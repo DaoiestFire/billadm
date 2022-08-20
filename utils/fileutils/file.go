@@ -1,8 +1,47 @@
 package fileutils
 
-import "os"
+import (
+	"fmt"
+	"io/ioutil"
+	constant "ljw/billadm/const"
+	"os"
+	"path/filepath"
+)
 
 func Exist(filePath string) bool {
 	_, err := os.Stat(filePath)
 	return err == nil || os.IsExist(err)
+}
+
+func RemoveFile(filePath string) error {
+	return os.RemoveAll(filePath)
+}
+
+func ReadFileByte(filePath string) ([]byte, error) {
+	if !Exist(filePath) {
+		return []byte{}, fmt.Errorf("%s is not exist", filePath)
+	}
+
+	return ioutil.ReadFile(filePath)
+}
+
+func ReadFileString(filePath string) (string, error) {
+	buffer, err := ReadFileByte(filePath)
+	return string(buffer), err
+}
+
+func WriteFileByte(filePath string, data []byte) error {
+	fileDir := filepath.Dir(filePath)
+	if !Exist(filepath.Dir(filePath)) {
+		err := os.MkdirAll(fileDir, constant.DirPerm)
+		if err != nil {
+			return fmt.Errorf("mkdir %s failed", fileDir)
+		}
+	}
+
+	return ioutil.WriteFile(filePath, data, constant.FilePerm)
+}
+
+func WriteFileString(filePath string, data string) error {
+	return WriteFileByte(filePath, []byte(data))
 }
