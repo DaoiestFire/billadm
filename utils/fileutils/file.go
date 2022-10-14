@@ -3,9 +3,10 @@ package fileutils
 import (
 	"fmt"
 	"io/ioutil"
-	constant "ljw/billadm/const"
 	"os"
 	"path/filepath"
+
+	"ljw/billadm/const"
 )
 
 func Exist(filePath string) bool {
