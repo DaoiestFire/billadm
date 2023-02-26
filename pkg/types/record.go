@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"strings"
 
 	"k8s.io/apimachinery/pkg/util/sets"
 )
@@ -11,22 +12,17 @@ var _ IRecord = &Record{}
 func NewRecord(id, year, month, day string) IRecord {
 	return &Record{
 		Id:     id,
-		Year:   year,
-		Month:  month,
-		Day:    day,
 		Labels: sets.NewString(),
 	}
 }
 
 type Record struct {
-	Id string `json:"id"`
-
-	Year  string `json:"year"`
-	Month string `json:"month"`
-	Day   string `json:"day"`
-
+	Id          string  `json:"id"`
 	Cost        float32 `json:"cost"`
 	Description string  `json:"description"`
+
+	CreationTime    string `json:"creation_time"`
+	ConsumptionTime string `json:"consumption_time"`
 
 	Labels sets.String `json:"labels,omitempty"`
 }
@@ -44,19 +40,19 @@ func (r *Record) GetDescription() string {
 }
 
 func (r *Record) GetYear() string {
-	return r.Year
+	return strings.Split(r.CreationTime, "-")[0]
 }
 
 func (r *Record) GetMonth() string {
-	return r.Month
+	return strings.Split(r.CreationTime, "-")[1]
 }
 
 func (r *Record) GetDay() string {
-	return r.Day
+	return strings.Split(r.CreationTime, "-")[2]
 }
 
 func (r *Record) GetTime() string {
-	return fmt.Sprintf("%s-%s-%s", r.Year, r.Month, r.Day)
+	return r.ConsumptionTime
 }
 
 func (r *Record) SetCost(cost float32) {
@@ -75,8 +71,8 @@ func (r *Record) DeleteLabel(lables ...string) {
 	r.Labels.Delete(lables...)
 }
 
-func (r *Record) GetLabels() sets.String {
-	return r.Labels
+func (r *Record) GetLabels() []string {
+	return r.Labels.List()
 }
 
 func (r *Record) GetKey() string {

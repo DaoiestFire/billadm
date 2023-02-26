@@ -2,6 +2,7 @@ package logger
 
 import (
 	"fmt"
+	constant "ljw/billadm/const"
 	"time"
 )
 
@@ -12,8 +13,8 @@ const (
 )
 
 const (
-	LogFormat  = "%s [%s] {%s}"
-	TimeFormat = "2006-01-02 15:04:05"
+	LogFormat  = constant.LogFormat
+	TimeFormat = constant.TimeFormat
 )
 
 func Info(args ...interface{}) {

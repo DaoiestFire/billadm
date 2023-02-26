@@ -1,7 +1,5 @@
 package types
 
-import "k8s.io/apimachinery/pkg/util/sets"
-
 type IRecord interface {
 	GetID() string
 	GetCost() float32
@@ -19,7 +17,7 @@ type IRecord interface {
 
 	AddLabel(...string)
 	DeleteLabel(...string)
-	GetLabels() sets.String
+	GetLabels() []string
 
 	GetKey() string
 }
