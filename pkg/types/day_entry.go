@@ -2,31 +2,25 @@ package types
 
 import (
 	"fmt"
-
-	"k8s.io/klog/v2"
+	"ljw/billadm/utils/logger"
 )
 
-func NewDayEntry(year, month, day string) *DayEntry {
+func NewDayEntry(dayTime string) *DayEntry {
 	return &DayEntry{
-		Year:    year,
-		Month:   month,
-		Day:     day,
-		Records: make(map[string]IRecord),
+		CurrentId: 0,
+		DayTime:   dayTime,
+		Records:   make(map[string]IRecord),
 	}
 }
 
 type DayEntry struct {
-	CurrentId uint32 `json:"current_id"`
-
-	Year  string `json:"year"`
-	Month string `json:"month"`
-	Day   string `json:"day"`
-
-	Records map[string]IRecord `json:"records,omitempty"`
+	CurrentId uint32             `json:"current_id"`
+	DayTime   string             `json:"day_time"`
+	Records   map[string]IRecord `json:"records,omitempty"`
 }
 
 func (d *DayEntry) GetKey(id string) string {
-	return fmt.Sprintf("%s-%s-%s-%s", d.Year, d.Month, d.Day, id)
+	return fmt.Sprintf("%s-%s", d.DayTime, id)
 }
 
 func (d *DayEntry) GetNextId() string {
@@ -39,8 +33,8 @@ func (d *DayEntry) GetRecordByKey(id string) (IRecord, error) {
 	key := d.GetKey(id)
 	r, ok := d.Records[key]
 	if !ok {
-		klog.Errorf("Record-key(%s) isn't exsited", key)
-		return nil, fmt.Errorf("can't get Record by id(%s)", id)
+		logger.Errorf("Record-key(%s) isn't exsited in [%s]", key, d.DayTime)
+		return nil, fmt.Errorf("can't get Record by key(%s)", key)
 	}
 	return r, nil
 }
@@ -53,7 +47,7 @@ func (d *DayEntry) AddRecord(r IRecord) {
 func (d *DayEntry) DeleteRecord(key string) error {
 	_, ok := d.Records[key]
 	if !ok {
-		klog.Errorf("Record-key(%s) isn't exsited", key)
+		logger.Errorf("not found record in [%s] [key : %s]", d.DayTime, key)
 		return fmt.Errorf("Record-key(%s) isn't exsited", key)
 	}
 	delete(d.Records, key)

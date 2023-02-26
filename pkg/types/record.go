@@ -2,17 +2,21 @@ package types
 
 import (
 	"fmt"
+	constant "ljw/billadm/const"
 	"strings"
+	"time"
 
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
 var _ IRecord = &Record{}
 
-func NewRecord(id, year, month, day string) IRecord {
+func NewRecord(id, consumptionTime string) IRecord {
 	return &Record{
-		Id:     id,
-		Labels: sets.NewString(),
+		Id:              id,
+		CreationTime:    time.Now().Format(constant.TimeFormat),
+		ConsumptionTime: consumptionTime,
+		Labels:          sets.NewString(),
 	}
 }
 
@@ -21,7 +25,9 @@ type Record struct {
 	Cost        float32 `json:"cost"`
 	Description string  `json:"description"`
 
-	CreationTime    string `json:"creation_time"`
+	// 2006-01-02-15:04:05
+	CreationTime string `json:"creation_time"`
+	// 2006-01-02
 	ConsumptionTime string `json:"consumption_time"`
 
 	Labels sets.String `json:"labels,omitempty"`
@@ -40,15 +46,15 @@ func (r *Record) GetDescription() string {
 }
 
 func (r *Record) GetYear() string {
-	return strings.Split(r.CreationTime, "-")[0]
+	return strings.Split(r.GetTime(), "-")[0]
 }
 
 func (r *Record) GetMonth() string {
-	return strings.Split(r.CreationTime, "-")[1]
+	return strings.Split(r.GetTime(), "-")[1]
 }
 
 func (r *Record) GetDay() string {
-	return strings.Split(r.CreationTime, "-")[2]
+	return strings.Split(r.GetTime(), "-")[2]
 }
 
 func (r *Record) GetTime() string {
