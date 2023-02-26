@@ -21,3 +21,8 @@ type IRecord interface {
 
 	GetKey() string
 }
+
+type IArgsMap interface {
+	Get(string) (string, error)
+	Set(string, string)
+}

@@ -1,18 +1,20 @@
 package handler
 
+import "ljw/billadm/pkg/types"
+
 var _ handler = &DayRecordsHandler{}
 
 type DayRecordsHandler struct {
 }
 
-func (dh *DayRecordsHandler) Get() error {
+func (dh *DayRecordsHandler) Get(am types.IArgsMap) error {
 	return nil
 }
 
-func (dh *DayRecordsHandler) Delete() error {
+func (dh *DayRecordsHandler) Delete(am types.IArgsMap) error {
 	return nil
 }
 
-func (dh *DayRecordsHandler) Create() error {
+func (dh *DayRecordsHandler) Create(am types.IArgsMap) error {
 	return nil
 }
