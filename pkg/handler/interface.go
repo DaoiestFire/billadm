@@ -1,6 +1,6 @@
-package manager
+package handler
 
-type manager interface {
+type handler interface {
 	Get() error
 	Delete() error
 	Create() error

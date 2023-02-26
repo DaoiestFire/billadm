@@ -2,7 +2,6 @@ package types
 
 import (
 	"fmt"
-	"ljw/billadm/utils/logger"
 )
 
 func NewDayEntry(dayTime string) *DayEntry {
@@ -33,8 +32,7 @@ func (d *DayEntry) GetRecordByKey(id string) (IRecord, error) {
 	key := d.GetKey(id)
 	r, ok := d.Records[key]
 	if !ok {
-		logger.Errorf("Record-key(%s) isn't exsited in [%s]", key, d.DayTime)
-		return nil, fmt.Errorf("can't get Record by key(%s)", key)
+		return nil, fmt.Errorf("Record-key(%s) isn't exsited in [%s]", key, d.DayTime)
 	}
 	return r, nil
 }
@@ -47,8 +45,7 @@ func (d *DayEntry) AddRecord(r IRecord) {
 func (d *DayEntry) DeleteRecord(key string) error {
 	_, ok := d.Records[key]
 	if !ok {
-		logger.Errorf("not found record in [%s] [key : %s]", d.DayTime, key)
-		return fmt.Errorf("Record-key(%s) isn't exsited", key)
+		return fmt.Errorf("not found record in [%s] [key : %s]", d.DayTime, key)
 	}
 	delete(d.Records, key)
 	return nil

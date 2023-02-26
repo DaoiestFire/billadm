@@ -2,7 +2,7 @@ package types
 
 import "k8s.io/apimachinery/pkg/util/sets"
 
-type BilladmConfiguration struct {
+type BilladmConfig struct {
 	BackupDirList sets.String `json:"backup_dir_list"`
 	BillDataDir   string      `json:"bill_data_dir"`
 
