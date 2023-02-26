@@ -11,27 +11,21 @@ const (
 )
 
 const (
-	LogFile string = "billadm.log"
-	LogDir  string = "log"
-)
-
-const (
-	DataDir      string = "data"
-	MetadataFile string = "metadata.json"
+	ConfigurationName = ".billadm"
+	BilladmDataDir    = "BilladmData"
 )
 
 // sub command
 const (
-	GET     = "get"
-	CREATE  = "create"
-	DELETE  = "delete"
-	STATUS  = "status"
-	RECOVER = "recover"
+	GET    = "get"
+	CREATE = "create"
+	DELETE = "delete"
 )
 
 // resource
 const (
-	Label     = "label"
-	Workspace = "workspace"
-	Record    = "record"
+	Record     = "record"
+	DayRecords = "dr"
+	Label      = "label"
+	Bill       = "bill"
 )

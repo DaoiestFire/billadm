@@ -23,7 +23,3 @@ type IRecord interface {
 
 	GetKey() string
 }
-
-type Data interface {
-	Get(string) (string, bool)
-}

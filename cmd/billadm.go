@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"ljw/billadm/cmd/command"
-	_ "ljw/billadm/utils/log"
 )
 
 func main() {
