@@ -2,8 +2,9 @@ package logger
 
 import (
 	"fmt"
-	constant "ljw/billadm/const"
 	"time"
+
+	constant "ljw/billadm/const"
 )
 
 const (
