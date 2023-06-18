@@ -70,12 +70,12 @@ func (r *Record) SetDescription(description string) {
 	r.Description = description
 }
 
-func (r *Record) AddLabel(lables ...string) {
-	r.Labels.Insert(lables...)
+func (r *Record) AddLabel(labels ...string) {
+	r.Labels.Insert(labels...)
 }
 
-func (r *Record) DeleteLabel(lables ...string) {
-	r.Labels.Delete(lables...)
+func (r *Record) DeleteLabel(labels ...string) {
+	r.Labels.Delete(labels...)
 }
 
 func (r *Record) GetLabels() []string {

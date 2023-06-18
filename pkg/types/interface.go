@@ -10,7 +10,7 @@ type IRecord interface {
 	GetDay() string
 	GetTime() string
 
-	// 时间与id是无法被更改的，这个成员是自动生成的
+	// SetCost 时间与id是无法被更改的，这个成员是自动生成的
 	// 想要更改时间或id只能删除这个记录，增加一个新记录
 	SetCost(float32)
 	SetDescription(string)

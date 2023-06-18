@@ -28,21 +28,23 @@ func (d *DayEntry) GetNextId() string {
 	return res
 }
 
-func (d *DayEntry) GetRecordByKey(id string) (IRecord, error) {
+func (d *DayEntry) GetRecordById(id string) (IRecord, error) {
 	key := d.GetKey(id)
 	r, ok := d.Records[key]
 	if !ok {
-		return nil, fmt.Errorf("Record-key(%s) isn't exsited in [%s]", key, d.DayTime)
+		return nil, fmt.Errorf("record-key(%s) isn't exsited in [%s]", key, d.DayTime)
 	}
 	return r, nil
 }
 
-// 假设id不会重复，因此不检查map存在同名Record情况
-func (d *DayEntry) AddRecord(r IRecord) {
+// AddRecord 假设id不会重复，因此不检查map存在同名Record情况
+func (d *DayEntry) AddRecord() {
+	r := NewRecord(d.GetNextId(), d.DayTime)
 	d.Records[r.GetKey()] = r
 }
 
-func (d *DayEntry) DeleteRecord(key string) error {
+func (d *DayEntry) DeleteRecord(id string) error {
+	key := d.GetKey(id)
 	_, ok := d.Records[key]
 	if !ok {
 		return fmt.Errorf("not found record in [%s] [key : %s]", d.DayTime, key)
