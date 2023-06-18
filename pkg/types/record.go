@@ -2,12 +2,9 @@ package types
 
 import (
 	"fmt"
-	"strings"
-	"time"
+	timeutils "ljw/billadm/utils/time"
 
 	"k8s.io/apimachinery/pkg/util/sets"
-
-	constant "ljw/billadm/const"
 )
 
 var _ IRecord = &Record{}
@@ -15,7 +12,7 @@ var _ IRecord = &Record{}
 func NewRecord(id, consumptionTime string) IRecord {
 	return &Record{
 		Id:              id,
-		CreationTime:    time.Now().Format(constant.TimeFormat),
+		CreationTime:    timeutils.GetNowTimeString(),
 		ConsumptionTime: consumptionTime,
 		Labels:          sets.NewString(),
 	}
@@ -44,18 +41,6 @@ func (r *Record) GetCost() float32 {
 
 func (r *Record) GetDescription() string {
 	return r.Description
-}
-
-func (r *Record) GetYear() string {
-	return strings.Split(r.GetTime(), "-")[0]
-}
-
-func (r *Record) GetMonth() string {
-	return strings.Split(r.GetTime(), "-")[1]
-}
-
-func (r *Record) GetDay() string {
-	return strings.Split(r.GetTime(), "-")[2]
 }
 
 func (r *Record) GetTime() string {

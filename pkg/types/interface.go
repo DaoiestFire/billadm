@@ -5,9 +5,6 @@ type IRecord interface {
 	GetCost() float32
 	GetDescription() string
 
-	GetYear() string
-	GetMonth() string
-	GetDay() string
 	GetTime() string
 
 	// SetCost 时间与id是无法被更改的，这个成员是自动生成的
