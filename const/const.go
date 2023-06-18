@@ -11,7 +11,8 @@ const (
 )
 
 const (
-	ConfigurationName = ".billadm"
+	ConfigurationDir  = "/etc/billadm"
+	ConfigurationName = "billadm.config"
 	BilladmDataDir    = "BilladmData"
 )
 
@@ -20,14 +21,15 @@ const (
 	GET    = "get"
 	CREATE = "create"
 	DELETE = "delete"
+	MODIFY = "modify"
 )
 
 // resource
 const (
-	Record     = "record"
-	DayRecords = "dr"
-	Label      = "label"
-	Bill       = "bill"
+	Record   = "record"
+	DayEntry = "de"
+	Label    = "label"
+	Bill     = "bill"
 )
 
 // log

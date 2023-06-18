@@ -9,7 +9,6 @@ import (
 	"ljw/billadm/pkg/types"
 	"ljw/billadm/utils/fileutils"
 	"ljw/billadm/utils/logger"
-	"ljw/billadm/utils/pathutils"
 )
 
 var cm *ConfigManager
@@ -26,11 +25,7 @@ func GetConfigManager() *ConfigManager {
 }
 
 func Init() error {
-	homePath, err := pathutils.GetHomeDir()
-	if err != nil {
-		return err
-	}
-	configPath := path.Join(homePath, constant.ConfigurationName)
+	configPath := path.Join(constant.ConfigurationDir, constant.ConfigurationName)
 	data, err := fileutils.ReadFileByte(configPath)
 	if err != nil {
 		return err
