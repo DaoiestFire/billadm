@@ -37,7 +37,7 @@ func (d *DayEntry) GetRecordById(id string) (IRecord, error) {
 	return r, nil
 }
 
-// AddRecord 假设id不会重复，因此不检查map存在同名Record情况
+// AddRecord 根据当前的id值创建一个新的record
 func (d *DayEntry) AddRecord() {
 	r := NewRecord(d.GetNextId(), d.DayTime)
 	d.Records[r.GetKey()] = r
