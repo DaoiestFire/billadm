@@ -4,7 +4,7 @@ type BilladmConfig struct {
 	BackupDirList string `json:"backup_dir_list"`
 	BillDataDir   string `json:"bill_data_dir"`
 
-	Bills map[string]*Bill `json:"bills"`
+	Bills map[string]string `json:"bills"`
 
 	CurrentBillName string `json:"current_bill_name"`
 
