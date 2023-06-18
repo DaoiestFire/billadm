@@ -2,8 +2,6 @@ package handler
 
 import "ljw/billadm/pkg/types"
 
-var _ handler = &RecordHandler{}
-
 type RecordHandler struct {
 }
 

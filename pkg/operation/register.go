@@ -20,8 +20,8 @@ func NewCommandRegister() *CommandRegister {
 	return cr
 }
 
-func (cr *CommandRegister) register(name string, contructor func() *cobra.Command) {
-	cr.data[name] = contructor()
+func (cr *CommandRegister) register(name string, constructor func() *cobra.Command) {
+	cr.data[name] = constructor()
 }
 
 func (cr *CommandRegister) BindToCommand(command *cobra.Command) {

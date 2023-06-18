@@ -2,8 +2,6 @@ package handler
 
 import "ljw/billadm/pkg/types"
 
-var _ handler = &BillHandler{}
-
 type BillHandler struct {
 }
 

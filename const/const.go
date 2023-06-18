@@ -16,14 +16,6 @@ const (
 	BilladmDataDir    = "BilladmData"
 )
 
-// sub command
-const (
-	GET    = "get"
-	CREATE = "create"
-	DELETE = "delete"
-	MODIFY = "modify"
-)
-
 // resource
 const (
 	Record   = "record"
