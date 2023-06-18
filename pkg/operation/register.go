@@ -17,6 +17,7 @@ func NewCommandRegister() *CommandRegister {
 	cr.register(Get, NewGetCommand)
 	cr.register(Delete, NewDeleteCommand)
 	cr.register(Create, NewCreateCommand)
+	cr.register(Modify, NewModifyCommand)
 	return cr
 }
 
