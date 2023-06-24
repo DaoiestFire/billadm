@@ -2,6 +2,7 @@ package handler
 
 import (
 	cmdoptions "ljw/billadm/cmd/options"
+	"ljw/billadm/utils/logger"
 )
 
 func NewResourceHandler() *ResourceHandler {
@@ -14,4 +15,6 @@ type ResourceHandler struct {
 }
 
 func (rh *ResourceHandler) Run(op, resourceName string, options *cmdoptions.Options) {
+	logger.Infof("start to [%s] resource [%s]", op, resourceName)
+
 }

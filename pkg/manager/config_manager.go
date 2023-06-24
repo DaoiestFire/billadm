@@ -2,6 +2,7 @@ package manager
 
 import (
 	"encoding/json"
+	"fmt"
 	"path"
 	"sync"
 
@@ -40,4 +41,17 @@ func Init() error {
 
 type ConfigManager struct {
 	Config *types.BilladmConfig
+}
+
+func (cm *ConfigManager) Save() error {
+	configPath := path.Join(constant.ConfigurationDir, constant.ConfigurationName)
+
+	data, err := json.MarshalIndent(cm.Config, "  ", "  ")
+	if err != nil {
+		return fmt.Errorf("marshal billadm.config failed -> <%v>", err)
+	}
+	if err = fileutils.WriteFileByte(configPath, data); err != nil {
+		return err
+	}
+	return nil
 }

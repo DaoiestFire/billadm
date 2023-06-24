@@ -2,7 +2,6 @@ package fileutils
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -23,7 +22,7 @@ func ReadFileByte(filePath string) ([]byte, error) {
 		return []byte{}, fmt.Errorf("%s is not exist", filePath)
 	}
 
-	return ioutil.ReadFile(filePath)
+	return os.ReadFile(filePath)
 }
 
 func ReadFileString(filePath string) (string, error) {
@@ -40,7 +39,7 @@ func WriteFileByte(filePath string, data []byte) error {
 		}
 	}
 
-	return ioutil.WriteFile(filePath, data, constant.FilePerm)
+	return os.WriteFile(filePath, data, constant.FilePerm)
 }
 
 func WriteFileString(filePath string, data string) error {
