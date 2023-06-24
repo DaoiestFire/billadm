@@ -1,18 +1,15 @@
 package handler
 
-import "ljw/billadm/pkg/types"
+import (
+	"ljw/billadm/cmd/options"
+	"ljw/billadm/pkg/manager"
+)
+
+var _ IResource = &BillHandler{}
 
 type BillHandler struct {
 }
 
-func (bh *BillHandler) Get(am types.IArgsMap) error {
-	return nil
-}
-
-func (bh *BillHandler) Delete(am types.IArgsMap) error {
-	return nil
-}
-
-func (bh *BillHandler) Create(am types.IArgsMap) error {
+func (bh *BillHandler) Run(op string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	return nil
 }
