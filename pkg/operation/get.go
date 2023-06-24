@@ -24,7 +24,7 @@ func NewGetCommand(opts *options.Options) *cobra.Command {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			handler.NewResourceHandler().Run(Get, opts)
+			handler.NewResourceHandler().Run(Get, args[0], opts)
 		},
 		Args: cobra.ExactArgs(1),
 	}

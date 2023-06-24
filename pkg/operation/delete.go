@@ -24,7 +24,7 @@ func NewDeleteCommand(opts *options.Options) *cobra.Command {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			handler.NewResourceHandler().Run(Delete, opts)
+			handler.NewResourceHandler().Run(Delete, args[0], opts)
 		},
 		Args: cobra.ExactArgs(1),
 	}

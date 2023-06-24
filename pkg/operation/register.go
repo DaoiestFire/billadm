@@ -2,8 +2,8 @@ package operation
 
 import (
 	"github.com/spf13/cobra"
+
 	"ljw/billadm/cmd/options"
-	"ljw/billadm/pkg/handler"
 )
 
 // 基于工厂模式实现子命令的注册
@@ -46,9 +46,8 @@ func NewInitCommand(opts *options.Options) *cobra.Command {
 	command := &cobra.Command{
 		Use: Init,
 		Run: func(cmd *cobra.Command, args []string) {
-			handler.NewResourceHandler().Run(Init, opts)
 		},
-		Args: cobra.ExactArgs(1),
+		Args: cobra.ExactArgs(0),
 	}
 	return command
 }

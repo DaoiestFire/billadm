@@ -24,7 +24,7 @@ func NewCreateCommand(opts *options.Options) *cobra.Command {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			handler.NewResourceHandler().Run(Create, opts)
+			handler.NewResourceHandler().Run(Create, args[0], opts)
 		},
 		Args: cobra.ExactArgs(1),
 	}

@@ -13,5 +13,5 @@ func NewResourceHandler() *ResourceHandler {
 type ResourceHandler struct {
 }
 
-func (rh *ResourceHandler) Run(op string, options *cmdoptions.Options) {
+func (rh *ResourceHandler) Run(op, resourceName string, options *cmdoptions.Options) {
 }
