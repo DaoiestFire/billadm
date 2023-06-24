@@ -3,6 +3,7 @@ package operation
 import (
 	"github.com/spf13/cobra"
 	"ljw/billadm/cmd/options"
+	"ljw/billadm/pkg/handler"
 )
 
 // 基于工厂模式实现子命令的注册
@@ -17,6 +18,9 @@ func NewCommandRegister(opts *options.Options) *CommandRegister {
 		data: make(map[string]*cobra.Command, 0),
 		opts: opts,
 	}
+
+	cr.register(Init, NewInitCommand)
+
 	cr.register(Get, NewGetCommand)
 	cr.register(Delete, NewDeleteCommand)
 	cr.register(Create, NewCreateCommand)
@@ -32,4 +36,19 @@ func (cr *CommandRegister) BindToCommand(command *cobra.Command) {
 	for _, c := range cr.data {
 		command.AddCommand(c)
 	}
+}
+
+const (
+	Init = "init"
+)
+
+func NewInitCommand(opts *options.Options) *cobra.Command {
+	command := &cobra.Command{
+		Use: Init,
+		Run: func(cmd *cobra.Command, args []string) {
+			handler.NewResourceHandler().Run(Init, opts)
+		},
+		Args: cobra.ExactArgs(1),
+	}
+	return command
 }
