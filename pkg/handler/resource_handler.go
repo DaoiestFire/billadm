@@ -35,30 +35,35 @@ type Resources struct {
 
 // IResource op,资源库，配置控制器，前台选项
 type IResource interface {
-	Run(string, Resources, *manager.ConfigManager, *cmdoptions.Options) error
+	Run(string, string, Resources, *manager.ConfigManager, *cmdoptions.Options) error
 }
 
 // Run 每一种资源对外的函数都是Run函数。resource Handler接收到资源处理请求中将请求分配给每一种资源处理器
-func (rh *ResourceHandler) Run(op, resourceName string, options *cmdoptions.Options) {
-	logger.Infof("===start to [%s] resource [%s]===", op, resourceName)
+func (rh *ResourceHandler) Run(op string, args []string, options *cmdoptions.Options) {
+	resourceType := args[0]
+	resourceName := ""
+	if len(args) > 1 {
+		resourceName = args[1]
+	}
+	logger.Infof("===start to [%s] resource [%s]===", op, resourceType)
 
 	var err error
-	switch resourceName {
+	switch resourceType {
 	case constant.Bill:
-		err = rh.billHandler.Run(op, rh.resources, rh.cm, options)
+		err = rh.billHandler.Run(op, resourceName, rh.resources, rh.cm, options)
 	case constant.Record:
-		err = rh.recordHandler.Run(op, rh.resources, rh.cm, options)
+		err = rh.recordHandler.Run(op, resourceName, rh.resources, rh.cm, options)
 	case constant.DayEntry:
-		err = rh.dayEntryHandler.Run(op, rh.resources, rh.cm, options)
+		err = rh.dayEntryHandler.Run(op, resourceName, rh.resources, rh.cm, options)
 	case constant.Label:
-		err = rh.labelHandler.Run(op, rh.resources, rh.cm, options)
+		err = rh.labelHandler.Run(op, resourceName, rh.resources, rh.cm, options)
 	default:
-		logger.Errorf("invalid resource name [%s]", resourceName)
+		logger.Errorf("invalid resource name [%s]", resourceType)
 	}
 
 	if err != nil {
-		logger.Infof("[%s] resource [%s] failed", op, resourceName)
+		logger.Infof("[%s] resource [%s] failed", op, resourceType)
 	}
 
-	logger.Infof("===end to [%s] resource [%s]===", op, resourceName)
+	logger.Infof("===end to [%s] resource [%s]===", op, resourceType)
 }

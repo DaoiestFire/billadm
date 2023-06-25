@@ -18,10 +18,10 @@ func NewCreateCommand(opts *options.Options) *cobra.Command {
 	command := &cobra.Command{
 		Use: Create,
 		Run: func(cmd *cobra.Command, args []string) {
-			handler.NewResourceHandler().Run(Create, args[0], opts)
+			handler.NewResourceHandler().Run(Create, args, opts)
 		},
 		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 0 {
+			if len(args) != 2 {
 				return fmt.Errorf("len of args not equal zero")
 			}
 			if !utils.IsResourceValid(args[0]) {

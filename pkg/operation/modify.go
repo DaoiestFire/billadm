@@ -18,11 +18,11 @@ func NewModifyCommand(opts *options.Options) *cobra.Command {
 	command := &cobra.Command{
 		Use: Modify,
 		Run: func(cmd *cobra.Command, args []string) {
-			handler.NewResourceHandler().Run(Modify, args[0], opts)
+			handler.NewResourceHandler().Run(Modify, args, opts)
 		},
 		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 0 {
-				return fmt.Errorf("len of args not equal zero")
+			if len(args) != 2 {
+				return fmt.Errorf("len of args not equal two")
 			}
 			if !utils.IsResourceValid(args[0]) {
 				return fmt.Errorf("resource [%s] isn't supported", args[0])
