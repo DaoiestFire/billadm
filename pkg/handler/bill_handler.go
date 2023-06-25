@@ -17,34 +17,31 @@ func (bh *BillHandler) Run(op, resourceName string, resources Resources, cm *man
 	var err error
 	switch op {
 	case operation.Get:
-		err = bh.get(resources, cm, options)
+		err = bh.get(resourceName, resources, cm, options)
 	case operation.Delete:
-		err = bh.delete(resources, cm, options)
+		err = bh.delete(resourceName, resources, cm, options)
 	case operation.Create:
-		err = bh.create(resources, cm, options)
+		err = bh.create(resourceName, resources, cm, options)
 	case operation.Modify:
-		err = bh.modify(resources, cm, options)
+		err = bh.modify(resourceName, resources, cm, options)
 	default:
 		err = fmt.Errorf("invalid op [%s] for BillHandler", op)
 	}
 	return err
 }
 
-func (bh *BillHandler) get(resources Resources, cm *manager.ConfigManager, options *options.Options) error {
-	fmt.Println("all bills:")
-	for billName, bill := range cm.Config.Bills {
-
-	}
+func (bh *BillHandler) get(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+	// resourceName是空的，那么我们就打印所有的bill和程序配置信息
 }
 
-func (bh *BillHandler) delete(resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (bh *BillHandler) delete(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 
 }
 
-func (bh *BillHandler) create(resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (bh *BillHandler) create(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 
 }
 
-func (bh *BillHandler) modify(resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (bh *BillHandler) modify(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 
 }
