@@ -26,3 +26,7 @@ func OneBillPrint(bill *types.Bill, detail bool) {
 			bill.Name, bill.User, bill.CreationTime, bill.LastModifyTime)
 	}
 }
+
+func OneRecordPrint(record types.IRecord) {
+
+}

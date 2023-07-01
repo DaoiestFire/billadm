@@ -22,3 +22,11 @@ func GetMonthFromTimeString(t string) string {
 func GetDayFromTimeString(t string) string {
 	return strings.Split(t, "-")[2]
 }
+
+func GetYearMonthDay(time string) (string, string, string) {
+	timeList := strings.Split(time, "-")
+	if len(timeList) != 3 {
+		return "", "", ""
+	}
+	return timeList[0], timeList[1], timeList[2]
+}

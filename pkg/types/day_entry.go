@@ -1,7 +1,9 @@
 package types
 
 import (
+	"encoding/json"
 	"fmt"
+	"ljw/billadm/utils/fileutils"
 )
 
 func NewDayEntry(dayTime string) *DayEntry {
@@ -10,6 +12,32 @@ func NewDayEntry(dayTime string) *DayEntry {
 		DayTime:   dayTime,
 		Records:   make(map[string]IRecord),
 	}
+}
+
+func ReadOneDayEntry(path string) (*DayEntry, error) {
+	data, err := fileutils.ReadFileByte(path)
+	if err != nil {
+		return nil, err
+	}
+	de := &DayEntry{}
+	err = json.Unmarshal(data, de)
+	if err != nil {
+		return nil, err
+	}
+	return de, nil
+}
+
+func SaveOneDayEntry(path string, de *DayEntry) error {
+	data, err := fileutils.GenerateJsonData(de)
+	if err != nil {
+		return err
+	}
+
+	err = fileutils.WriteFileByte(path, data)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 type DayEntry struct {
@@ -26,6 +54,15 @@ func (d *DayEntry) GetNextId() string {
 	res := fmt.Sprintf("%03d", d.CurrentId)
 	d.CurrentId++
 	return res
+}
+
+func (d *DayEntry) GetRecords() []IRecord {
+	recordsList := make([]IRecord, 0, d.Len())
+
+	for _, r := range d.Records {
+		recordsList = append(recordsList, r)
+	}
+	return recordsList
 }
 
 func (d *DayEntry) GetRecordById(id string) (IRecord, error) {

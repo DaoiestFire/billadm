@@ -1,6 +1,7 @@
 package fileutils
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -44,4 +45,8 @@ func WriteFileByte(filePath string, data []byte) error {
 
 func WriteFileString(filePath string, data string) error {
 	return WriteFileByte(filePath, []byte(data))
+}
+
+func GenerateJsonData(val any) ([]byte, error) {
+	return json.MarshalIndent(val, "  ", "  ")
 }

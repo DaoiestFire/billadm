@@ -56,7 +56,7 @@ func (cm *ConfigManager) Save() error {
 	cm.Config.LastModifyTime = timeutils.GetNowTimeString()
 	configPath := path.Join(constant.ConfigurationDir, constant.ConfigurationName)
 
-	data, err := json.MarshalIndent(cm.Config, "  ", "  ")
+	data, err := fileutils.GenerateJsonData(cm.Config)
 	if err != nil {
 		return fmt.Errorf("marshal billadm.config failed -> <%v>", err)
 	}

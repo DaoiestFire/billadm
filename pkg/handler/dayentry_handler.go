@@ -3,10 +3,14 @@ package handler
 import (
 	"fmt"
 
+	"path"
+
 	"ljw/billadm/cmd/options"
 	"ljw/billadm/pkg/manager"
 	"ljw/billadm/pkg/operation"
 	"ljw/billadm/pkg/types"
+	"ljw/billadm/utils/print"
+	"ljw/billadm/utils/time"
 )
 
 var _ IResource = &DayEntryHandler{}
@@ -33,26 +37,26 @@ func (dh *DayEntryHandler) Run(op, resourceName string, resources Resources, cm 
 	return err
 }
 
+// 打印Time时间的DE中的record
 func (dh *DayEntryHandler) get(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	// 必须要激活一个bill
 	if cm.Config.CurrentBillName == "" {
 		return fmt.Errorf("please activate a bill first")
 	}
 
-	if options.Time == "" {
-		return dh.getWithoutTime(resourceName, resources, cm, options)
-	} else {
-		return dh.getWithTime(resourceName, resources, cm, options)
+	year, month, _ := time.GetYearMonthDay(options.Time)
+	fileName := fmt.Sprintf("%s.json", options.Time)
+	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
+	de, err := types.ReadOneDayEntry(dayEntryPath)
+	if err != nil {
+		return fmt.Errorf("read day entry [%s] failed ---> <%v>", fileName, err)
 	}
-}
 
-// 没有知道时间需要输出当前的de中的record
-func (dh *DayEntryHandler) getWithoutTime(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
-
-}
-
-func (dh *DayEntryHandler) getWithTime(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
-
+	fmt.Printf("All records of day entey [%s] :\n", fileName)
+	for _, r := range de.GetRecords() {
+		print.OneRecordPrint(r)
+	}
+	return nil
 }
 
 func (dh *DayEntryHandler) delete(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
