@@ -34,6 +34,24 @@ func (dh *DayEntryHandler) Run(op, resourceName string, resources Resources, cm 
 }
 
 func (dh *DayEntryHandler) get(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+	// 必须要激活一个bill
+	if cm.Config.CurrentBillName == "" {
+		return fmt.Errorf("please activate a bill first")
+	}
+
+	if options.Time == "" {
+		return dh.getWithoutTime(resourceName, resources, cm, options)
+	} else {
+		return dh.getWithTime(resourceName, resources, cm, options)
+	}
+}
+
+// 没有知道时间需要输出当前的de中的record
+func (dh *DayEntryHandler) getWithoutTime(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+
+}
+
+func (dh *DayEntryHandler) getWithTime(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 
 }
 
