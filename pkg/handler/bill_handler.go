@@ -34,10 +34,10 @@ func (bh *BillHandler) Run(op, resourceName string, resources Resources, cm *man
 func (bh *BillHandler) get(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	// resourceName是空的，那么我们就打印所有的bill和程序配置信息
 	if resourceName == "" {
-		print.PrintBillConfig(cm.Config)
+		print.BillConfigPrint(cm.Config)
 
 		for _, bill := range cm.Config.Bills {
-			print.PrintOneBill(bill, false)
+			print.OneBillPrint(bill, false)
 		}
 
 		return nil
@@ -48,7 +48,7 @@ func (bh *BillHandler) get(resourceName string, resources Resources, cm *manager
 		return fmt.Errorf("bill [%s] doesn't exsit", resourceName)
 	}
 	bill := cm.GetBillByName(resourceName)
-	print.PrintOneBill(bill, true)
+	print.OneBillPrint(bill, true)
 	return nil
 }
 

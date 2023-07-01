@@ -3,6 +3,7 @@ package manager
 import (
 	"encoding/json"
 	"fmt"
+	"ljw/billadm/utils/pathutils"
 	timeutils "ljw/billadm/utils/time"
 	"path"
 	"sync"
@@ -31,6 +32,7 @@ func Init() error {
 	configPath := path.Join(constant.ConfigurationDir, constant.ConfigurationName)
 	if !fileutils.Exist(configPath) {
 		cm.Config.CreationTime = timeutils.GetNowTimeString()
+		cm.Config.BillDataDir = path.Join(pathutils.GetHomeDir(), constant.BilladmDataDir)
 		return nil
 	}
 	data, err := fileutils.ReadFileByte(configPath)
