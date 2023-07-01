@@ -1,10 +1,10 @@
 package types
 
 type BilladmConfig struct {
-	BackupDirList string `json:"backup_dir_list"`
+	BackupDirList string `json:"backup_dir_list,omitempty"`
 	BillDataDir   string `json:"bill_data_dir"`
 
-	Bills map[string]*Bill `json:"bills"`
+	Bills map[string]*Bill `json:"bills,omitempty"`
 
 	CurrentBillName string `json:"current_bill_name"`
 

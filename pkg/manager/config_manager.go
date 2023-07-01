@@ -3,6 +3,7 @@ package manager
 import (
 	"encoding/json"
 	"fmt"
+	timeutils "ljw/billadm/utils/time"
 	"path"
 	"sync"
 
@@ -26,12 +27,17 @@ func GetConfigManager() *ConfigManager {
 }
 
 func Init() error {
+	cm = &ConfigManager{}
 	configPath := path.Join(constant.ConfigurationDir, constant.ConfigurationName)
+	if !fileutils.Exist(configPath) {
+		cm.Config.CreationTime = timeutils.GetNowTimeString()
+		return nil
+	}
 	data, err := fileutils.ReadFileByte(configPath)
 	if err != nil {
 		return err
 	}
-	cm = &ConfigManager{}
+
 	if err = json.Unmarshal(data, cm.Config); err != nil {
 		return nil
 	}
@@ -44,6 +50,7 @@ type ConfigManager struct {
 }
 
 func (cm *ConfigManager) Save() error {
+	cm.Config.LastModifyTime = timeutils.GetNowTimeString()
 	configPath := path.Join(constant.ConfigurationDir, constant.ConfigurationName)
 
 	data, err := json.MarshalIndent(cm.Config, "  ", "  ")
@@ -53,5 +60,14 @@ func (cm *ConfigManager) Save() error {
 	if err = fileutils.WriteFileByte(configPath, data); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (cm *ConfigManager) SetCurrentBillName(name string) error {
+	// 需要判断name存不存在
+	if _, ok := cm.Config.Bills[name]; !ok {
+		return fmt.Errorf("bill [%v] doesn't exist", name)
+	}
+	cm.Config.CurrentBillName = name
 	return nil
 }

@@ -2,6 +2,8 @@ package operation
 
 import (
 	"github.com/spf13/cobra"
+	"ljw/billadm/pkg/manager"
+	"ljw/billadm/utils/logger"
 
 	"ljw/billadm/cmd/options"
 )
@@ -25,6 +27,7 @@ func NewCommandRegister(opts *options.Options) *CommandRegister {
 	cr.register(Delete, NewDeleteCommand)
 	cr.register(Create, NewCreateCommand)
 	cr.register(Modify, NewModifyCommand)
+	cr.register(Activate, NewActivateCommand)
 	return cr
 }
 
@@ -39,15 +42,41 @@ func (cr *CommandRegister) BindToCommand(command *cobra.Command) {
 }
 
 const (
-	Init = "init"
+	Init     = "init"
+	Activate = "activate"
 )
 
+// NewInitCommand 初始化bill.config配置文件。没有的配置设置为空串，设置配置文件的创建时间和上次修改时间
 func NewInitCommand(opts *options.Options) *cobra.Command {
 	command := &cobra.Command{
 		Use: Init,
 		Run: func(cmd *cobra.Command, args []string) {
+			cm := manager.GetConfigManager()
+			err := cm.Save()
+			if err != nil {
+				logger.Errorf("failed to init bill.config --> <%v>", err)
+				return
+			}
+			logger.Infof("initialize bill.config success")
 		},
 		Args: cobra.ExactArgs(0),
+	}
+	return command
+}
+
+func NewActivateCommand(opts *options.Options) *cobra.Command {
+	command := &cobra.Command{
+		Use: Activate,
+		Run: func(cmd *cobra.Command, args []string) {
+			cm := manager.GetConfigManager()
+			err := cm.SetCurrentBillName(args[0])
+			if err != nil {
+				logger.Errorf("failed to set CurrentBillName --> <%v>", err)
+				return
+			}
+			logger.Infof("set CurrentBillName success")
+		},
+		Args: cobra.ExactArgs(1),
 	}
 	return command
 }
