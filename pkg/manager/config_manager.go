@@ -85,3 +85,11 @@ func (cm *ConfigManager) GetBillByName(name string) *types.Bill {
 	}
 	return cm.Config.Bills[name]
 }
+
+func (cm *ConfigManager) AddBill(name string) {
+	cm.Config.Bills[name] = types.NewBill(name, constant.DefaultUserName)
+}
+
+func (cm *ConfigManager) DeleteBill(name string) {
+	delete(cm.Config.Bills, name)
+}

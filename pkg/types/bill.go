@@ -1,5 +1,7 @@
 package types
 
+import timeutils "ljw/billadm/utils/time"
+
 type Bill struct {
 	Name string `json:"name"`
 	User string `json:"user"`
@@ -11,4 +13,13 @@ type Bill struct {
 
 	// how many days
 	BackupTimeInterval int `json:"backup_time_interval,omitempty"`
+}
+
+func NewBill(name, user string) *Bill {
+	return &Bill{
+		Name: name,
+		User: user,
+
+		CreationTime: timeutils.GetNowTimeString(),
+	}
 }

@@ -40,6 +40,11 @@ type IResource interface {
 
 // Run 每一种资源对外的函数都是Run函数。resource Handler接收到资源处理请求中将请求分配给每一种资源处理器
 func (rh *ResourceHandler) Run(op string, args []string, options *cmdoptions.Options) {
+	defer func() {
+		if err := rh.cm.Save(); err != nil {
+			logger.Errorf("bill.config save failed ---> <%v>", err)
+		}
+	}()
 	resourceType := args[0]
 	resourceName := ""
 	if len(args) > 1 {

@@ -14,6 +14,8 @@ const (
 	ConfigurationDir  = "/etc/billadm"
 	ConfigurationName = "billadm.config"
 	BilladmDataDir    = "BilladmData"
+
+	DefaultUserName = "default"
 )
 
 // resource

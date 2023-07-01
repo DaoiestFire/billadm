@@ -2,6 +2,8 @@ package handler
 
 import (
 	"fmt"
+	"ljw/billadm/utils/pathutils"
+	"path"
 
 	"ljw/billadm/cmd/options"
 	"ljw/billadm/pkg/manager"
@@ -53,13 +55,47 @@ func (bh *BillHandler) get(resourceName string, resources Resources, cm *manager
 }
 
 func (bh *BillHandler) delete(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+	if resourceName == "" {
+		return fmt.Errorf("please specify bill name")
+	}
 
+	if !cm.IsBillExist(resourceName) {
+		return fmt.Errorf("bill [%s] doesn't exist", resourceName)
+	}
+
+	billPath := path.Join(cm.Config.BillDataDir, resourceName)
+	err := pathutils.RemoveDirectory(billPath)
+	if err != nil {
+		return err
+	}
+
+	delete(cm.Config.Bills, resourceName)
+
+	return nil
 }
 
+// 创建一个bill。在配置中添加空的bill，创建一个bill目录
 func (bh *BillHandler) create(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+	if cm.IsBillExist(resourceName) {
+		return fmt.Errorf("can't create existed bill [%s]", resourceName)
+	}
 
+	cm.AddBill(resourceName)
+	err := pathutils.CreateBillDir(resourceName)
+	return err
 }
 
+// 主要是修改config中的配置
 func (bh *BillHandler) modify(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
-
+	if resourceName == "" {
+		return fmt.Errorf("please specify bill name")
+	}
+	if !cm.IsBillExist(resourceName) {
+		return fmt.Errorf("bill [%s] doesn't exist", resourceName)
+	}
+	if options.User != "" {
+		bill := cm.GetBillByName(resourceName)
+		bill.User = options.User
+	}
+	return nil
 }
