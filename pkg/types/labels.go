@@ -1,7 +1,9 @@
 package types
 
+type LabelType uint32
+
 const (
-	Food = iota
+	Food LabelType = 1 << iota
 	Clothing
 	Daily
 	Home
@@ -34,7 +36,7 @@ const (
 	Other
 )
 
-var LabelToChinese = map[int]string{
+var LabelToChinese = map[LabelType]string{
 	Food:          "餐饮美食",
 	Clothing:      "服饰装扮",
 	Daily:         "日用百货",
