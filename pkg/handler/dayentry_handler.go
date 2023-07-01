@@ -16,35 +16,35 @@ type DayEntryHandler struct {
 	dayEntry *types.DayEntry
 }
 
-func (dh *DayEntryHandler) Run(op string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (dh *DayEntryHandler) Run(op, resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	var err error
 	switch op {
 	case operation.Get:
-		err = dh.get(resources, cm, options)
+		err = dh.get(resourceName, resources, cm, options)
 	case operation.Delete:
-		err = dh.delete(resources, cm, options)
+		err = dh.delete(resourceName, resources, cm, options)
 	case operation.Create:
-		err = dh.create(resources, cm, options)
+		err = dh.create(resourceName, resources, cm, options)
 	case operation.Modify:
-		err = dh.modify(resources, cm, options)
+		err = dh.modify(resourceName, resources, cm, options)
 	default:
 		err = fmt.Errorf("invalid op [%s] for DayEntryHandler", op)
 	}
 	return err
 }
 
-func (dh *DayEntryHandler) get(resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (dh *DayEntryHandler) get(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 
 }
 
-func (dh *DayEntryHandler) delete(resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (dh *DayEntryHandler) delete(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 
 }
 
-func (dh *DayEntryHandler) create(resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (dh *DayEntryHandler) create(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 
 }
 
-func (dh *DayEntryHandler) modify(resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (dh *DayEntryHandler) modify(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 
 }

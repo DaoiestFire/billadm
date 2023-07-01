@@ -1,11 +1,11 @@
 package pathutils
 
 import (
-	constant "ljw/billadm/const"
 	"os"
 	"os/user"
 	"path"
 
+	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/manager"
 )
 
