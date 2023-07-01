@@ -65,9 +65,21 @@ func (cm *ConfigManager) Save() error {
 
 func (cm *ConfigManager) SetCurrentBillName(name string) error {
 	// 需要判断name存不存在
-	if _, ok := cm.Config.Bills[name]; !ok {
+	if !cm.IsBillExist(name) {
 		return fmt.Errorf("bill [%v] doesn't exist", name)
 	}
 	cm.Config.CurrentBillName = name
 	return nil
+}
+
+func (cm *ConfigManager) IsBillExist(name string) bool {
+	_, ok := cm.Config.Bills[name]
+	return ok
+}
+
+func (cm *ConfigManager) GetBillByName(name string) *types.Bill {
+	if !cm.IsBillExist(name) {
+		return nil
+	}
+	return cm.Config.Bills[name]
 }

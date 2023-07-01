@@ -22,12 +22,13 @@ func NewCommandRegister(opts *options.Options) *CommandRegister {
 	}
 
 	cr.register(Init, NewInitCommand)
+	cr.register(Activate, NewActivateCommand)
 
 	cr.register(Get, NewGetCommand)
 	cr.register(Delete, NewDeleteCommand)
 	cr.register(Create, NewCreateCommand)
 	cr.register(Modify, NewModifyCommand)
-	cr.register(Activate, NewActivateCommand)
+
 	return cr
 }
 

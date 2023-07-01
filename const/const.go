@@ -26,6 +26,6 @@ const (
 
 // log
 const (
-	LogFormat  = "%s [%s] {%s}"
+	LogFormat  = "%s [%s] {%s}\n"
 	TimeFormat = "2006-01-02-15:04:05"
 )

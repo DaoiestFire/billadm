@@ -62,7 +62,7 @@ func (rh *ResourceHandler) Run(op string, args []string, options *cmdoptions.Opt
 	}
 
 	if err != nil {
-		logger.Infof("[%s] resource [%s] failed", op, resourceType)
+		logger.Infof("[%s] resource [%s] failed ---> <%v>", op, resourceType, err)
 	}
 
 	logger.Infof("===end to [%s] resource [%s]===", op, resourceType)
