@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestExsit(t *testing.T) {
+func TestExist(t *testing.T) {
 	if !Exist("./file.go") {
 		t.Fail()
 	}
