@@ -13,7 +13,9 @@ func BillConfigPrint(billConfig *types.BilladmConfig) {
 	fmt.Printf("There is [%d] bill on your computer\n", len(billConfig.Bills))
 
 	if len(billConfig.CurrentBillName) != 0 {
-		fmt.Printf("******current activated bill is [%s]\n", billConfig.CurrentBillName)
+		fmt.Printf("******current activated bill is [%s]******\n", billConfig.CurrentBillName)
+	} else {
+		fmt.Println("!!!No activated bill!!!")
 	}
 }
 
