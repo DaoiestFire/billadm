@@ -1,6 +1,7 @@
 package options
 
 import (
+	"github.com/spf13/pflag"
 	"ljw/billadm/utils/logger"
 	timeutils "ljw/billadm/utils/time"
 	"strings"
@@ -40,4 +41,12 @@ func (op *Options) Refresh() {
 	default:
 		logger.Errorf("invalid Options.Time [%s]", op.Time)
 	}
+}
+
+func (op *Options) ApplyTo(fs *pflag.FlagSet) {
+	fs.StringVar(&op.User, "user", "", "specify user for a bill")
+	fs.StringVar(&op.Time, "time", "", "specify time for day entry")
+	fs.IntVar(&op.Id, "id", 0, "specify id for record")
+	fs.Float32Var(&op.Cost, "cost", 0, "specify cost for record")
+	fs.StringVar(&op.Description, "dsp", "", "specify description for record")
 }

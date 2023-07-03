@@ -15,6 +15,7 @@ func NewBilladmCommand() *cobra.Command {
 
 	opts := &options.Options{}
 	// ApplyTo
+	opts.ApplyTo(cmd.PersistentFlags())
 
 	cr := operation.NewCommandRegister(opts)
 	cr.BindToCommand(cmd)
