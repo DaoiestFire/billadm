@@ -8,7 +8,19 @@ import (
 )
 
 func NewResourceHandler() *ResourceHandler {
-	return &ResourceHandler{}
+	rh := &ResourceHandler{
+		cm:              manager.GetConfigManager(),
+		billHandler:     &BillHandler{},
+		recordHandler:   &RecordHandler{},
+		labelHandler:    &LabelHandler{},
+		dayEntryHandler: &DayEntryHandler{},
+	}
+	rh.resources.billHandler = rh.billHandler
+	rh.resources.recordHandler = rh.recordHandler
+	rh.resources.labelHandler = rh.labelHandler
+	rh.resources.dayEntryHandler = rh.dayEntryHandler
+
+	return rh
 }
 
 // ResourceHandler 资源处理器
@@ -27,10 +39,10 @@ type ResourceHandler struct {
 // Resources 将所有的资源处理函数再保存一遍。传给每一个资源的处理器
 // 这样每一种资源可以方便的使用其他资源的处理器
 type Resources struct {
-	billHandler     *BillHandler
-	recordHandler   *RecordHandler
-	labelHandler    *LabelHandler
-	dayEntryHandler *DayEntryHandler
+	billHandler     IResource
+	recordHandler   IResource
+	labelHandler    IResource
+	dayEntryHandler IResource
 }
 
 // IResource op,资源库，配置控制器，前台选项
