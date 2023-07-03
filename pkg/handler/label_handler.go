@@ -34,8 +34,8 @@ func (lh *LabelHandler) Run(op, resourceName string, resources Resources, cm *ma
 func (lh *LabelHandler) get(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	// 打印所有的label
 	fmt.Println("here is some labels available")
-	for key, label := range types.LabelToChinese {
-		fmt.Printf("%s --> %b\n", label, key)
+	for idx, label := range types.LabelList {
+		fmt.Printf("%d --> %s\n", idx, types.LabelToChinese[label])
 	}
 	return nil
 }

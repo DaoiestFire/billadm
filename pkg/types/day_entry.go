@@ -3,6 +3,7 @@ package types
 import (
 	"encoding/json"
 	"fmt"
+
 	"ljw/billadm/utils/fileutils"
 )
 
@@ -46,8 +47,8 @@ type DayEntry struct {
 	Records   map[string]IRecord `json:"records,omitempty"`
 }
 
-func (d *DayEntry) GetKey(id string) string {
-	return fmt.Sprintf("%s-%s", d.DayTime, id)
+func (d *DayEntry) GetKey(id int) string {
+	return fmt.Sprintf("%s-%03d", d.DayTime, id)
 }
 
 func (d *DayEntry) GetNextId() string {
@@ -65,7 +66,7 @@ func (d *DayEntry) GetRecords() []IRecord {
 	return recordsList
 }
 
-func (d *DayEntry) GetRecordById(id string) (IRecord, error) {
+func (d *DayEntry) GetRecordById(id int) (IRecord, error) {
 	key := d.GetKey(id)
 	r, ok := d.Records[key]
 	if !ok {
@@ -75,12 +76,13 @@ func (d *DayEntry) GetRecordById(id string) (IRecord, error) {
 }
 
 // AddRecord 根据当前的id值创建一个新的record
-func (d *DayEntry) AddRecord() {
+func (d *DayEntry) AddRecord() IRecord {
 	r := NewRecord(d.GetNextId(), d.DayTime)
 	d.Records[r.GetKey()] = r
+	return r
 }
 
-func (d *DayEntry) DeleteRecord(id string) error {
+func (d *DayEntry) DeleteRecord(id int) error {
 	key := d.GetKey(id)
 	_, ok := d.Records[key]
 	if !ok {

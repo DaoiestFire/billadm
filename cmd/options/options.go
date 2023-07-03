@@ -13,6 +13,11 @@ type Options struct {
 	// day entry 2006-01-02 01-02 02
 	// 这个值需要被刷新
 	Time string
+
+	// record
+	Id          int
+	Cost        float32
+	Description string
 }
 
 func (op *Options) Refresh() {

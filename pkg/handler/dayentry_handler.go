@@ -2,13 +2,15 @@ package handler
 
 import (
 	"fmt"
-
 	"path"
 
 	"ljw/billadm/cmd/options"
 	"ljw/billadm/pkg/manager"
 	"ljw/billadm/pkg/operation"
 	"ljw/billadm/pkg/types"
+	"ljw/billadm/utils/fileutils"
+	"ljw/billadm/utils/logger"
+	"ljw/billadm/utils/pathutils"
 	"ljw/billadm/utils/print"
 	"ljw/billadm/utils/time"
 )
@@ -60,13 +62,52 @@ func (dh *DayEntryHandler) get(resourceName string, resources Resources, cm *man
 }
 
 func (dh *DayEntryHandler) delete(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+	// 必须要激活一个bill
+	if cm.Config.CurrentBillName == "" {
+		return fmt.Errorf("please activate a bill first")
+	}
 
+	year, month, _ := time.GetYearMonthDay(options.Time)
+	fileName := fmt.Sprintf("%s.json", options.Time)
+	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
+
+	// 直接删除对应的de
+	err := fileutils.RemoveFileRecursive(dayEntryPath, cm.Config.BillDataDir)
+	if err != nil {
+		logger.Errorf("delete day entry failed ---> <%v>", err)
+	}
+	return nil
 }
 
 func (dh *DayEntryHandler) create(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+	// 必须要激活一个bill
+	if cm.Config.CurrentBillName == "" {
+		return fmt.Errorf("please activate a bill first")
+	}
 
+	year, month, _ := time.GetYearMonthDay(options.Time)
+	fileName := fmt.Sprintf("%s.json", options.Time)
+	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
+
+	// 如果文件存在，就跳过
+	if fileutils.Exist(dayEntryPath) {
+		logger.Infof("day entry [%s] existed", fileName)
+	}
+
+	// 不存在时需要先创建目录
+	err := pathutils.CreateDir(path.Dir(dayEntryPath))
+	if err != nil {
+		return fmt.Errorf("create day entry directory failed ---> <%v>", err)
+	}
+	// 生成新的de,存储到本地
+	de := types.NewDayEntry(options.Time)
+	err = types.SaveOneDayEntry(dayEntryPath, de)
+	if err != nil {
+		return fmt.Errorf("create day entry [%s] failed --> <%v>", dayEntryPath, err)
+	}
+	return nil
 }
 
 func (dh *DayEntryHandler) modify(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
-
+	return nil
 }

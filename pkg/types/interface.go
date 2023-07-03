@@ -12,9 +12,8 @@ type IRecord interface {
 	SetCost(float32)
 	SetDescription(string)
 
-	AddLabel(...string)
-	DeleteLabel(...string)
-	GetLabels() []string
+	GetLabels() LabelType
+	SetLabels(LabelType)
 
 	GetKey() string
 }

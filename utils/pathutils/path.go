@@ -24,10 +24,10 @@ func RemoveDirectory(path string) error {
 func CreateBillDir(name string) error {
 	cm := manager.GetConfigManager()
 	billPath := path.Join(cm.Config.BillDataDir, name)
-	return createDir(billPath)
+	return CreateDir(billPath)
 }
 
-func createDir(path string) error {
+func CreateDir(path string) error {
 	err := os.MkdirAll(path, constant.DirPerm)
 	return err
 }
