@@ -7,7 +7,7 @@ import (
 	"ljw/billadm/cmd/options"
 	"ljw/billadm/pkg/manager"
 	"ljw/billadm/pkg/operation"
-	"ljw/billadm/utils/pathutils"
+	"ljw/billadm/utils/fileutils"
 	"ljw/billadm/utils/print"
 )
 
@@ -64,7 +64,7 @@ func (bh *BillHandler) delete(resourceName string, resources Resources, cm *mana
 	}
 
 	billPath := path.Join(cm.Config.BillDataDir, resourceName)
-	err := pathutils.RemoveDirectory(billPath)
+	err := fileutils.RemoveDirectory(billPath)
 	if err != nil {
 		return err
 	}
@@ -81,7 +81,7 @@ func (bh *BillHandler) create(resourceName string, resources Resources, cm *mana
 	}
 
 	cm.AddBill(resourceName)
-	err := pathutils.CreateBillDir(resourceName)
+	err := fileutils.CreateBillDir(resourceName)
 	return err
 }
 

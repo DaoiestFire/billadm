@@ -10,7 +10,6 @@ import (
 	"ljw/billadm/pkg/types"
 	"ljw/billadm/utils/fileutils"
 	"ljw/billadm/utils/logger"
-	"ljw/billadm/utils/pathutils"
 	"ljw/billadm/utils/print"
 	"ljw/billadm/utils/time"
 )
@@ -93,7 +92,7 @@ func (dh *DayEntryHandler) create(resourceName string, resources Resources, cm *
 	}
 
 	// 不存在时需要先创建目录
-	err := pathutils.CreateDir(path.Dir(dayEntryPath))
+	err := fileutils.CreateDir(path.Dir(dayEntryPath))
 	if err != nil {
 		return fmt.Errorf("create day entry directory failed ---> <%v>", err)
 	}

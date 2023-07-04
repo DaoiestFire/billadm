@@ -3,7 +3,9 @@ package fileutils
 import (
 	"encoding/json"
 	"fmt"
+	"ljw/billadm/pkg/manager"
 	"os"
+	"os/user"
 	"path"
 
 	"ljw/billadm/const"
@@ -75,4 +77,27 @@ func WriteFileString(filePath string, data string) error {
 
 func GenerateJsonData(val any) ([]byte, error) {
 	return json.MarshalIndent(val, "  ", "  ")
+}
+
+func GetHomeDir() string {
+	u, err := user.Current()
+	if err != nil {
+		return "/tmp"
+	}
+	return u.HomeDir
+}
+
+func RemoveDirectory(path string) error {
+	return os.RemoveAll(path)
+}
+
+func CreateBillDir(name string) error {
+	cm := manager.GetConfigManager()
+	billPath := path.Join(cm.Config.BillDataDir, name)
+	return CreateDir(billPath)
+}
+
+func CreateDir(path string) error {
+	err := os.MkdirAll(path, constant.DirPerm)
+	return err
 }

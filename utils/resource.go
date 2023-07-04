@@ -1,8 +1,9 @@
 package utils
 
 import (
-	constant "ljw/billadm/const"
 	"strings"
+
+	constant "ljw/billadm/const"
 )
 
 func IsResourceValid(resourceName string) bool {
