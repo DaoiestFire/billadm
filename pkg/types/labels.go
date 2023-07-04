@@ -71,6 +71,7 @@ var LabelToChinese = map[LabelType]string{
 }
 
 var LabelList = []LabelType{
+	0,
 	Food,
 	Clothing,
 	Daily,

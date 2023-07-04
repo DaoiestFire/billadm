@@ -35,6 +35,9 @@ func (lh *LabelHandler) get(resourceName string, resources Resources, cm *manage
 	// 打印所有的label
 	fmt.Println("here is some labels available")
 	for idx, label := range types.LabelList {
+		if idx == 0 {
+			continue
+		}
 		fmt.Printf("%d --> %s\n", idx, types.LabelToChinese[label])
 	}
 	return nil

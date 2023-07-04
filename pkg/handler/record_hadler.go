@@ -108,9 +108,14 @@ func (rh *RecordHandler) create(resourceName string, resources Resources, cm *ma
 	if options.Cost == 0 {
 		return fmt.Errorf("cost should not be zero when create record")
 	}
+	if options.Label > len(types.LabelList) {
+		return fmt.Errorf("label should not be lager than [%d]", len(types.LabelList))
+	}
 	r.SetCost(options.Cost)
 	// 描述可以是空的
 	r.SetDescription(options.Description)
+	r.SetLabels(types.LabelList[options.Label])
+
 	err = types.SaveOneDayEntry(dayEntryPath, de)
 	if err != nil {
 		return fmt.Errorf("save day entry [%s] failed after delete record [id -> %03d] ---> <%v>", fileName, options.Id, err)
@@ -147,6 +152,12 @@ func (rh *RecordHandler) modify(resourceName string, resources Resources, cm *ma
 	}
 	if options.Description == "" {
 		r.SetDescription(options.Description)
+	}
+	if options.Label > len(types.LabelList) {
+		return fmt.Errorf("label should not be lager than [%d]", len(types.LabelList))
+	}
+	if options.Label != 0 {
+		r.SetLabels(types.LabelList[options.Label])
 	}
 	// 描述可以是空的
 	err = types.SaveOneDayEntry(dayEntryPath, de)

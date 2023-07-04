@@ -21,6 +21,7 @@ type Options struct {
 	Id          int
 	Cost        float32
 	Description string
+	Label       int
 }
 
 func (op *Options) Refresh() {
@@ -51,4 +52,5 @@ func (op *Options) ApplyTo(fs *pflag.FlagSet) {
 	fs.IntVar(&op.Id, "id", 0, "specify id for record")
 	fs.Float32Var(&op.Cost, "cost", 0, "specify cost for record")
 	fs.StringVar(&op.Description, "dsp", "", "specify description for record")
+	fs.IntVar(&op.Label, "label", 0, "specify description for record")
 }
