@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"ljw/billadm/cmd/options"
+	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/manager"
 	"ljw/billadm/utils/logger"
 )
@@ -24,10 +25,10 @@ func NewCommandRegister(opts *options.Options) *CommandRegister {
 	cr.register(Init, NewInitCommand)
 	cr.register(Activate, NewActivateCommand)
 
-	cr.register(Get, NewGetCommand)
-	cr.register(Delete, NewDeleteCommand)
-	cr.register(Create, NewCreateCommand)
-	cr.register(Modify, NewModifyCommand)
+	cr.register(constant.Get, NewGetCommand)
+	cr.register(constant.Delete, NewDeleteCommand)
+	cr.register(constant.Create, NewCreateCommand)
+	cr.register(constant.Modify, NewModifyCommand)
 
 	return cr
 }

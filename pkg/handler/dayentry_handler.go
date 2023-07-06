@@ -2,11 +2,12 @@ package handler
 
 import (
 	"fmt"
+
 	"path"
 
 	"ljw/billadm/cmd/options"
+	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/manager"
-	"ljw/billadm/pkg/operation"
 	"ljw/billadm/pkg/types"
 	"ljw/billadm/utils/fileutils"
 	"ljw/billadm/utils/logger"
@@ -22,13 +23,13 @@ type DayEntryHandler struct {
 func (dh *DayEntryHandler) Run(op, resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	var err error
 	switch op {
-	case operation.Get:
+	case constant.Get:
 		err = dh.get(resourceName, resources, cm, options)
-	case operation.Delete:
+	case constant.Delete:
 		err = dh.delete(resourceName, resources, cm, options)
-	case operation.Create:
+	case constant.Create:
 		err = dh.create(resourceName, resources, cm, options)
-	case operation.Modify:
+	case constant.Modify:
 		err = dh.modify(resourceName, resources, cm, options)
 	default:
 		err = fmt.Errorf("invalid op [%s] for DayEntryHandler", op)

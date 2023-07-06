@@ -31,3 +31,10 @@ const (
 	LogFormat  = "%s [%s] {%s}\n"
 	TimeFormat = "2006-01-02-15:04:05"
 )
+
+const (
+	Get    = "get"
+	Delete = "delete"
+	Create = "create"
+	Modify = "modify"
+)

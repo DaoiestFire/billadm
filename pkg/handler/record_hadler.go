@@ -2,11 +2,12 @@ package handler
 
 import (
 	"fmt"
+
 	"path"
 
 	"ljw/billadm/cmd/options"
+	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/manager"
-	"ljw/billadm/pkg/operation"
 	"ljw/billadm/pkg/types"
 	"ljw/billadm/utils/fileutils"
 	"ljw/billadm/utils/logger"
@@ -21,13 +22,13 @@ type RecordHandler struct {
 func (rh *RecordHandler) Run(op, resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	var err error
 	switch op {
-	case operation.Get:
+	case constant.Get:
 		err = rh.get(resourceName, resources, cm, options)
-	case operation.Delete:
+	case constant.Delete:
 		err = rh.delete(resourceName, resources, cm, options)
-	case operation.Create:
+	case constant.Create:
 		err = rh.create(resourceName, resources, cm, options)
-	case operation.Modify:
+	case constant.Modify:
 		err = rh.modify(resourceName, resources, cm, options)
 	default:
 		err = fmt.Errorf("invalid op [%s] for RecordHandler", op)
@@ -67,7 +68,7 @@ func (rh *RecordHandler) delete(resourceName string, resources Resources, cm *ma
 	}
 
 	if de.Len() == 0 {
-		err = resources.dayEntryHandler.Run(operation.Delete, resourceName, resources, cm, options)
+		err = resources.dayEntryHandler.Run(constant.Delete, resourceName, resources, cm, options)
 		if err != nil {
 			return fmt.Errorf("error after delete record ---> <%v>", err)
 		}
@@ -93,7 +94,7 @@ func (rh *RecordHandler) create(resourceName string, resources Resources, cm *ma
 
 	// 如果文件不存在，就创建de
 	if !fileutils.Exist(dayEntryPath) {
-		err := resources.dayEntryHandler.Run(operation.Create, resourceName, resources, cm, options)
+		err := resources.dayEntryHandler.Run(constant.Create, resourceName, resources, cm, options)
 		if err != nil {
 			return fmt.Errorf("create day entry failed before create record ---> <%v>", err)
 		}

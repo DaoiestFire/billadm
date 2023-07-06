@@ -6,19 +6,16 @@ import (
 	"github.com/spf13/cobra"
 
 	"ljw/billadm/cmd/options"
+	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/handler"
 	"ljw/billadm/utils"
 )
 
-const (
-	Modify = "modify"
-)
-
 func NewModifyCommand(opts *options.Options) *cobra.Command {
 	command := &cobra.Command{
-		Use: Modify,
+		Use: constant.Modify,
 		Run: func(cmd *cobra.Command, args []string) {
-			handler.NewResourceHandler().Run(Modify, args, opts)
+			handler.NewResourceHandler().Run(constant.Modify, args, opts)
 		},
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {

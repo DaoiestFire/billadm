@@ -3,6 +3,7 @@ package manager
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"path"
 	"sync"
 
@@ -27,11 +28,16 @@ func GetConfigManager() *ConfigManager {
 }
 
 func Init() error {
-	cm = &ConfigManager{}
+	cm = &ConfigManager{
+		Config: &types.BilladmConfig{
+			Bills: make(map[string]*types.Bill, 0),
+		},
+	}
 	configPath := path.Join(constant.ConfigurationDir, constant.ConfigurationName)
 	if !fileutils.Exist(configPath) {
 		cm.Config.CreationTime = timeutils.GetNowTimeString()
-		cm.Config.BillDataDir = path.Join(fileutils.GetHomeDir(), constant.BilladmDataDir)
+		home, _ := os.UserHomeDir()
+		cm.Config.BillDataDir = path.Join(home, constant.BilladmDataDir)
 		return nil
 	}
 	data, err := fileutils.ReadFileByte(configPath)

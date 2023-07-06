@@ -2,6 +2,7 @@ package operation
 
 import (
 	"fmt"
+	constant "ljw/billadm/const"
 
 	"github.com/spf13/cobra"
 
@@ -10,15 +11,11 @@ import (
 	"ljw/billadm/utils"
 )
 
-const (
-	Create = "create"
-)
-
 func NewCreateCommand(opts *options.Options) *cobra.Command {
 	command := &cobra.Command{
-		Use: Create,
+		Use: constant.Create,
 		Run: func(cmd *cobra.Command, args []string) {
-			handler.NewResourceHandler().Run(Create, args, opts)
+			handler.NewResourceHandler().Run(constant.Create, args, opts)
 		},
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {
