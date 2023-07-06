@@ -76,6 +76,9 @@ func NewActivateCommand(opts *options.Options) *cobra.Command {
 				logger.Errorf("failed to set CurrentBillName --> <%v>", err)
 				return
 			}
+			if err := cm.Save(); err != nil {
+				logger.Errorf("bill.config save failed ---> <%v>", err)
+			}
 			logger.Infof("set CurrentBillName success")
 		},
 		Args: cobra.ExactArgs(1),
