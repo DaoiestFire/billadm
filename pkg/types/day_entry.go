@@ -77,6 +77,9 @@ func (d *DayEntry) GetRecordById(id int) (IRecord, error) {
 
 // AddRecord 根据当前的id值创建一个新的record
 func (d *DayEntry) AddRecord() IRecord {
+	if d.Records == nil {
+		d.Records = make(map[string]IRecord, 0)
+	}
 	r := NewRecord(d.GetNextId(), d.DayTime)
 	d.Records[r.GetKey()] = r
 	return r
