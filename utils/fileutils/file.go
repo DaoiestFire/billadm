@@ -74,7 +74,7 @@ func WriteFileString(filePath string, data string) error {
 }
 
 func GenerateJsonData(val any) ([]byte, error) {
-	return json.MarshalIndent(val, "  ", "  ")
+	return json.MarshalIndent(val, "", "  ")
 }
 
 func RemoveDirectory(path string) error {
