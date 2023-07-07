@@ -22,7 +22,6 @@ func NewCommandRegister(opts *options.Options) *CommandRegister {
 		opts: opts,
 	}
 
-	cr.register(Init, NewInitCommand)
 	cr.register(Activate, NewActivateCommand)
 
 	cr.register(constant.Get, NewGetCommand)
@@ -44,33 +43,17 @@ func (cr *CommandRegister) BindToCommand(command *cobra.Command) {
 }
 
 const (
-	Init     = "init"
 	Activate = "activate"
 )
-
-// NewInitCommand 初始化bill.config配置文件。没有的配置设置为空串，设置配置文件的创建时间和上次修改时间
-func NewInitCommand(opts *options.Options) *cobra.Command {
-	command := &cobra.Command{
-		Use: Init,
-		Run: func(cmd *cobra.Command, args []string) {
-			cm := manager.GetConfigManager()
-			err := cm.Save()
-			if err != nil {
-				logger.Errorf("failed to init bill.config --> <%v>", err)
-				return
-			}
-			logger.Infof("initialize bill.config success")
-		},
-		Args: cobra.ExactArgs(0),
-	}
-	return command
-}
 
 func NewActivateCommand(opts *options.Options) *cobra.Command {
 	command := &cobra.Command{
 		Use: Activate,
 		Run: func(cmd *cobra.Command, args []string) {
 			cm := manager.GetConfigManager()
+			if !cm.IsBillExist(args[0]) {
+				logger.Errorf("bill [%s] doesn't existed", args[0])
+			}
 			err := cm.SetCurrentBillName(args[0])
 			if err != nil {
 				logger.Errorf("failed to set CurrentBillName --> <%v>", err)
