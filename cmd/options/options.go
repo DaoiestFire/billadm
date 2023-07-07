@@ -31,11 +31,14 @@ func (op *Options) Refresh() {
 	currentMonth := timeutils.GetMonthFromTimeString(currentTime)
 	currentDay := timeutils.GetDayFromTimeString(currentTime)
 
+	if len(op.Time) == 0 {
+		op.Time = strings.Join([]string{currentYear, currentMonth, currentDay}, "-")
+		return
+	}
+
 	lenOfTime := len(strings.Split(op.Time, "-"))
 
 	switch lenOfTime {
-	case 0:
-		op.Time = strings.Join([]string{currentYear, currentMonth, currentDay}, "-")
 	case 1:
 		op.Time = strings.Join([]string{currentYear, currentMonth, op.Time}, "-")
 	case 2:
