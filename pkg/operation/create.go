@@ -2,11 +2,11 @@ package operation
 
 import (
 	"fmt"
-	constant "ljw/billadm/const"
 
 	"github.com/spf13/cobra"
 
 	"ljw/billadm/cmd/options"
+	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/handler"
 	"ljw/billadm/utils"
 )
@@ -18,7 +18,7 @@ func NewCreateCommand(opts *options.Options) *cobra.Command {
 			handler.NewResourceHandler().Run(constant.Create, args, opts)
 		},
 		Args: func(cmd *cobra.Command, args []string) error {
-			if len(args) != 2 {
+			if len(args) < 1 {
 				return fmt.Errorf("len of args not equal zero")
 			}
 			if !utils.IsResourceValid(args[0]) {
