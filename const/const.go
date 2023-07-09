@@ -33,8 +33,9 @@ const (
 )
 
 const (
-	Get    = "get"
-	Delete = "delete"
-	Create = "create"
-	Edit   = "edit"
+	Get      = "get"
+	Create   = "create"
+	Delete   = "delete"
+	Edit     = "edit"
+	Activate = "activate"
 )

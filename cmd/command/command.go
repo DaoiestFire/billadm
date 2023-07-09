@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/cobra"
 
 	"ljw/billadm/cmd/options"
-	"ljw/billadm/pkg/operation"
 )
 
 func NewBilladmCommand() *cobra.Command {
@@ -17,7 +16,7 @@ func NewBilladmCommand() *cobra.Command {
 	// ApplyTo
 	opts.ApplyTo(cmd.PersistentFlags())
 
-	cr := operation.NewCommandRegister(opts)
+	cr := NewCommandRegister(opts)
 	cr.BindToCommand(cmd)
 	return cmd
 }
