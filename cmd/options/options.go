@@ -27,9 +27,7 @@ type Options struct {
 func (op *Options) Refresh() {
 	// Options.Time
 	currentTime := timeutils.GetNowTimeString()
-	currentYear := timeutils.GetYearFromTimeString(currentTime)
-	currentMonth := timeutils.GetMonthFromTimeString(currentTime)
-	currentDay := timeutils.GetDayFromTimeString(currentTime)
+	currentYear, currentMonth, currentDay := timeutils.GetYearMonthDay(currentTime)
 
 	if len(op.Time) == 0 {
 		op.Time = strings.Join([]string{currentYear, currentMonth, currentDay}, "-")

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"os"
 
 	"path"
 
@@ -65,7 +66,7 @@ func (bh *BillHandler) delete(resourceName string, resources Resources, cm *mana
 	}
 
 	billPath := path.Join(cm.Config.BillDataDir, resourceName)
-	err := fileutils.RemoveDirectory(billPath)
+	err := fileutils.RemoveDirectoryOrFile(billPath)
 	if err != nil {
 		return err
 	}
@@ -82,7 +83,10 @@ func (bh *BillHandler) create(resourceName string, resources Resources, cm *mana
 	}
 
 	cm.AddBill(resourceName)
-	err := fileutils.CreateBillDir(resourceName)
+	home, _ := os.UserHomeDir()
+	billDir := path.Join(home, constant.BilladmDataDir)
+	billPath := path.Join(billDir, resourceName)
+	err := fileutils.CreateDirectory(billPath)
 	return err
 }
 

@@ -14,7 +14,12 @@ func Exist(filePath string) bool {
 	return err == nil || os.IsExist(err)
 }
 
-func RemoveFile(filePath string) error {
+func CreateDirectory(path string) error {
+	err := os.MkdirAll(path, constant.DirPerm)
+	return err
+}
+
+func RemoveDirectoryOrFile(filePath string) error {
 	return os.RemoveAll(filePath)
 }
 
@@ -32,7 +37,7 @@ func RemoveFileRecursive(filePath, end string) error {
 	if filePath == end {
 		return nil
 	}
-	err := RemoveFile(filePath)
+	err := RemoveDirectoryOrFile(filePath)
 	if err != nil {
 		return err
 	}
@@ -46,7 +51,7 @@ func RemoveFileRecursive(filePath, end string) error {
 
 func ReadFileByte(filePath string) ([]byte, error) {
 	if !Exist(filePath) {
-		return []byte{}, fmt.Errorf("%s is not exist", filePath)
+		return []byte{}, fmt.Errorf("%s not exist", filePath)
 	}
 
 	return os.ReadFile(filePath)
@@ -59,10 +64,9 @@ func ReadFileString(filePath string) (string, error) {
 
 func WriteFileByte(filePath string, data []byte) error {
 	fileDir := path.Dir(filePath)
-	if !Exist(path.Dir(filePath)) {
-		err := os.MkdirAll(fileDir, constant.DirPerm)
-		if err != nil {
-			return fmt.Errorf("mkdir %s failed", fileDir)
+	if !Exist(fileDir) {
+		if err := CreateDirectory(fileDir); err != nil {
+			return err
 		}
 	}
 
@@ -75,20 +79,4 @@ func WriteFileString(filePath string, data string) error {
 
 func GenerateJsonData(val any) ([]byte, error) {
 	return json.MarshalIndent(val, "", "  ")
-}
-
-func RemoveDirectory(path string) error {
-	return os.RemoveAll(path)
-}
-
-func CreateBillDir(name string) error {
-	home, _ := os.UserHomeDir()
-	billDir := path.Join(home, constant.BilladmDataDir)
-	billPath := path.Join(billDir, name)
-	return CreateDir(billPath)
-}
-
-func CreateDir(path string) error {
-	err := os.MkdirAll(path, constant.DirPerm)
-	return err
 }

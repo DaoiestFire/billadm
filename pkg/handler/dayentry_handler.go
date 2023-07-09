@@ -93,7 +93,7 @@ func (dh *DayEntryHandler) create(resourceName string, resources Resources, cm *
 	}
 
 	// 不存在时需要先创建目录
-	err := fileutils.CreateDir(path.Dir(dayEntryPath))
+	err := fileutils.CreateDirectory(path.Dir(dayEntryPath))
 	if err != nil {
 		return fmt.Errorf("create day entry directory failed ---> <%v>", err)
 	}
