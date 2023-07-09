@@ -1,8 +1,20 @@
 package logger
 
 import (
+	"flag"
+
 	"k8s.io/klog"
 )
+
+func InitLogger(logFile string) {
+	flagSet := flag.NewFlagSet("klog", flag.ExitOnError)
+	klog.InitFlags(flagSet)
+	_ = flagSet.Set("log_file", logFile)
+}
+
+func Flush() {
+	klog.Flush()
+}
 
 func Info(args ...interface{}) {
 	klog.Info(args)
