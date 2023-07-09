@@ -27,7 +27,7 @@ func NewCommandRegister(opts *options.Options) *CommandRegister {
 	cr.register(constant.Get, NewGetCommand)
 	cr.register(constant.Delete, NewDeleteCommand)
 	cr.register(constant.Create, NewCreateCommand)
-	cr.register(constant.Modify, NewModifyCommand)
+	cr.register(constant.Edit, NewEditCommand)
 
 	return cr
 }
