@@ -151,7 +151,7 @@ func (rh *RecordHandler) edit(resourceName string, resources Resources, cm *mana
 	if options.Cost != 0 {
 		r.SetCost(options.Cost)
 	}
-	if options.Description == "" {
+	if options.Description != "" {
 		r.SetDescription(options.Description)
 	}
 	if options.Label > len(types.LabelList) {
