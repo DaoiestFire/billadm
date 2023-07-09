@@ -26,7 +26,7 @@ func (bh *BillHandler) Run(op, resourceName string, resources Resources, cm *man
 		err = bh.delete(resourceName, resources, cm, options)
 	case constant.Create:
 		err = bh.create(resourceName, resources, cm, options)
-	case constant.Modify:
+	case constant.Edit:
 		err = bh.modify(resourceName, resources, cm, options)
 	default:
 		err = fmt.Errorf("invalid op [%s] for BillHandler", op)

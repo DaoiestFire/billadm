@@ -23,8 +23,8 @@ func (lh *LabelHandler) Run(op, resourceName string, resources Resources, cm *ma
 		err = lh.delete(resourceName, resources, cm, options)
 	case constant.Create:
 		err = lh.create(resourceName, resources, cm, options)
-	case constant.Modify:
-		err = lh.modify(resourceName, resources, cm, options)
+	case constant.Edit:
+		err = lh.edit(resourceName, resources, cm, options)
 	default:
 		err = fmt.Errorf("invalid op [%s] for LabelHandler", op)
 	}
@@ -51,6 +51,6 @@ func (lh *LabelHandler) create(resourceName string, resources Resources, cm *man
 	return nil
 }
 
-func (lh *LabelHandler) modify(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (lh *LabelHandler) edit(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	return nil
 }

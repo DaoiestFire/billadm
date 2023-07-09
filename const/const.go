@@ -36,5 +36,5 @@ const (
 	Get    = "get"
 	Delete = "delete"
 	Create = "create"
-	Modify = "modify"
+	Edit   = "edit"
 )

@@ -28,8 +28,8 @@ func (rh *RecordHandler) Run(op, resourceName string, resources Resources, cm *m
 		err = rh.delete(resourceName, resources, cm, options)
 	case constant.Create:
 		err = rh.create(resourceName, resources, cm, options)
-	case constant.Modify:
-		err = rh.modify(resourceName, resources, cm, options)
+	case constant.Edit:
+		err = rh.edit(resourceName, resources, cm, options)
 	default:
 		err = fmt.Errorf("invalid op [%s] for RecordHandler", op)
 	}
@@ -124,7 +124,7 @@ func (rh *RecordHandler) create(resourceName string, resources Resources, cm *ma
 	return nil
 }
 
-func (rh *RecordHandler) modify(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (rh *RecordHandler) edit(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	// 必须要激活一个bill
 	if cm.Config.CurrentBillName == "" {
 		return fmt.Errorf("please activate a bill first")

@@ -29,8 +29,8 @@ func (dh *DayEntryHandler) Run(op, resourceName string, resources Resources, cm 
 		err = dh.delete(resourceName, resources, cm, options)
 	case constant.Create:
 		err = dh.create(resourceName, resources, cm, options)
-	case constant.Modify:
-		err = dh.modify(resourceName, resources, cm, options)
+	case constant.Edit:
+		err = dh.edit(resourceName, resources, cm, options)
 	default:
 		err = fmt.Errorf("invalid op [%s] for DayEntryHandler", op)
 	}
@@ -106,6 +106,6 @@ func (dh *DayEntryHandler) create(resourceName string, resources Resources, cm *
 	return nil
 }
 
-func (dh *DayEntryHandler) modify(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
+func (dh *DayEntryHandler) edit(resourceName string, resources Resources, cm *manager.ConfigManager, options *options.Options) error {
 	return nil
 }
