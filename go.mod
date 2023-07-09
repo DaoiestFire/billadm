@@ -2,8 +2,6 @@ module ljw/billadm
 
 go 1.18
 
-replace k8s.io/apimachinery v0.0.0 => github.com/kubernetes/apimachinery v0.25.3
-
 require (
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
