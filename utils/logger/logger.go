@@ -1,49 +1,29 @@
 package logger
 
 import (
-	"fmt"
-	"time"
-
-	constant "ljw/billadm/const"
-)
-
-const (
-	INFO  = "INFO"
-	WARN  = "WARN"
-	ERROR = "ERROR"
-)
-
-const (
-	LogFormat  = constant.LogFormat
-	TimeFormat = constant.TimeFormat
+	"k8s.io/klog"
 )
 
 func Info(args ...interface{}) {
-	msg := fmt.Sprint(args...)
-	fmt.Printf(LogFormat, INFO, time.Now().Format(TimeFormat), msg)
+	klog.Info(args)
 }
 
 func Infof(format string, args ...interface{}) {
-	msg := fmt.Sprintf(format, args...)
-	fmt.Printf(LogFormat, INFO, time.Now().Format(TimeFormat), msg)
+	klog.Infof(format, args)
 }
 
 func Warn(args ...interface{}) {
-	msg := fmt.Sprint(args...)
-	fmt.Printf(LogFormat, WARN, time.Now().Format(TimeFormat), msg)
+	klog.Warning(args)
 }
 
 func Warnf(format string, args ...interface{}) {
-	msg := fmt.Sprintf(format, args...)
-	fmt.Printf(LogFormat, WARN, time.Now().Format(TimeFormat), msg)
+	klog.Warningf(format, Warn)
 }
 
 func Error(args ...interface{}) {
-	msg := fmt.Sprint(args...)
-	fmt.Printf(LogFormat, ERROR, time.Now().Format(TimeFormat), msg)
+	klog.Error(args)
 }
 
 func Errorf(format string, args ...interface{}) {
-	msg := fmt.Sprintf(format, args...)
-	fmt.Printf(LogFormat, ERROR, time.Now().Format(TimeFormat), msg)
+	klog.Errorf(format, args)
 }
