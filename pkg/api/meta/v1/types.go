@@ -1,0 +1,13 @@
+package v1
+
+type TypeMeta struct {
+	Kind       string `json:"kind,omitempty"`
+	APIVersion string `json:"apiVersion,omitempty"`
+}
+
+type ObjectMeta struct {
+	Name string `json:"name,omitempty"`
+
+	CreationTimestamp string `json:"creationTimestamp,omitempty"`
+	ModifyTimestamp   string `json:"modifyTimestamp,omitempty"`
+}

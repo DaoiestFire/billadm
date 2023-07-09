@@ -30,7 +30,7 @@ func OneBillPrint(bill *types.Bill, detail bool) {
 }
 
 func OneRecordPrint(record types.IRecord) {
-	fmt.Printf("[id -> %s] [cost -> %s] [description -> %s] [consumption time -> %s] [label -> %s]\n",
+	fmt.Printf("[id -> %s] [cost -> %f] [description -> %s] [consumption time -> %s] [label -> %s]\n",
 		record.GetID(),
 		record.GetCost(),
 		record.GetDescription(),
