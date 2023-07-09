@@ -70,7 +70,7 @@ func (dh *DayEntryHandler) delete(resourceName string, resources Resources, cm *
 	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
 
 	// 直接删除对应的de
-	err := fileutils.RemoveFileRecursive(dayEntryPath, cm.Config.BillDataDir)
+	err := fileutils.RemoveFileRecursive(dayEntryPath, path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName))
 	if err != nil {
 		logger.Errorf("delete day entry failed ---> <%v>", err)
 	}
