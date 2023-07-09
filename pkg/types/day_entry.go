@@ -11,7 +11,7 @@ func NewDayEntry(dayTime string) *DayEntry {
 	return &DayEntry{
 		CurrentId: 0,
 		DayTime:   dayTime,
-		Records:   make(map[string]IRecord),
+		Records:   make(map[string]*Record),
 	}
 }
 
@@ -44,7 +44,7 @@ func SaveOneDayEntry(path string, de *DayEntry) error {
 type DayEntry struct {
 	CurrentId uint32             `json:"current_id"`
 	DayTime   string             `json:"day_time"`
-	Records   map[string]IRecord `json:"records,omitempty"`
+	Records   map[string]*Record `json:"records,omitempty"`
 }
 
 func (d *DayEntry) GetKey(id int) string {
@@ -57,8 +57,8 @@ func (d *DayEntry) GetNextId() string {
 	return res
 }
 
-func (d *DayEntry) GetRecords() []IRecord {
-	recordsList := make([]IRecord, 0, d.Len())
+func (d *DayEntry) GetRecords() []*Record {
+	recordsList := make([]*Record, 0, d.Len())
 
 	for _, r := range d.Records {
 		recordsList = append(recordsList, r)
@@ -78,7 +78,7 @@ func (d *DayEntry) GetRecordById(id int) (IRecord, error) {
 // AddRecord 根据当前的id值创建一个新的record
 func (d *DayEntry) AddRecord() IRecord {
 	if d.Records == nil {
-		d.Records = make(map[string]IRecord, 0)
+		d.Records = make(map[string]*Record, 0)
 	}
 	r := NewRecord(d.GetNextId(), d.DayTime)
 	d.Records[r.GetKey()] = r

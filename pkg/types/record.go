@@ -8,7 +8,7 @@ import (
 
 var _ IRecord = &Record{}
 
-func NewRecord(id, consumptionTime string) IRecord {
+func NewRecord(id, consumptionTime string) *Record {
 	return &Record{
 		Id:              id,
 		CreationTime:    timeutils.GetNowTimeString(),
