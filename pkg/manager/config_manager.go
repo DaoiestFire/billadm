@@ -11,7 +11,7 @@ import (
 	"ljw/billadm/pkg/types"
 	"ljw/billadm/utils/fileutils"
 	"ljw/billadm/utils/logger"
-	timeutils "ljw/billadm/utils/time"
+	"ljw/billadm/utils/time"
 )
 
 var cm *ConfigManager
@@ -33,7 +33,7 @@ func Init() error {
 			Bills: make(map[string]*types.Bill, 0),
 		},
 	}
-	configPath := path.Join(constant.ConfigurationDir, constant.ConfigurationName)
+	configPath := path.Join(constant.ConfigDir, constant.ConfigName)
 	if !fileutils.Exist(configPath) {
 		cm.Config.CreationTime = timeutils.GetNowTimeString()
 		home, _ := os.UserHomeDir()
@@ -58,7 +58,7 @@ type ConfigManager struct {
 
 func (cm *ConfigManager) Save() error {
 	cm.Config.LastModifyTime = timeutils.GetNowTimeString()
-	configPath := path.Join(constant.ConfigurationDir, constant.ConfigurationName)
+	configPath := path.Join(constant.ConfigDir, constant.ConfigName)
 
 	data, err := fileutils.GenerateJsonData(cm.Config)
 	if err != nil {

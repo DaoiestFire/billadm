@@ -44,7 +44,7 @@ func (dh *DayEntryHandler) get(resourceName string, resources Resources, cm *man
 		return fmt.Errorf("please activate a bill first")
 	}
 
-	year, month, _ := time.GetYearMonthDay(options.Time)
+	year, month, _ := timeutils.GetYearMonthDay(options.Time)
 	fileName := fmt.Sprintf("%s.json", options.Time)
 	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
 	de, err := types.ReadOneDayEntry(dayEntryPath)
@@ -65,7 +65,7 @@ func (dh *DayEntryHandler) delete(resourceName string, resources Resources, cm *
 		return fmt.Errorf("please activate a bill first")
 	}
 
-	year, month, _ := time.GetYearMonthDay(options.Time)
+	year, month, _ := timeutils.GetYearMonthDay(options.Time)
 	fileName := fmt.Sprintf("%s.json", options.Time)
 	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
 
@@ -83,7 +83,7 @@ func (dh *DayEntryHandler) create(resourceName string, resources Resources, cm *
 		return fmt.Errorf("please activate a bill first")
 	}
 
-	year, month, _ := time.GetYearMonthDay(options.Time)
+	year, month, _ := timeutils.GetYearMonthDay(options.Time)
 	fileName := fmt.Sprintf("%s.json", options.Time)
 	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
 

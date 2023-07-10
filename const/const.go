@@ -11,9 +11,9 @@ const (
 )
 
 const (
-	ConfigurationDir  = "/etc/billadm"
-	ConfigurationName = "billadm.config"
-	BilladmDataDir    = "BilladmData"
+	ConfigDir      = "/etc/billadm"
+	ConfigName     = "billadm.config"
+	BilladmDataDir = "BilladmData"
 
 	DefaultUserName = "default"
 )

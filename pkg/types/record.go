@@ -3,7 +3,7 @@ package types
 import (
 	"fmt"
 
-	timeutils "ljw/billadm/utils/time"
+	"ljw/billadm/utils/time"
 )
 
 var _ IRecord = &Record{}

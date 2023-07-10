@@ -48,7 +48,7 @@ func (rh *RecordHandler) delete(resourceName string, resources Resources, cm *ma
 		return fmt.Errorf("please activate a bill first")
 	}
 
-	year, month, _ := time.GetYearMonthDay(options.Time)
+	year, month, _ := timeutils.GetYearMonthDay(options.Time)
 	fileName := fmt.Sprintf("%s.json", options.Time)
 	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
 
@@ -88,7 +88,7 @@ func (rh *RecordHandler) create(resourceName string, resources Resources, cm *ma
 		return fmt.Errorf("please activate a bill first")
 	}
 
-	year, month, _ := time.GetYearMonthDay(options.Time)
+	year, month, _ := timeutils.GetYearMonthDay(options.Time)
 	fileName := fmt.Sprintf("%s.json", options.Time)
 	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
 
@@ -130,7 +130,7 @@ func (rh *RecordHandler) edit(resourceName string, resources Resources, cm *mana
 		return fmt.Errorf("please activate a bill first")
 	}
 
-	year, month, _ := time.GetYearMonthDay(options.Time)
+	year, month, _ := timeutils.GetYearMonthDay(options.Time)
 	fileName := fmt.Sprintf("%s.json", options.Time)
 	dayEntryPath := path.Join(cm.Config.BillDataDir, cm.Config.CurrentBillName, year, month, fileName)
 

@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/pflag"
 
 	"ljw/billadm/utils/logger"
-	timeutils "ljw/billadm/utils/time"
+	"ljw/billadm/utils/time"
 )
 
 type Options struct {

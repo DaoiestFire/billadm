@@ -1,6 +1,6 @@
 package types
 
-import timeutils "ljw/billadm/utils/time"
+import "ljw/billadm/utils/time"
 
 type Bill struct {
 	Name string `json:"name"`
