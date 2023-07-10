@@ -4,7 +4,7 @@ import (
 	"os"
 )
 
-// file variables
+// file
 const (
 	FilePerm os.FileMode = 0600
 	DirPerm  os.FileMode = 0700
@@ -26,9 +26,7 @@ const (
 	Bill     = "bill"
 )
 
-// log
 const (
-	LogFormat  = "%s [%s] {%s}\n"
 	TimeFormat = "2006-01-02-15:04:05"
 )
 
