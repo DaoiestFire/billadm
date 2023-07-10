@@ -37,3 +37,8 @@ const (
 	Edit     = "edit"
 	Activate = "activate"
 )
+
+const (
+	LogFile         = "log_file"
+	BilladmDataPath = "billadm_data_path"
+)
