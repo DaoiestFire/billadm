@@ -1,7 +1,6 @@
 package configutils
 
 import (
-	"ljw/billadm/utils/fileutils"
 	"os"
 	"path"
 	"sync"
@@ -9,6 +8,7 @@ import (
 	"gopkg.in/ini.v1"
 
 	constant "ljw/billadm/const"
+	"ljw/billadm/utils/fileutils"
 )
 
 var cfg *ini.File

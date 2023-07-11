@@ -28,7 +28,8 @@ func main() {
 
 	cmd := command.NewBilladmCommand()
 	if err := cmd.Execute(); err != nil {
-
+		fmt.Printf("cmd Execute failed --> <%v>\n", err)
+		os.Exit(1)
 	}
 	os.Exit(0)
 }
