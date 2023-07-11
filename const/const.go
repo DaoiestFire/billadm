@@ -14,6 +14,7 @@ const (
 	ConfigDir      = "/etc/billadm"
 	ConfigName     = "billadm.config"
 	BilladmDataDir = "BilladmData"
+	LogFile        = "billadm.log"
 
 	DefaultUserName = "default"
 )
@@ -38,7 +39,8 @@ const (
 	Activate = "activate"
 )
 
+// ini
 const (
-	LogFile         = "log_file"
-	BilladmDataPath = "billadm_data_path"
+	LogFileKey         = "log_file"
+	BilladmDataPathKey = "billadm_data_Path"
 )

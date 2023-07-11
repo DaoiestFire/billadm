@@ -20,8 +20,8 @@ func main() {
 	}
 
 	// 尽早的初始化日志组件
-	logFile := cfg.Section(ini.DefaultSection).Key(constant.LogFile).String()
-	billadmDatePath := cfg.Section(ini.DefaultSection).Key(constant.BilladmDataPath).String()
+	logFile := cfg.Section(ini.DefaultSection).Key(constant.LogFileKey).String()
+	billadmDatePath := cfg.Section(ini.DefaultSection).Key(constant.BilladmDataPathKey).String()
 	logFilePath := path.Join(billadmDatePath, constant.BilladmDataDir, logFile)
 	logger.InitLogger(logFilePath)
 	defer logger.Flush()
