@@ -11,10 +11,11 @@ const (
 )
 
 const (
-	ConfigDir      = "/etc/billadm"
-	ConfigName     = "billadm.config"
-	BilladmDataDir = "BilladmData"
-	LogFile        = "billadm.log"
+	ConfigDir   = "/etc/billadm"
+	ConfigName  = "billadm.config"
+	BilladmData = "BilladmData"
+	LogFile     = "billadm.log"
+	BillConfig  = "bill.json"
 
 	DefaultUserName = "default"
 )

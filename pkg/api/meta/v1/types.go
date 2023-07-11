@@ -1,5 +1,13 @@
 package v1
 
+const (
+	Bill     = "Bill"
+	Record   = "Record"
+	DayEntry = "DayEntry"
+
+	V1 = "v1"
+)
+
 type TypeMeta struct {
 	Kind       string `json:"kind,omitempty"`
 	APIVersion string `json:"apiVersion,omitempty"`

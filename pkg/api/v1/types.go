@@ -34,7 +34,6 @@ type Record struct {
 
 type DayEntrySpec struct {
 	CurrentId uint32             `json:"current_id"`
-	Time      string             `json:"time,omitempty"`
 	Records   map[string]*Record `json:"records,omitempty"`
 }
 

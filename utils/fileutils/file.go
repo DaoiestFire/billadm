@@ -80,3 +80,27 @@ func WriteFileString(filePath string, data string) error {
 func GenerateJsonData(val any) ([]byte, error) {
 	return json.MarshalIndent(val, "", "  ")
 }
+
+func FindAllFileFromDirectory(p string) ([]string, error) {
+	res := make([]string, 0)
+	dirs, err := os.ReadDir(p)
+	if err != nil {
+		return nil, err
+	}
+	if len(dirs) == 0 {
+		return res, nil
+	}
+	for _, dir := range dirs {
+		nextPath := path.Join(p, dir.Name())
+		if dir.IsDir() {
+			nextRes, err := FindAllFileFromDirectory(nextPath)
+			if err != nil {
+				return nil, err
+			}
+			res = append(res, nextRes...)
+		} else {
+			res = append(res, nextPath)
+		}
+	}
+	return res, nil
+}

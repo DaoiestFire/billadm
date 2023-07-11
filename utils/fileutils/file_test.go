@@ -24,3 +24,11 @@ func TestReadFileString(t *testing.T) {
 	}
 	fmt.Println(res)
 }
+
+func TestFindAllFileFromDirectory(t *testing.T) {
+	res, err := FindAllFileFromDirectory("../../testing")
+	if err != nil {
+		t.Fail()
+	}
+	fmt.Println(res)
+}

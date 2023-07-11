@@ -84,7 +84,7 @@ func (bh *BillHandler) create(resourceName string, resources Resources, cm *mana
 
 	cm.AddBill(resourceName)
 	home, _ := os.UserHomeDir()
-	billDir := path.Join(home, constant.BilladmDataDir)
+	billDir := path.Join(home, constant.BilladmData)
 	billPath := path.Join(billDir, resourceName)
 	err := fileutils.CreateDirectory(billPath)
 	return err

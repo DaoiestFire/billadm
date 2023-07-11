@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"gopkg.in/ini.v1"
-	constant "ljw/billadm/const"
-	configutils "ljw/billadm/utils/config"
-	"ljw/billadm/utils/logger"
 	"os"
 	"path"
 
+	"gopkg.in/ini.v1"
+
 	"ljw/billadm/cmd/command"
+	constant "ljw/billadm/const"
+	configutils "ljw/billadm/utils/config"
+	"ljw/billadm/utils/logger"
 )
 
 func main() {
@@ -22,7 +23,7 @@ func main() {
 	// 尽早的初始化日志组件
 	logFile := cfg.Section(ini.DefaultSection).Key(constant.LogFileKey).String()
 	billadmDatePath := cfg.Section(ini.DefaultSection).Key(constant.BilladmDataPathKey).String()
-	logFilePath := path.Join(billadmDatePath, constant.BilladmDataDir, logFile)
+	logFilePath := path.Join(billadmDatePath, constant.BilladmData, logFile)
 	logger.InitLogger(logFilePath)
 	defer logger.Flush()
 
