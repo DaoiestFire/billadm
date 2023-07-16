@@ -5,8 +5,6 @@ import (
 
 	"ljw/billadm/cmd/options"
 	constant "ljw/billadm/const"
-	"ljw/billadm/pkg/manager"
-	"ljw/billadm/pkg/types"
 )
 
 var _ IResource = &LabelHandler{}

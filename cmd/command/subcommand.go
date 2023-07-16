@@ -8,7 +8,6 @@ import (
 	"ljw/billadm/cmd/options"
 	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/handler"
-	"ljw/billadm/pkg/manager"
 	"ljw/billadm/utils"
 	"ljw/billadm/utils/logger"
 )
