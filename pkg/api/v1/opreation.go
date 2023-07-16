@@ -3,6 +3,8 @@ package v1
 import (
 	"encoding/json"
 	"fmt"
+	"ljw/billadm/cmd/options"
+	"ljw/billadm/pkg/storage"
 
 	constant "ljw/billadm/const"
 	metav1 "ljw/billadm/pkg/api/meta/v1"
@@ -21,6 +23,8 @@ type IRecord interface {
 	GetLabel() LabelType
 	SetLabel(LabelType)
 }
+
+var _ IRecord = &Record{}
 
 func NewRecord(id string) *Record {
 	record := &Record{}
@@ -73,6 +77,8 @@ type IBill interface {
 	GetUser() string
 }
 
+var _ IBill = &Bill{}
+
 func NewBill(name string) *Bill {
 	bill := &Bill{}
 	bill.Kind = metav1.Bill
@@ -106,6 +112,8 @@ type IDayEntry interface {
 	DeleteRecord(string) error
 	GetRecord(string) (IRecord, error)
 }
+
+var _ IDayEntry = &DayEntry{}
 
 func NewDayEntry(name string) *DayEntry {
 	de := &DayEntry{}
@@ -152,4 +160,11 @@ func (d *DayEntry) getNextID() string {
 	id := fmt.Sprintf("%03d", d.Spec.CurrentId)
 	d.Spec.CurrentId++
 	return id
+}
+
+type Controller interface {
+	Get(storage *storage.Storage, config *options.Config) error
+	Delete(storage *storage.Storage, config *options.Config) error
+	Create(storage *storage.Storage, config *options.Config) error
+	Edit(storage *storage.Storage, config *options.Config) error
 }

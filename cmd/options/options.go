@@ -24,34 +24,46 @@ type Options struct {
 	Label       int
 }
 
-func (op *Options) Refresh() {
+func (opt *Options) Refresh() {
 	// Options.Time
 	currentTime := timeutils.GetNowTimeString()
 	currentYear, currentMonth, currentDay := timeutils.GetYearMonthDay(currentTime)
 
-	if len(op.Time) == 0 {
-		op.Time = strings.Join([]string{currentYear, currentMonth, currentDay}, "-")
+	if len(opt.Time) == 0 {
+		opt.Time = strings.Join([]string{currentYear, currentMonth, currentDay}, "-")
 		return
 	}
 
-	lenOfTime := len(strings.Split(op.Time, "-"))
+	lenOfTime := len(strings.Split(opt.Time, "-"))
 
 	switch lenOfTime {
 	case 1:
-		op.Time = strings.Join([]string{currentYear, currentMonth, op.Time}, "-")
+		opt.Time = strings.Join([]string{currentYear, currentMonth, opt.Time}, "-")
 	case 2:
-		op.Time = strings.Join([]string{currentYear, op.Time}, "-")
+		opt.Time = strings.Join([]string{currentYear, opt.Time}, "-")
 	case 3:
 	default:
-		logger.Errorf("invalid Options.Time [%s]", op.Time)
+		logger.Errorf("invalid Options.Time [%s]", opt.Time)
 	}
 }
 
-func (op *Options) ApplyTo(fs *pflag.FlagSet) {
-	fs.StringVar(&op.User, "user", "", "specify user for a bill")
-	fs.StringVar(&op.Time, "time", "", "specify time for day entry")
-	fs.IntVar(&op.Id, "id", 0, "specify id for record")
-	fs.Float32Var(&op.Cost, "cost", 0, "specify cost for record")
-	fs.StringVar(&op.Description, "dsp", "", "specify description for record")
-	fs.IntVar(&op.Label, "label", 0, "specify description for record")
+func (opt *Options) ApplyTo(fs *pflag.FlagSet) {
+	fs.StringVar(&opt.User, "user", "", "specify user for a bill")
+	fs.StringVar(&opt.Time, "time", "", "specify time for day entry")
+	fs.IntVar(&opt.Id, "id", 0, "specify id for record")
+	fs.Float32Var(&opt.Cost, "cost", 0, "specify cost for record")
+	fs.StringVar(&opt.Description, "dsp", "", "specify description for record")
+	fs.IntVar(&opt.Label, "label", 0, "specify description for record")
+}
+
+func (opt *Options) Validate(op, resource string) error {
+
+}
+
+func (opt *Options) Config() *Config {
+
+}
+
+type Config string {
+
 }
