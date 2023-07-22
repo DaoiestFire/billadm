@@ -2,11 +2,11 @@ package controller
 
 import (
 	"fmt"
-	"ljw/billadm/utils/view"
 
 	"ljw/billadm/cmd/options"
 	v1 "ljw/billadm/pkg/api/v1"
 	"ljw/billadm/pkg/storage"
+	"ljw/billadm/utils/view"
 )
 
 var _ v1.Controller = &LabelController{}
