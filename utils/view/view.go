@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/liushuochen/gotable"
@@ -78,5 +79,23 @@ func PrintRecords(records []v1.IRecord) error {
 		}
 	}
 	fmt.Println(tb)
+	return nil
+}
+
+func PrintLabels() error {
+	tb, err := gotable.Create("label_id", "label_name")
+	if err != nil {
+		return err
+	}
+
+	for i := 1; i < len(v1.LabelList); i++ {
+		r := make([]string, 0, 2)
+		r = append(r, strconv.Itoa(i))
+		r = append(r, v1.LabelToChinese[v1.LabelList[i]])
+		err = tb.AddRow(r)
+		if err != nil {
+			return err
+		}
+	}
 	return nil
 }
