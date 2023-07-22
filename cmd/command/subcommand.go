@@ -83,6 +83,13 @@ func run(op, resource string, opts *options.Options) {
 		fmt.Printf("GetStorage failed -> <%v>\n", err)
 		return
 	}
+	defer func() {
+		err := st.Finalizer()
+		if err != nil {
+			logger.Errorf("storage finalizer failed -> <%v>", err)
+			fmt.Printf("storage finalizer failed -> <%v>", err)
+		}
+	}()
 
 	//验证opts的有效性
 	err = opts.Validate(op, resource)

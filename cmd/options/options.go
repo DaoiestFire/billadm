@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/pflag"
 
+	v1 "ljw/billadm/pkg/api/v1"
 	"ljw/billadm/utils/logger"
 	"ljw/billadm/utils/time"
 )
@@ -52,8 +53,8 @@ func (opt *Options) Refresh() {
 func (opt *Options) ApplyTo(fs *pflag.FlagSet) {
 	fs.StringVar(&opt.User, "user", "", "specify user for a bill")
 	fs.StringVar(&opt.Time, "time", "", "specify time for day entry")
-	fs.IntVar(&opt.Id, "id", 0, "specify id for record")
-	fs.Float32Var(&opt.Cost, "cost", 0, "specify cost for record")
+	fs.IntVar(&opt.Id, "id", -1, "specify id for record")
+	fs.Float32Var(&opt.Cost, "cost", -1, "specify cost for record")
 	fs.StringVar(&opt.Description, "dsp", "", "specify description for record")
 	fs.IntVar(&opt.Label, "label", 0, "specify description for record")
 }
@@ -74,5 +75,6 @@ type Config struct {
 
 	Cost        float32
 	Description string
-	Label       int
+	Label       v1.LabelType
+	ID          string
 }
