@@ -3,17 +3,19 @@ package v1
 import (
 	"encoding/json"
 	"fmt"
-	"ljw/billadm/cmd/options"
-	"ljw/billadm/pkg/storage"
 
+	"ljw/billadm/cmd/options"
 	constant "ljw/billadm/const"
 	metav1 "ljw/billadm/pkg/api/meta/v1"
+	"ljw/billadm/pkg/storage"
 	"ljw/billadm/utils/fileutils"
 	timeutils "ljw/billadm/utils/time"
 )
 
 type IRecord interface {
 	GetID() string
+	GetCreationTime() string
+	GetModifyTime() string
 	GetConsumptionTime() string
 
 	GetCost() float32
@@ -39,6 +41,14 @@ func NewRecord(id string) *Record {
 
 func (r *Record) GetID() string {
 	return r.Spec.ID
+}
+
+func (r *Record) GetCreationTime() string {
+	return r.CreationTimestamp
+}
+
+func (r *Record) GetModifyTime() string {
+	return r.ModifyTimestamp
 }
 
 func (r *Record) GetConsumptionTime() string {
@@ -111,6 +121,13 @@ type IDayEntry interface {
 	AddRecord() IRecord
 	DeleteRecord(string) error
 	GetRecord(string) (IRecord, error)
+	ListRecords() []IRecord
+
+	GetName() string
+	GetCreationTime() string
+	GetModifyTime() string
+	GetCurrentID() uint32
+	GetLen() int
 }
 
 var _ IDayEntry = &DayEntry{}
@@ -154,6 +171,34 @@ func (d *DayEntry) GetRecord(id string) (IRecord, error) {
 	} else {
 		return r, nil
 	}
+}
+
+func (d *DayEntry) ListRecords() []IRecord {
+	res := make([]IRecord, 0, len(d.Spec.Records))
+	for key := range d.Spec.Records {
+		res = append(res, d.Spec.Records[key])
+	}
+	return res
+}
+
+func (d *DayEntry) GetName() string {
+	return d.Name
+}
+
+func (d *DayEntry) GetCreationTime() string {
+	return d.CreationTimestamp
+}
+
+func (d *DayEntry) GetModifyTime() string {
+	return d.ModifyTimestamp
+}
+
+func (d *DayEntry) GetCurrentID() uint32 {
+	return d.Spec.CurrentId
+}
+
+func (d *DayEntry) GetLen() int {
+	return len(d.Spec.Records)
 }
 
 func (d *DayEntry) getNextID() string {
