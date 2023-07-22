@@ -99,6 +99,15 @@ func (s *Storage) ListAllBill() []v1.IBill {
 	return res
 }
 
+func (s *Storage) ListAllDayEntry() ([]v1.IDayEntry, error) {
+	s.rwMutex.Lock()
+	defer s.rwMutex.Unlock()
+	if s.currentBillName == "" {
+		return nil, fmt.Errorf("please activate a bill")
+	}
+	return s.billMapper[s.currentBillName].ListAllDayEntry(), nil
+}
+
 func (s *Storage) GetRecord(deName, id string) (v1.IRecord, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
@@ -266,27 +275,6 @@ func (b *billManager) getDayEntry(deName string) (v1.IDayEntry, error) {
 		return nil, fmt.Errorf("DayEntry [%s] not exsited", deName)
 	}
 	return b.dayEntryCache[deName], nil
-}
-
-func (b *billManager) getDayEntryToMemory(name string) error {
-	// 如果de不在缓存中,查看文件是否存在。如果不存在就将其读入内存
-	if _, ok := b.dayEntryCache[name]; !ok {
-		y, m, _ := timeutils.GetYearMonthDay(name)
-		dayEntryFilePath := path.Join(b.dataPath, y, m, name+".json")
-		if !fileutils.Exist(dayEntryFilePath) {
-			return fmt.Errorf("DayEntry [%s] not exsited", name)
-		}
-		data, err := fileutils.ReadFileByte(dayEntryFilePath)
-		if err != nil {
-			return err
-		}
-		de := &v1.DayEntry{}
-		if err := de.UnmarshalFrom(data); err != nil {
-			return err
-		}
-		b.dayEntryCache[name] = de
-	}
-	return nil
 }
 
 func (b *billManager) deleteDayEntry(deName string) error {

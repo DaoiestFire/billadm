@@ -17,6 +17,7 @@ type Options struct {
 	// day entry 2006-01-02 01-02 02
 	// 这个值需要被刷新
 	Time string
+	All  bool
 
 	// record
 	Id          int
@@ -68,4 +69,10 @@ func (opt *Options) Config() *Config {
 type Config struct {
 	Name string
 	User string
+	Time string
+	All  bool
+
+	Cost        float32
+	Description string
+	Label       int
 }
