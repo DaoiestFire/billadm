@@ -2,13 +2,14 @@ package view
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/liushuochen/gotable"
 
 	v1 "ljw/billadm/pkg/api/v1"
 )
 
-func PrintBills(bills []*v1.Bill) error {
+func PrintBills(bills []v1.IBill, currentBill string) error {
 	tb, err := gotable.Create("name", "user", "creation_time", "modify_time")
 	if err != nil {
 		return err
@@ -16,10 +17,15 @@ func PrintBills(bills []*v1.Bill) error {
 
 	for _, b := range bills {
 		r := make([]string, 0, 4)
-		r = append(r, b.Name)
-		r = append(r, b.Spec.User)
-		r = append(r, b.CreationTimestamp)
-		r = append(r, b.ModifyTimestamp)
+		if strings.EqualFold(b.GetName(), currentBill) {
+			r = append(r, "*"+b.GetName())
+		} else {
+			r = append(r, b.GetName())
+		}
+
+		r = append(r, b.GetUser())
+		r = append(r, b.GetCreationTime())
+		r = append(r, b.GetModifyTime())
 		err = tb.AddRow(r)
 		if err != nil {
 			return err

@@ -11,6 +11,7 @@ import (
 
 type Options struct {
 	// Bill
+	name string
 	User string
 
 	// day entry 2006-01-02 01-02 02
@@ -64,6 +65,7 @@ func (opt *Options) Config() *Config {
 
 }
 
-type Config string {
-
+type Config struct {
+	Name string
+	User string
 }

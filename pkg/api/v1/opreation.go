@@ -83,6 +83,9 @@ func (r *Record) SetLabel(label LabelType) {
 }
 
 type IBill interface {
+	GetName() string
+	GetCreationTime() string
+	GetModifyTime() string
 	SetUser(user string)
 	GetUser() string
 }
@@ -107,6 +110,18 @@ func (b *Bill) GetUser() string {
 func (b *Bill) SetUser(user string) {
 	b.ModifyTimestamp = timeutils.GetNowTimeString()
 	b.Spec.User = user
+}
+
+func (b *Bill) GetName() string {
+	return b.Name
+}
+
+func (b *Bill) GetCreationTime() string {
+	return b.CreationTimestamp
+}
+
+func (b *Bill) GetModifyTime() string {
+	return b.ModifyTimestamp
 }
 
 func (b *Bill) UnmarshalFrom(data []byte) error {
