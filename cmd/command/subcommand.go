@@ -2,19 +2,19 @@ package command
 
 import (
 	"fmt"
-	v1 "ljw/billadm/pkg/api/v1"
-	"ljw/billadm/pkg/controller"
+
 	"strings"
 
 	"github.com/spf13/cobra"
 
 	"ljw/billadm/cmd/options"
 	constant "ljw/billadm/const"
+	"ljw/billadm/pkg/controller"
 	"ljw/billadm/pkg/storage"
 	"ljw/billadm/utils/logger"
 )
 
-var controllers = map[string]v1.Controller{
+var controllers = map[string]controller.Controller{
 	constant.Bill:     &controller.BillController{},
 	constant.Label:    &controller.LabelController{},
 	constant.DayEntry: &controller.DayEntryController{},
@@ -99,7 +99,12 @@ func run(op, resource string, opts *options.Options) {
 		return
 	}
 
-	cfg := opts.Config()
+	cfg, err := opts.Config()
+	if err != nil {
+		logger.Errorf("transfer to Config failed -> <%v>", err)
+		fmt.Printf("transfer to Config failed -> <%v>", err)
+		return
+	}
 
 	if strings.EqualFold(op, constant.Activate) {
 		err = st.SetCurrentBillName(resource)

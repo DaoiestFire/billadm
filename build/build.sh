@@ -45,11 +45,12 @@ function install() {
 
 function uninstall() {
   if [ -d ${CONFIG_PATH} ]; then
-    rm -r ${CONFIG_PATH}
+    rm -rf ${CONFIG_PATH}
   fi
 
   if [ -f ${INSTALL_PATH}/${EXECUTABLE_NAME} ]; then
-    rm ${INSTALL_PATH}/${EXECUTABLE_NAME}
+    # shellcheck disable=SC2115
+    rm -rf "${INSTALL_PATH}/${EXECUTABLE_NAME}"
   fi
 
   echo "uninstall billadm success"

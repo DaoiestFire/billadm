@@ -2,19 +2,19 @@ package controller
 
 import (
 	"fmt"
-	"ljw/billadm/cmd/options"
+
 	v1 "ljw/billadm/pkg/api/v1"
 	"ljw/billadm/pkg/storage"
 	"ljw/billadm/utils/logger"
 	"ljw/billadm/utils/view"
 )
 
-var _ v1.Controller = &BillController{}
+var _ Controller = &BillController{}
 
 type BillController struct {
 }
 
-func (b *BillController) Get(storage *storage.Storage, config *options.Config) error {
+func (b *BillController) Get(storage *storage.Storage, config *v1.Config) error {
 	bills := storage.ListAllBill()
 	currentBill := storage.GetCurrentBillName()
 	if err := view.PrintBills(bills, currentBill); err != nil {
@@ -24,7 +24,7 @@ func (b *BillController) Get(storage *storage.Storage, config *options.Config) e
 	return nil
 }
 
-func (b *BillController) Create(storage *storage.Storage, config *options.Config) error {
+func (b *BillController) Create(storage *storage.Storage, config *v1.Config) error {
 	if config.Name == "" {
 		return fmt.Errorf("specify [name args] to create bill")
 	}
@@ -35,7 +35,7 @@ func (b *BillController) Create(storage *storage.Storage, config *options.Config
 	return nil
 }
 
-func (b *BillController) Delete(storage *storage.Storage, config *options.Config) error {
+func (b *BillController) Delete(storage *storage.Storage, config *v1.Config) error {
 	if config.Name == "" {
 		return fmt.Errorf("specify [name args] to create bill")
 	}
@@ -46,7 +46,7 @@ func (b *BillController) Delete(storage *storage.Storage, config *options.Config
 	return nil
 }
 
-func (b *BillController) Edit(storage *storage.Storage, config *options.Config) error {
+func (b *BillController) Edit(storage *storage.Storage, config *v1.Config) error {
 	// 如果没有指定正在活动的bill就修改当前bill，如果没有激活的当前bill就报错
 	billName := config.Name
 	if billName == "" {

@@ -3,21 +3,20 @@ package controller
 import (
 	"fmt"
 
-	"ljw/billadm/cmd/options"
 	v1 "ljw/billadm/pkg/api/v1"
 	"ljw/billadm/pkg/storage"
 )
 
-var _ v1.Controller = &RecordController{}
+var _ Controller = &RecordController{}
 
 type RecordController struct {
 }
 
-func (r *RecordController) Get(storage *storage.Storage, config *options.Config) error {
+func (r *RecordController) Get(storage *storage.Storage, config *v1.Config) error {
 	return fmt.Errorf("not supported")
 }
 
-func (r *RecordController) Create(storage *storage.Storage, config *options.Config) error {
+func (r *RecordController) Create(storage *storage.Storage, config *v1.Config) error {
 	record, err := storage.CreateRecord(config.Time)
 	if err != nil {
 		return err
@@ -28,7 +27,7 @@ func (r *RecordController) Create(storage *storage.Storage, config *options.Conf
 	return nil
 }
 
-func (r *RecordController) Delete(storage *storage.Storage, config *options.Config) error {
+func (r *RecordController) Delete(storage *storage.Storage, config *v1.Config) error {
 	err := storage.DeleteRecord(config.Time, config.ID)
 	if err != nil {
 		return err
@@ -36,7 +35,7 @@ func (r *RecordController) Delete(storage *storage.Storage, config *options.Conf
 	return nil
 }
 
-func (r *RecordController) Edit(storage *storage.Storage, config *options.Config) error {
+func (r *RecordController) Edit(storage *storage.Storage, config *v1.Config) error {
 	record, err := storage.GetRecord(config.Time, config.ID)
 	if err != nil {
 		return err

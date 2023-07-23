@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"ljw/billadm/cmd/options"
 	constant "ljw/billadm/const"
 	metav1 "ljw/billadm/pkg/api/meta/v1"
-	"ljw/billadm/pkg/storage"
 	"ljw/billadm/utils/fileutils"
 	timeutils "ljw/billadm/utils/time"
 )
@@ -220,11 +218,4 @@ func (d *DayEntry) getNextID() string {
 	id := fmt.Sprintf("%03d", d.Spec.CurrentId)
 	d.Spec.CurrentId++
 	return id
-}
-
-type Controller interface {
-	Get(storage *storage.Storage, config *options.Config) error
-	Delete(storage *storage.Storage, config *options.Config) error
-	Create(storage *storage.Storage, config *options.Config) error
-	Edit(storage *storage.Storage, config *options.Config) error
 }

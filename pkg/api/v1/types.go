@@ -44,6 +44,18 @@ type DayEntry struct {
 	Spec DayEntrySpec `json:"spec,omitempty"`
 }
 
+type Config struct {
+	Name string
+	User string
+	Time string
+	All  bool
+
+	Cost        float32
+	Description string
+	Label       LabelType
+	ID          string
+}
+
 const (
 	Food LabelType = 1 << iota
 	Clothing
