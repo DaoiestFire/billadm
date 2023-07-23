@@ -10,11 +10,11 @@ import (
 
 	"gopkg.in/ini.v1"
 
+	logger "k8s.io/klog/v2"
 	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/api/v1"
 	configutils "ljw/billadm/utils/config"
 	"ljw/billadm/utils/fileutils"
-	"ljw/billadm/utils/logger"
 	timeutils "ljw/billadm/utils/time"
 )
 
@@ -132,7 +132,7 @@ func (s *Storage) GetBill(name string) (v1.IBill, error) {
 	if _, ok := s.billMapper[name]; !ok {
 		return nil, fmt.Errorf("bill [%s] not existed", name)
 	}
-	return s.billMapper[s.currentBillName].bill, nil
+	return s.billMapper[name].bill, nil
 }
 
 func (s *Storage) DeleteRecord(deName, id string) error {
@@ -345,8 +345,8 @@ func (b *billManager) initializer() error {
 	if err != nil {
 		return err
 	}
-	bill := &v1.Bill{}
-	if err := bill.UnmarshalFrom(data); err != nil {
+	b.bill = &v1.Bill{}
+	if err := b.bill.UnmarshalFrom(data); err != nil {
 		return err
 	}
 	// 创建缓存
@@ -394,7 +394,7 @@ func (b *billManager) finalizer() error {
 	if err != nil {
 		return err
 	}
-	if err := fileutils.WriteFileByte(path.Join(targetPath, b.billName+".json"), data); err != nil {
+	if err := fileutils.WriteFileByte(targetPath, data); err != nil {
 		return err
 	}
 	return nil

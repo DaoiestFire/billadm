@@ -8,7 +8,6 @@ import (
 
 	constant "ljw/billadm/const"
 	v1 "ljw/billadm/pkg/api/v1"
-	"ljw/billadm/utils/logger"
 	"ljw/billadm/utils/time"
 )
 
@@ -29,29 +28,6 @@ type Options struct {
 	Label       int
 }
 
-func (opt *Options) Refresh() {
-	// Options.Time
-	currentTime := timeutils.GetNowTimeString()
-	currentYear, currentMonth, currentDay := timeutils.GetYearMonthDay(currentTime)
-
-	if len(opt.Time) == 0 {
-		opt.Time = strings.Join([]string{currentYear, currentMonth, currentDay}, "-")
-		return
-	}
-
-	lenOfTime := len(strings.Split(opt.Time, "-"))
-
-	switch lenOfTime {
-	case 1:
-		opt.Time = strings.Join([]string{currentYear, currentMonth, opt.Time}, "-")
-	case 2:
-		opt.Time = strings.Join([]string{currentYear, opt.Time}, "-")
-	case 3:
-	default:
-		logger.Errorf("invalid Options.Time [%s]", opt.Time)
-	}
-}
-
 func (opt *Options) ApplyTo(fs *pflag.FlagSet) {
 	fs.StringVar(&opt.name, "name", "", "specify name for a bill")
 	fs.StringVar(&opt.User, "user", "", "specify user for a bill")
@@ -64,6 +40,9 @@ func (opt *Options) ApplyTo(fs *pflag.FlagSet) {
 }
 
 func (opt *Options) Validate(op, resource string) error {
+	if strings.EqualFold(op, constant.Activate) {
+		return nil
+	}
 	if strings.EqualFold(op, constant.Get) {
 		switch resource {
 		case constant.Label:
@@ -143,8 +122,13 @@ func (opt *Options) Config() (*v1.Config, error) {
 	// 刷新id
 	// 刷新label
 	cfg := &v1.Config{
-		ID:    fmt.Sprintf("%03d", opt.Id),
-		Label: v1.LabelList[opt.Label],
+		ID:          fmt.Sprintf("%03d", opt.Id),
+		Label:       v1.LabelList[opt.Label],
+		Name:        opt.name,
+		Cost:        opt.Cost,
+		Description: opt.Description,
+		User:        opt.User,
+		All:         opt.All,
 	}
 
 	y, m, d := timeutils.GetYearMonthDay(timeutils.GetNowTimeString())

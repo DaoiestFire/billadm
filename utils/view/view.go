@@ -97,5 +97,6 @@ func PrintLabels() error {
 			return err
 		}
 	}
+	fmt.Println(tb)
 	return nil
 }

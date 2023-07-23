@@ -12,7 +12,7 @@ import (
 )
 
 var cfg *ini.File
-var once *sync.Once
+var once sync.Once
 
 func GetBilladmConfig() (*ini.File, error) {
 	if cfg != nil {
@@ -22,13 +22,17 @@ func GetBilladmConfig() (*ini.File, error) {
 	once.Do(func() {
 		cfgPath := path.Join(constant.ConfigDir, constant.ConfigName)
 		if !fileutils.Exist(cfgPath) {
-			err = fileutils.CreateDirectory(cfgPath)
+			err = fileutils.CreateDirectory(path.Dir(cfgPath))
 			if err != nil {
 				return
 			}
 			homePath, errTmp := os.UserHomeDir()
 			if errTmp != nil {
 				err = errTmp
+				return
+			}
+			err = fileutils.CreateDirectory(path.Join(homePath, constant.BilladmData))
+			if err != nil {
 				return
 			}
 			cfg = ini.Empty()

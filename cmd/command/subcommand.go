@@ -2,16 +2,15 @@ package command
 
 import (
 	"fmt"
-
 	"strings"
 
 	"github.com/spf13/cobra"
 
+	logger "k8s.io/klog/v2"
 	"ljw/billadm/cmd/options"
 	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/controller"
 	"ljw/billadm/pkg/storage"
-	"ljw/billadm/utils/logger"
 )
 
 var controllers = map[string]controller.Controller{
@@ -47,7 +46,7 @@ func (cr *SubCommandRegister) BindToCommand(command *cobra.Command) {
 			resourceCommand := &cobra.Command{
 				Use: resource,
 				Run: func(cmd *cobra.Command, args []string) {
-					run(op, resource, cr.opts)
+					run(cmd.Parent().Use, cmd.Use, cr.opts)
 				},
 			}
 			cr.opts.ApplyTo(resourceCommand.Flags())
@@ -91,6 +90,16 @@ func run(op, resource string, opts *options.Options) {
 		}
 	}()
 
+	if strings.EqualFold(op, constant.Activate) {
+		err = st.SetCurrentBillName(resource)
+		if err != nil {
+			logger.Errorf("activate current bill failed -> <%v>", err)
+			fmt.Printf("activate current bill failed -> <%v>\n", err)
+			return
+		}
+		return
+	}
+
 	//验证opts的有效性
 	err = opts.Validate(op, resource)
 	if err != nil {
@@ -103,16 +112,6 @@ func run(op, resource string, opts *options.Options) {
 	if err != nil {
 		logger.Errorf("transfer to Config failed -> <%v>", err)
 		fmt.Printf("transfer to Config failed -> <%v>", err)
-		return
-	}
-
-	if strings.EqualFold(op, constant.Activate) {
-		err = st.SetCurrentBillName(resource)
-		if err != nil {
-			logger.Errorf("activate current bill failed -> <%v>", err)
-			fmt.Printf("activate current bill failed -> <%v>\n", err)
-			return
-		}
 		return
 	}
 
@@ -132,7 +131,8 @@ func run(op, resource string, opts *options.Options) {
 
 	if err != nil {
 		logger.Errorf("%s %s failed -> <%v>", op, resource, err)
-		fmt.Printf("%s %s failed -> <%v>", op, resource, err)
+		fmt.Printf("%s %s failed -> <%v>\n", op, resource, err)
 		return
 	}
+	logger.Infof("%s %s success", op, resource)
 }
