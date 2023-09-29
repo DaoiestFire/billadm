@@ -64,6 +64,11 @@ function uninstall() {
   log_info "uninstall billadm success"
 }
 
+function clean() {
+  rm -rf ${INSTALL_PATH}
+  log_info "clean billadm success"
+}
+
 function main() {
   operation=$1
 
@@ -77,6 +82,10 @@ function main() {
   uninstall)
     log_info "start to uninstall billadm ..."
     uninstall
+    ;;
+  clean)
+    log_info "start to clean billadm ..."
+    clean
     ;;
   *)
     log_info "${operation} is not supported"
