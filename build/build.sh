@@ -59,7 +59,8 @@ function install() {
 }
 
 function uninstall() {
-  rm -rf ${INSTALL_PATH}
+  rm -rf ${BIN_PATH}
+  rm -rf ${LOG_PATH}
   log_info "uninstall billadm success"
 }
 

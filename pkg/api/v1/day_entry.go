@@ -43,7 +43,7 @@ func NewDayEntry(name string) *DayEntry {
 	de.Name = name
 	de.CreationTimestamp = timeutils.GetNowTimeString()
 	de.ModifyTimestamp = timeutils.GetNowTimeString()
-	de.Spec.Records = make(map[string]*Record, 0)
+	de.Spec.Records = make(map[string]*Record)
 	return de
 }
 
@@ -57,6 +57,10 @@ func (d *DayEntry) MarshalTo() ([]byte, error) {
 
 func (d *DayEntry) AddRecord() IRecord {
 	r := NewRecord(d.getNextID())
+	if d.Spec.Records == nil {
+		d.Spec.Records = make(map[string]*Record)
+	}
+	d.Spec.Records[r.Spec.ID] = r
 	return r
 }
 
