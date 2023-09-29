@@ -1,34 +1,21 @@
 package configutils
 
 import (
-	"fmt"
-	"path"
-	"sync"
-
-	"gopkg.in/ini.v1"
-
-	constant "ljw/billadm/const"
-	"ljw/billadm/utils/fileutils"
+	"os"
+	"path/filepath"
 )
 
-var cfg *ini.File
-var once sync.Once
+var InstallPath string
 
-func GetBilladmConfig() (*ini.File, error) {
-	if cfg != nil {
-		return cfg, nil
-	}
-	var err error
-	once.Do(func() {
-		cfgPath := path.Join(constant.ConfigDir, constant.ConfigName)
-		if !fileutils.Exist(cfgPath) {
-			err = fmt.Errorf("config file not found: [%s]", cfgPath)
-			return
-		}
-		cfg, err = ini.Load(cfgPath)
-	})
+func init() {
+	currentBinPath, err := os.Executable()
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-	return cfg, nil
+	realBinPath, err := filepath.EvalSymlinks(currentBinPath)
+	if err != nil {
+		panic(err)
+	}
+	realBinDir := filepath.Dir(realBinPath)
+	InstallPath = filepath.Dir(realBinDir)
 }

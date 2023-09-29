@@ -3,14 +3,13 @@ package storage
 import (
 	"fmt"
 	"os"
-	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"sync"
 
-	"gopkg.in/ini.v1"
-
 	logger "k8s.io/klog/v2"
+
 	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/api/v1"
 	configutils "ljw/billadm/utils/config"
@@ -27,19 +26,13 @@ func GetStorage() (*Storage, error) {
 	}
 	var err error
 	once.Do(func() {
-		cfg, errTmp := configutils.GetBilladmConfig()
-		if errTmp != nil {
-			err = errTmp
-			return
-		}
-		billadmDataPath := cfg.Section(ini.DefaultSection).Key(constant.BilladmDataPathKey).String()
-		billadmDataDir := path.Join(billadmDataPath, constant.BilladmData)
+		billadmDataDir := filepath.Join(configutils.InstallPath, constant.Data)
 		storage = &Storage{
 			billadmDataDir: billadmDataDir,
-			billMapper:     make(map[string]*billManager, 0),
+			billMapper:     make(map[string]*billManager),
 		}
 		err = storage.Initializer()
-		currentBillNamePath := path.Join(billadmDataDir, "currentBillName")
+		currentBillNamePath := filepath.Join(billadmDataDir, constant.CurrentBillName)
 		if fileutils.Exist(currentBillNamePath) {
 			res, errTmp := fileutils.ReadFileString(currentBillNamePath)
 			if errTmp != nil {
@@ -178,9 +171,9 @@ func (s *Storage) CreateBill(name string) error {
 	}
 	// 创建一个新的bill
 	s.billMapper[name] = &billManager{
-		dataPath:      path.Join(s.billadmDataDir, name),
+		dataPath:      filepath.Join(s.billadmDataDir, name),
 		billName:      name,
-		dayEntryCache: make(map[string]*v1.DayEntry, 0),
+		dayEntryCache: make(map[string]*v1.DayEntry),
 	}
 	s.billMapper[name].bill = v1.NewBill(name)
 	if err := fileutils.CreateDirectory(s.billMapper[name].dataPath); err != nil {
@@ -221,9 +214,9 @@ func (s *Storage) Initializer() error {
 		}
 		billName := dir.Name()
 		s.billMapper[billName] = &billManager{
-			dataPath:      path.Join(s.billadmDataDir, billName),
+			dataPath:      filepath.Join(s.billadmDataDir, billName),
 			billName:      billName,
-			dayEntryCache: make(map[string]*v1.DayEntry, 0),
+			dayEntryCache: make(map[string]*v1.DayEntry),
 		}
 		if err := s.billMapper[billName].initializer(); err != nil {
 			errMsg := fmt.Errorf("initialize billManager [%s] failed -> <%v>", billName, err)
@@ -242,7 +235,7 @@ func (s *Storage) Finalizer() error {
 			return err
 		}
 	}
-	currentBillNamePath := path.Join(s.billadmDataDir, "currentBillName")
+	currentBillNamePath := filepath.Join(s.billadmDataDir, constant.CurrentBillName)
 	if err := fileutils.WriteFileString(currentBillNamePath, s.currentBillName); err != nil {
 		return err
 	}
@@ -287,7 +280,7 @@ func (b *billManager) deleteDayEntry(deName string) error {
 	delete(b.dayEntryCache, deName)
 	// 删除磁盘中的de文件
 	y, m, _ := timeutils.GetYearMonthDay(deName)
-	dayEntryFilePath := path.Join(b.dataPath, y, m, deName+".json")
+	dayEntryFilePath := filepath.Join(b.dataPath, y, m, deName+".json")
 	if err := fileutils.RemoveFileRecursive(dayEntryFilePath, b.dataPath); err != nil {
 		return err
 	}
@@ -312,7 +305,7 @@ func (b *billManager) createDayEntry(deName string) error {
 	}
 	y, m, _ := timeutils.GetYearMonthDay(deName)
 	b.dayEntryCache[deName] = v1.NewDayEntry(deName)
-	if err := fileutils.CreateDirectory(path.Join(b.dataPath, y, m)); err != nil {
+	if err := fileutils.CreateDirectory(filepath.Join(b.dataPath, y, m)); err != nil {
 		return err
 	}
 	return nil
@@ -340,7 +333,7 @@ func (b *billManager) ListAllDayEntry() []v1.IDayEntry {
 
 func (b *billManager) initializer() error {
 	// 初始化bill配置文件
-	billConfigPath := path.Join(b.dataPath, constant.BillConfig)
+	billConfigPath := filepath.Join(b.dataPath, constant.BillConfig)
 	data, err := fileutils.ReadFileByte(billConfigPath)
 	if err != nil {
 		return err
@@ -375,7 +368,7 @@ func (b *billManager) initializer() error {
 func (b *billManager) finalizer() error {
 	for _, de := range b.dayEntryCache {
 		y, m, _ := timeutils.GetYearMonthDay(de.Name)
-		targetPath := path.Join(b.dataPath, y, m)
+		targetPath := filepath.Join(b.dataPath, y, m)
 		if !fileutils.Exist(targetPath) {
 			if err := fileutils.CreateDirectory(targetPath); err != nil {
 				return err
@@ -385,11 +378,11 @@ func (b *billManager) finalizer() error {
 		if err != nil {
 			return err
 		}
-		if err := fileutils.WriteFileByte(path.Join(targetPath, de.Name+".json"), data); err != nil {
+		if err := fileutils.WriteFileByte(filepath.Join(targetPath, de.Name+".json"), data); err != nil {
 			return err
 		}
 	}
-	targetPath := path.Join(b.dataPath, constant.BillConfig)
+	targetPath := filepath.Join(b.dataPath, constant.BillConfig)
 	data, err := b.bill.MarshalTo()
 	if err != nil {
 		return err

@@ -11,12 +11,16 @@ const (
 )
 
 const (
-	ConfigDir   = "/etc/billadm"
-	ConfigName  = "billadm.config"
-	BilladmData = "BilladmData"
-	LogFile     = "billadm.log"
-	BillConfig  = "bill.json"
+	Bin  = "bin"
+	Data = "data"
+	Log  = "log"
 
+	LogFile         = "billadm.log"
+	BillConfig      = "bill.json"
+	CurrentBillName = "current_bill_name"
+)
+
+const (
 	DefaultUserName = "default"
 )
 
@@ -28,10 +32,7 @@ const (
 	Bill     = "bill"
 )
 
-const (
-	TimeFormat = "2006-01-02-15:04:05"
-)
-
+// sub command
 const (
 	Get      = "get"
 	Create   = "create"
@@ -40,8 +41,6 @@ const (
 	Activate = "activate"
 )
 
-// ini
 const (
-	LogFileKey         = "log_file"
-	BilladmDataPathKey = "billadm_data_Path"
+	TimeFormat = "2006-01-02-15:04:05"
 )

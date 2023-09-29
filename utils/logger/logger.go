@@ -17,19 +17,3 @@ func InitLogger(logFile string) {
 func Flush() {
 	klog.Flush()
 }
-
-func Info(args ...interface{}) {
-	klog.Info(args...)
-}
-
-func Infof(format string, args ...interface{}) {
-	klog.Infof(format, args...)
-}
-
-func Error(args ...interface{}) {
-	klog.Error(args...)
-}
-
-func Errorf(format string, args ...interface{}) {
-	klog.Errorf(format, args...)
-}
