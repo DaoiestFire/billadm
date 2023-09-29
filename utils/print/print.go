@@ -3,10 +3,10 @@ package print
 import (
 	"fmt"
 
-	"ljw/billadm/pkg/types"
+	v1 "ljw/billadm/pkg/api/v1"
 )
 
-func BillConfigPrint(billConfig *types.BilladmConfig) {
+func BillConfigPrint(billConfig *v1.BilladmConfig) {
 	fmt.Printf("data saved in [%s]\n", billConfig.BillDataDir)
 	fmt.Printf("config created at [%s]\n", billConfig.CreationTime)
 	fmt.Printf("config modified at [%s]\n", billConfig.LastModifyTime)

@@ -1,7 +1,7 @@
 package configutils
 
 import (
-	"os"
+	"fmt"
 	"path"
 	"sync"
 
@@ -22,29 +22,7 @@ func GetBilladmConfig() (*ini.File, error) {
 	once.Do(func() {
 		cfgPath := path.Join(constant.ConfigDir, constant.ConfigName)
 		if !fileutils.Exist(cfgPath) {
-			err = fileutils.CreateDirectory(path.Dir(cfgPath))
-			if err != nil {
-				return
-			}
-			homePath, errTmp := os.UserHomeDir()
-			if errTmp != nil {
-				err = errTmp
-				return
-			}
-			err = fileutils.CreateDirectory(path.Join(homePath, constant.BilladmData))
-			if err != nil {
-				return
-			}
-			cfg = ini.Empty()
-			_, err = cfg.Section(ini.DefaultSection).NewKey(constant.LogFileKey, constant.LogFile)
-			if err != nil {
-				return
-			}
-			_, err = cfg.Section(ini.DefaultSection).NewKey(constant.BilladmDataPathKey, homePath)
-			if err != nil {
-				return
-			}
-			err = cfg.SaveTo(cfgPath)
+			err = fmt.Errorf("config file not found: [%s]", cfgPath)
 			return
 		}
 		cfg, err = ini.Load(cfgPath)

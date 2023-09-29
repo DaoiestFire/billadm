@@ -1,60 +1,6 @@
 package v1
 
-import (
-	metav1 "ljw/billadm/pkg/api/meta/v1"
-)
-
-type BillSpec struct {
-	User string `json:"user,omitempty"`
-}
-
-type Bill struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec BillSpec `json:"spec,omitempty"`
-}
-
-type RecordSpec struct {
-	ID              string    `json:"id"`
-	Cost            float32   `json:"cost"`
-	Label           LabelType `json:"label"`
-	Description     string    `json:"description,omitempty"`
-	ConsumptionTime string    `json:"consumptionTime,omitempty"`
-}
-
 type LabelType uint32
-
-type Record struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec RecordSpec `json:"spec,omitempty"`
-}
-
-type DayEntrySpec struct {
-	CurrentId uint32             `json:"current_id"`
-	Records   map[string]*Record `json:"records,omitempty"`
-}
-
-type DayEntry struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec DayEntrySpec `json:"spec,omitempty"`
-}
-
-type Config struct {
-	Name string
-	User string
-	Time string
-	All  bool
-
-	Cost        float32
-	Description string
-	Label       LabelType
-	ID          string
-}
 
 const (
 	Food LabelType = 1 << iota

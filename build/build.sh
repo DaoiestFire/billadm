@@ -8,13 +8,16 @@ readonly CURRENT_PATH=$(
 )
 
 readonly BILLADM_PATH=${CURRENT_PATH}/../cmd
-readonly INSTALL_PATH=/usr/local/bin
-readonly CONFIG_PATH=/etc/billadm
+readonly INSTALL_PATH=/opt/billadm
+readonly CONFIG_PATH=${INSTALL_PATH}/config
+readonly BIN_PATH=${INSTALL_PATH}/bin
+readonly 
 readonly EXECUTABLE_NAME=billadm
 
 function build() {
   cd "${BILLADM_PATH}" || return 1
   rm ${EXECUTABLE_NAME}
+  rm -rf go.sum
   go mod tidy
   go build -ldflags '-s -w' -o ${EXECUTABLE_NAME}
   if [ ! -f ${EXECUTABLE_NAME} ]; then

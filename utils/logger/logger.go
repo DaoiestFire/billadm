@@ -7,7 +7,7 @@ import (
 )
 
 func InitLogger(logFile string) {
-	flagSet := flag.NewFlagSet("klog", flag.ExitOnError)
+	flagSet := flag.NewFlagSet("klog", flag.ContinueOnError)
 	klog.InitFlags(flagSet)
 	flagSet.Set("log_file", logFile)
 	flagSet.Set("logtostderr", "false")
