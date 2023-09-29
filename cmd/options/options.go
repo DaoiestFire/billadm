@@ -65,7 +65,7 @@ func (opt *Options) Validate(op, resource string) error {
 			if opt.Id < 0 {
 				return fmt.Errorf("specify id for [%s %s]", op, resource)
 			}
-			if opt.Label > 0 && opt.Label >= len(v1.LabelList) {
+			if opt.Label <= 0 || opt.Label >= len(v1.LabelList) {
 				return fmt.Errorf("specify id in [1,%d] for [%s %s]", len(v1.LabelList)-1, op, resource)
 			}
 		case constant.DayEntry:
@@ -98,7 +98,7 @@ func (opt *Options) Validate(op, resource string) error {
 			if opt.Id < 0 {
 				return fmt.Errorf("specify id for [%s %s]", op, resource)
 			}
-			if opt.Label > 0 && opt.Label >= len(v1.LabelList) {
+			if opt.Label <= 0 || opt.Label >= len(v1.LabelList) {
 				return fmt.Errorf("specify id in [1,%d] for [%s %s]", len(v1.LabelList)-1, op, resource)
 			}
 		case constant.DayEntry:

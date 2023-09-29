@@ -9,54 +9,58 @@ readonly CURRENT_PATH=$(
 
 readonly BILLADM_PATH=${CURRENT_PATH}/../cmd
 readonly INSTALL_PATH=/opt/billadm
-readonly CONFIG_PATH=${INSTALL_PATH}/config
 readonly BIN_PATH=${INSTALL_PATH}/bin
-readonly 
+readonly DATA_PATH=${INSTALL_PATH}/data
+readonly LOG_PATH=${INSTALL_PATH}/log
 readonly EXECUTABLE_NAME=billadm
 
+function log_info() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')]" "[INFO]" "$@"
+}
+
+function log_error() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')]" "[ERROR]" "$@"
+}
+
 function build() {
-  cd "${BILLADM_PATH}" || return 1
+  cd ${BILLADM_PATH} || return 1
   rm ${EXECUTABLE_NAME}
   rm -rf go.sum
   go mod tidy
   go build -ldflags '-s -w' -o ${EXECUTABLE_NAME}
   if [ ! -f ${EXECUTABLE_NAME} ]; then
-    echo "build ${EXECUTABLE_NAME} failed"
+    log_error "build ${EXECUTABLE_NAME} failed"
     return 1
   fi
-  echo "build ${EXECUTABLE_NAME} success"
+  log_info "build ${EXECUTABLE_NAME} success"
   return 0
 }
 
 function install() {
+  if [ -d ${INSTALL_PATH} ]; then
+    log_error "please uninstall billadm first"
+  fi
+
   if [ -z "${GOROOT}" ]; then
-    echo "please install go environment first"
+    log_error "please install go environment first"
     exit 1
   fi
 
-  build
+  build || exit 1
 
-  if [ $? == 1 ]; then
-    exit 1
-  fi
-  if [ ! -d ${INSTALL_PATH} ]; then
-    mkdir ${INSTALL_PATH}
-  fi
-  cp ${EXECUTABLE_NAME} ${INSTALL_PATH}
+  mkdir -p ${BIN_PATH} || exit 1
+  mkdir -p ${DATA_PATH} || exit 1
+  mkdir -p ${LOG_PATH} || exit 1
 
+  cp ${EXECUTABLE_NAME} ${BIN_PATH}
+  find ${INSTALL_PATH} -type d | xargs -i chmod 750 {}
+  chmod 500 ${BIN_PATH}/${EXECUTABLE_NAME}
+  log_info "install billadm success"
 }
 
 function uninstall() {
-  if [ -d ${CONFIG_PATH} ]; then
-    rm -rf ${CONFIG_PATH}
-  fi
-
-  if [ -f ${INSTALL_PATH}/${EXECUTABLE_NAME} ]; then
-    # shellcheck disable=SC2115
-    rm -rf "${INSTALL_PATH}/${EXECUTABLE_NAME}"
-  fi
-
-  echo "uninstall billadm success"
+  rm -rf ${INSTALL_PATH}
+  log_info "uninstall billadm success"
 }
 
 function main() {
@@ -64,21 +68,23 @@ function main() {
 
   case ${operation} in
   install)
-    echo "start to install billadm ..."
-    echo "uninstall billadm first, user's data won't be removed"
+    log_info "start to install billadm ..."
+    log_info "uninstall billadm first, user's data won't be removed"
     uninstall
     install
     ;;
   uninstall)
-    echo "start to uninstall billadm ..."
+    log_info "start to uninstall billadm ..."
     uninstall
     ;;
   *)
-    echo "${operation} is not supported"
-    echo "supported operation: install/uninstall"
+    log_info "${operation} is not supported"
+    log_info "supported operation: install/uninstall"
     exit 1
     ;;
   esac
 }
 
 main $1
+
+exit 0
