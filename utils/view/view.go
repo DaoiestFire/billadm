@@ -37,7 +37,7 @@ func PrintBills(bills []v1.IBill, currentBill string) error {
 }
 
 func PrintDEs(des []v1.IDayEntry) error {
-	tb, err := gotable.Create("name", "curren_id", "record_nums", "creation_time", "modify_time")
+	tb, err := gotable.Create("name", "current_id", "record_nums", "creation_time", "modify_time")
 	if err != nil {
 		return err
 	}
