@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "ljw/billadm/pkg/service";
+option go_package = "./;service";
 
 service StorageService {
   rpc GetCurrentBillName(GetCurrentBillNameRequest) returns(GetCurrentBillNameResponse){}
