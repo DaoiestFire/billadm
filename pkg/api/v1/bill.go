@@ -25,14 +25,20 @@ type IBill interface {
 	GetName() string
 	GetCreationTime() int64
 	GetModifyTime() int64
-	SetUser(user string)
 	GetUser() string
+	SetUser(string)
+
+	UnmarshalFrom([]byte) error
+	MarshalTo() ([]byte, error)
+
 	ToBillInfo() *service.BillInfo
+
+	Clone() IBill
 }
 
 var _ IBill = &Bill{}
 
-func NewBill(name string) *Bill {
+func NewBill(name string) IBill {
 	bill := &Bill{}
 	bill.Kind = metav1.Bill
 	bill.APIVersion = metav1.V1
@@ -41,15 +47,6 @@ func NewBill(name string) *Bill {
 	bill.ModifyTimestamp = time.Now().Unix()
 	bill.Spec.User = constant.DefaultUserName
 	return bill
-}
-
-func (b *Bill) GetUser() string {
-	return b.Spec.User
-}
-
-func (b *Bill) SetUser(user string) {
-	b.ModifyTimestamp = time.Now().Unix()
-	b.Spec.User = user
 }
 
 func (b *Bill) GetName() string {
@@ -64,6 +61,15 @@ func (b *Bill) GetModifyTime() int64 {
 	return b.ModifyTimestamp
 }
 
+func (b *Bill) GetUser() string {
+	return b.Spec.User
+}
+
+func (b *Bill) SetUser(user string) {
+	b.ModifyTimestamp = time.Now().Unix()
+	b.Spec.User = user
+}
+
 func (b *Bill) ToBillInfo() *service.BillInfo {
 	return &service.BillInfo{
 		TypeMeta: &service.TypeMeta{
@@ -76,6 +82,23 @@ func (b *Bill) ToBillInfo() *service.BillInfo {
 			ModifyTimestamp:   b.ModifyTimestamp,
 		},
 		User: b.Spec.User,
+	}
+}
+
+func (b *Bill) Clone() IBill {
+	return &Bill{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       b.Kind,
+			APIVersion: b.APIVersion,
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:              b.Name,
+			CreationTimestamp: b.CreationTimestamp,
+			ModifyTimestamp:   b.ModifyTimestamp,
+		},
+		Spec: BillSpec{
+			User: b.Spec.User,
+		},
 	}
 }
 

@@ -68,8 +68,8 @@ type Storage struct {
 }
 
 func (s *Storage) GetCurrentBillName(ctx context.Context, request *service.GetCurrentBillNameRequest) (*service.GetCurrentBillNameResponse, error) {
-	s.rwMutex.Lock()
-	defer s.rwMutex.Unlock()
+	s.rwMutex.RLock()
+	defer s.rwMutex.RUnlock()
 	out := new(service.GetCurrentBillNameResponse)
 	out.Name = s.currentBillName
 	return out, nil
@@ -83,20 +83,21 @@ func (s *Storage) SetCurrentBillName(ctx context.Context, request *service.SetCu
 		return nil, nil
 	}
 	if _, ok := s.billMapper[request.Name]; !ok {
-		return nil, fmt.Errorf("bill [%s] not existed", request.Name)
+		return nil, fmt.Errorf("bill [%s] not found", request.Name)
 	}
 	s.currentBillName = request.Name
 	return nil, nil
 }
 
 func (s *Storage) ListAllBill(ctx context.Context, request *service.ListAllBillRequest) (*service.ListAllBillResponse, error) {
-	s.rwMutex.Lock()
-	defer s.rwMutex.Unlock()
+	s.rwMutex.RLock()
+	defer s.rwMutex.RUnlock()
 	out := new(service.ListAllBillResponse)
 	billInfoList := make([]*service.BillInfo, 0, len(s.billMapper))
 	for key := range s.billMapper {
 		billInfoList = append(billInfoList, s.billMapper[key].bill.ToBillInfo())
 	}
+	out.BillList = billInfoList
 	return out, nil
 }
 
@@ -104,7 +105,7 @@ func (s *Storage) GetBill(ctx context.Context, request *service.GetBillRequest) 
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
 	if _, ok := s.billMapper[request.Name]; !ok {
-		return nil, fmt.Errorf("bill [%s] not existed", request.Name)
+		return nil, fmt.Errorf("bill [%s] not found", request.Name)
 	}
 	out := new(service.GetBillResponse)
 	out.Bill = s.billMapper[request.Name].bill.ToBillInfo()
@@ -123,7 +124,7 @@ func (s *Storage) CreateBill(ctx context.Context, request *service.CreateBillReq
 	s.billMapper[name] = &billManager{
 		dataPath:      filepath.Join(s.billadmDataDir, name),
 		billName:      name,
-		dayEntryCache: make(map[string]*v1.DayEntry),
+		dayEntryCache: make(map[string]v1.IDayEntry),
 	}
 	s.billMapper[name].bill = v1.NewBill(name)
 	if err := fileutils.CreateDirectory(s.billMapper[name].dataPath); err != nil {
@@ -137,7 +138,7 @@ func (s *Storage) DeleteBill(ctx context.Context, request *service.DeleteBillReq
 	defer s.rwMutex.Unlock()
 	name := request.Name
 	if _, ok := s.billMapper[name]; !ok {
-		return nil, fmt.Errorf("bill [%s] not existed", name)
+		return nil, fmt.Errorf("bill [%s] not found", name)
 	}
 	if err := fileutils.RemoveDirectoryOrFile(s.billMapper[name].dataPath); err != nil {
 		return nil, err
@@ -150,8 +151,8 @@ func (s *Storage) DeleteBill(ctx context.Context, request *service.DeleteBillReq
 }
 
 func (s *Storage) ListAllDayEntry(ctx context.Context, request *service.ListAllDayEntryRequest) (*service.ListAllDayEntryResponse, error) {
-	s.rwMutex.Lock()
-	defer s.rwMutex.Unlock()
+	s.rwMutex.RLock()
+	defer s.rwMutex.RUnlock()
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -161,6 +162,7 @@ func (s *Storage) ListAllDayEntry(ctx context.Context, request *service.ListAllD
 	for i := range res {
 		dayEntryInfoList = append(dayEntryInfoList, res[i].ToDayEntryInfo())
 	}
+	out.DayEntryList = dayEntryInfoList
 	return out, nil
 }
 
@@ -180,8 +182,8 @@ func (s *Storage) GetDayEntry(ctx context.Context, request *service.GetDayEntryR
 }
 
 func (s *Storage) CreateDayEntry(ctx context.Context, request *service.CreateDayEntryRequest) (*service.CreateDayEntryResponse, error) {
-	s.rwMutex.RLock()
-	defer s.rwMutex.RUnlock()
+	s.rwMutex.Lock()
+	defer s.rwMutex.Unlock()
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -213,8 +215,8 @@ func (s *Storage) GetRecord(ctx context.Context, request *service.GetRecordReque
 }
 
 func (s *Storage) CreateRecord(ctx context.Context, request *service.CreateRecordRequest) (*service.CreateRecordEntryResponse, error) {
-	s.rwMutex.RLock()
-	defer s.rwMutex.RUnlock()
+	s.rwMutex.Lock()
+	defer s.rwMutex.Unlock()
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -227,9 +229,9 @@ func (s *Storage) DeleteRecord(ctx context.Context, request *service.DeleteRecor
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
 	if s.currentBillName == "" {
-		return fmt.Errorf("please activate a bill")
+		return nil, fmt.Errorf("please activate a bill")
 	}
-	return s.billMapper[s.currentBillName].deleteRecord(deName, id)
+	return nil, s.billMapper[s.currentBillName].deleteRecord(request.DayEntryName, request.Id)
 }
 
 // Initializer 初始化Storage
@@ -248,7 +250,7 @@ func (s *Storage) Initializer() error {
 		s.billMapper[billName] = &billManager{
 			dataPath:      filepath.Join(s.billadmDataDir, billName),
 			billName:      billName,
-			dayEntryCache: make(map[string]*v1.DayEntry),
+			dayEntryCache: make(map[string]v1.IDayEntry),
 		}
 		if err := s.billMapper[billName].initializer(); err != nil {
 			errMsg := fmt.Errorf("initialize billManager [%s] failed -> <%v>", billName, err)
@@ -277,16 +279,13 @@ func (s *Storage) Finalizer() error {
 type billManager struct {
 	dataPath      string
 	billName      string
-	bill          *v1.Bill
-	dayEntryCache map[string]*v1.DayEntry
-	mutex         sync.Mutex
+	bill          v1.IBill
+	dayEntryCache map[string]v1.IDayEntry
 }
 
 func (b *billManager) getRecord(deName, id string) (v1.IRecord, error) {
-	b.mutex.Lock()
-	defer b.mutex.Unlock()
 	if _, ok := b.dayEntryCache[deName]; !ok {
-		return nil, fmt.Errorf("DayEntry [%s] not exsited", deName)
+		return nil, fmt.Errorf("DayEntry [%s] not found", deName)
 	}
 	// 查看de中是否存在record
 	de := b.dayEntryCache[deName]
@@ -294,19 +293,15 @@ func (b *billManager) getRecord(deName, id string) (v1.IRecord, error) {
 }
 
 func (b *billManager) getDayEntry(deName string) (v1.IDayEntry, error) {
-	b.mutex.Lock()
-	defer b.mutex.Unlock()
 	if _, ok := b.dayEntryCache[deName]; !ok {
-		return nil, fmt.Errorf("DayEntry [%s] not exsited", deName)
+		return nil, fmt.Errorf("DayEntry [%s] not found", deName)
 	}
 	return b.dayEntryCache[deName], nil
 }
 
 func (b *billManager) deleteDayEntry(deName string) error {
-	b.mutex.Lock()
-	defer b.mutex.Unlock()
 	if _, ok := b.dayEntryCache[deName]; !ok {
-		return fmt.Errorf("DayEntry [%s] not exsited", deName)
+		return fmt.Errorf("DayEntry [%s] not found", deName)
 	}
 	// 删除内存中的de缓存
 	delete(b.dayEntryCache, deName)
@@ -320,18 +315,14 @@ func (b *billManager) deleteDayEntry(deName string) error {
 }
 
 func (b *billManager) deleteRecord(deName, id string) error {
-	b.mutex.Lock()
-	defer b.mutex.Unlock()
 	if _, ok := b.dayEntryCache[deName]; !ok {
-		return fmt.Errorf("DayEntry [%s] not exsited", deName)
+		return fmt.Errorf("DayEntry [%s] not found", deName)
 	}
 	de := b.dayEntryCache[deName]
 	return de.DeleteRecord(id)
 }
 
 func (b *billManager) createDayEntry(deName string) error {
-	b.mutex.Lock()
-	defer b.mutex.Unlock()
 	if _, ok := b.dayEntryCache[deName]; ok {
 		return fmt.Errorf("DayEntry [%s] exsited", deName)
 	}
@@ -343,11 +334,10 @@ func (b *billManager) createDayEntry(deName string) error {
 	return nil
 }
 
-func (b *billManager) createRecord(record *v1.IRecord) error {
-	b.mutex.Lock()
-	defer b.mutex.Unlock()
+func (b *billManager) createRecord(record v1.IRecord) error {
+	deName := record.GetDayEntryName()
 	if _, ok := b.dayEntryCache[deName]; !ok {
-		return fmt.Errorf("DayEntry [%s] not exsited", deName)
+		return fmt.Errorf("DayEntry [%s] not found", deName)
 	}
 	de := b.dayEntryCache[deName]
 	de.AddRecord(record)
@@ -355,8 +345,6 @@ func (b *billManager) createRecord(record *v1.IRecord) error {
 }
 
 func (b *billManager) ListAllDayEntry() []v1.IDayEntry {
-	b.mutex.Lock()
-	defer b.mutex.Unlock()
 	res := make([]v1.IDayEntry, 0, len(b.dayEntryCache))
 	for key := range b.dayEntryCache {
 		res = append(res, b.dayEntryCache[key])
@@ -400,7 +388,7 @@ func (b *billManager) initializer() error {
 // 终止程序时执行，将内存中的数据刷回磁盘。会有Storage的Finalizer调用
 func (b *billManager) finalizer() error {
 	for _, de := range b.dayEntryCache {
-		y, m, _ := timeutils.GetYearMonthDay(de.Name)
+		y, m, _ := timeutils.GetYearMonthDay(de.GetName())
 		targetPath := filepath.Join(b.dataPath, y, m)
 		if !fileutils.Exist(targetPath) {
 			if err := fileutils.CreateDirectory(targetPath); err != nil {
@@ -411,7 +399,7 @@ func (b *billManager) finalizer() error {
 		if err != nil {
 			return err
 		}
-		if err := fileutils.WriteFileByte(filepath.Join(targetPath, de.Name+".json"), data); err != nil {
+		if err := fileutils.WriteFileByte(filepath.Join(targetPath, de.GetName()+".json"), data); err != nil {
 			return err
 		}
 	}

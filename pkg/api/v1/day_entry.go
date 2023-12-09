@@ -39,11 +39,13 @@ type IDayEntry interface {
 
 	ToDayEntryInfo() *service.DayEntryInfo
 	FromDayEntryInfo(*service.DayEntryInfo)
+
+	Clone() IDayEntry
 }
 
 var _ IDayEntry = &DayEntry{}
 
-func NewDayEntry(name string) *DayEntry {
+func NewDayEntry(name string) IDayEntry {
 	de := &DayEntry{}
 	de.Kind = metav1.DayEntry
 	de.APIVersion = metav1.V1
@@ -79,7 +81,7 @@ func (d *DayEntry) AddRecord(record IRecord) {
 
 func (d *DayEntry) DeleteRecord(name string) error {
 	if _, ok := d.Spec.Records[name]; !ok {
-		return fmt.Errorf("record [%s] not existed", name)
+		return fmt.Errorf("record [%s] not found", name)
 	}
 	delete(d.Spec.Records, name)
 	return nil
@@ -88,7 +90,7 @@ func (d *DayEntry) DeleteRecord(name string) error {
 // GetRecord 获取已存在record的复制
 func (d *DayEntry) GetRecord(name string) (IRecord, error) {
 	if r, ok := d.Spec.Records[name]; !ok {
-		return nil, fmt.Errorf("record [%s] not existed", name)
+		return nil, fmt.Errorf("record [%s] not found", name)
 	} else {
 		return r.Clone(), nil
 	}
@@ -149,6 +151,24 @@ func (d *DayEntry) FromDayEntryInfo(info *service.DayEntryInfo) {
 	recordMap := RecordMap{}
 	recordMap.FromRecordInfoMap(info.RecordMap)
 	d.Spec.Records = recordMap
+}
+
+func (d *DayEntry) Clone() IDayEntry {
+	return &DayEntry{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       d.Kind,
+			APIVersion: d.APIVersion,
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:              d.Name,
+			CreationTimestamp: d.CreationTimestamp,
+			ModifyTimestamp:   d.ModifyTimestamp,
+		},
+		Spec: DayEntrySpec{
+			CurrentId: d.Spec.CurrentId,
+			Records:   d.Spec.Records.Clone(),
+		},
+	}
 }
 
 func (d *DayEntry) getNextName() string {

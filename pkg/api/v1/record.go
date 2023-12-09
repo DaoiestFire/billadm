@@ -26,6 +26,14 @@ func (recordMap RecordMap) FromRecordInfoMap(recordInfoMap map[string]*service.R
 	}
 }
 
+func (recordMap RecordMap) Clone() RecordMap {
+	ret := RecordMap{}
+	for key := range recordMap {
+		ret[key] = recordMap[key].Clone()
+	}
+	return ret
+}
+
 type RecordSpec struct {
 	Id              string    `json:"id"`
 	Cost            float32   `json:"cost"`
