@@ -92,33 +92,6 @@ func (s *Storage) ListAllBill() []v1.IBill {
 	return res
 }
 
-func (s *Storage) ListAllDayEntry() ([]v1.IDayEntry, error) {
-	s.rwMutex.Lock()
-	defer s.rwMutex.Unlock()
-	if s.currentBillName == "" {
-		return nil, fmt.Errorf("please activate a bill")
-	}
-	return s.billMapper[s.currentBillName].ListAllDayEntry(), nil
-}
-
-func (s *Storage) GetRecord(deName, id string) (v1.IRecord, error) {
-	s.rwMutex.RLock()
-	defer s.rwMutex.RUnlock()
-	if s.currentBillName == "" {
-		return nil, fmt.Errorf("please activate a bill")
-	}
-	return s.billMapper[s.currentBillName].getRecord(deName, id)
-}
-
-func (s *Storage) GetDayEntry(name string) (v1.IDayEntry, error) {
-	s.rwMutex.RLock()
-	defer s.rwMutex.RUnlock()
-	if s.currentBillName == "" {
-		return nil, fmt.Errorf("please activate a bill")
-	}
-	return s.billMapper[s.currentBillName].getDayEntry(name)
-}
-
 func (s *Storage) GetBill(name string) (v1.IBill, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
@@ -126,40 +99,6 @@ func (s *Storage) GetBill(name string) (v1.IBill, error) {
 		return nil, fmt.Errorf("bill [%s] not existed", name)
 	}
 	return s.billMapper[name].bill, nil
-}
-
-func (s *Storage) DeleteRecord(deName, id string) error {
-	s.rwMutex.RLock()
-	defer s.rwMutex.RUnlock()
-	if s.currentBillName == "" {
-		return fmt.Errorf("please activate a bill")
-	}
-	return s.billMapper[s.currentBillName].deleteRecord(deName, id)
-}
-
-func (s *Storage) DeleteDayEntry(name string) error {
-	s.rwMutex.RLock()
-	defer s.rwMutex.RUnlock()
-	if s.currentBillName == "" {
-		return fmt.Errorf("please activate a bill")
-	}
-	return s.billMapper[s.currentBillName].deleteDayEntry(name)
-}
-
-func (s *Storage) DeleteBill(name string) error {
-	s.rwMutex.Lock()
-	defer s.rwMutex.Unlock()
-	if _, ok := s.billMapper[name]; !ok {
-		return fmt.Errorf("bill [%s] not existed", name)
-	}
-	if err := fileutils.RemoveDirectoryOrFile(s.billMapper[name].dataPath); err != nil {
-		return err
-	}
-	delete(s.billMapper, name)
-	if strings.EqualFold(name, s.currentBillName) {
-		s.currentBillName = ""
-	}
-	return nil
 }
 
 func (s *Storage) CreateBill(name string) error {
@@ -182,6 +121,40 @@ func (s *Storage) CreateBill(name string) error {
 	return nil
 }
 
+func (s *Storage) DeleteBill(name string) error {
+	s.rwMutex.Lock()
+	defer s.rwMutex.Unlock()
+	if _, ok := s.billMapper[name]; !ok {
+		return fmt.Errorf("bill [%s] not existed", name)
+	}
+	if err := fileutils.RemoveDirectoryOrFile(s.billMapper[name].dataPath); err != nil {
+		return err
+	}
+	delete(s.billMapper, name)
+	if strings.EqualFold(name, s.currentBillName) {
+		s.currentBillName = ""
+	}
+	return nil
+}
+
+func (s *Storage) ListAllDayEntry() ([]v1.IDayEntry, error) {
+	s.rwMutex.Lock()
+	defer s.rwMutex.Unlock()
+	if s.currentBillName == "" {
+		return nil, fmt.Errorf("please activate a bill")
+	}
+	return s.billMapper[s.currentBillName].ListAllDayEntry(), nil
+}
+
+func (s *Storage) GetDayEntry(name string) (v1.IDayEntry, error) {
+	s.rwMutex.RLock()
+	defer s.rwMutex.RUnlock()
+	if s.currentBillName == "" {
+		return nil, fmt.Errorf("please activate a bill")
+	}
+	return s.billMapper[s.currentBillName].getDayEntry(name)
+}
+
 func (s *Storage) CreateDayEntry(name string) error {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
@@ -191,6 +164,24 @@ func (s *Storage) CreateDayEntry(name string) error {
 	return s.billMapper[s.currentBillName].createDayEntry(name)
 }
 
+func (s *Storage) DeleteDayEntry(name string) error {
+	s.rwMutex.RLock()
+	defer s.rwMutex.RUnlock()
+	if s.currentBillName == "" {
+		return fmt.Errorf("please activate a bill")
+	}
+	return s.billMapper[s.currentBillName].deleteDayEntry(name)
+}
+
+func (s *Storage) GetRecord(deName, id string) (v1.IRecord, error) {
+	s.rwMutex.RLock()
+	defer s.rwMutex.RUnlock()
+	if s.currentBillName == "" {
+		return nil, fmt.Errorf("please activate a bill")
+	}
+	return s.billMapper[s.currentBillName].getRecord(deName, id)
+}
+
 func (s *Storage) CreateRecord(name string) (v1.IRecord, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
@@ -198,6 +189,15 @@ func (s *Storage) CreateRecord(name string) (v1.IRecord, error) {
 		return nil, fmt.Errorf("please activate a bill")
 	}
 	return s.billMapper[s.currentBillName].createRecord(name)
+}
+
+func (s *Storage) DeleteRecord(deName, id string) error {
+	s.rwMutex.RLock()
+	defer s.rwMutex.RUnlock()
+	if s.currentBillName == "" {
+		return fmt.Errorf("please activate a bill")
+	}
+	return s.billMapper[s.currentBillName].deleteRecord(deName, id)
 }
 
 // Initializer 初始化Storage

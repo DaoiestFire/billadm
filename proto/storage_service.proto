@@ -1,0 +1,151 @@
+syntax = "proto3";
+option go_package = "ljw/billadm/pkg/service";
+
+service StorageService {
+  rpc GetCurrentBillName(GetCurrentBillNameRequest) returns(GetCurrentBillNameResponse){}
+  rpc SetCurrentBillName(SetCurrentBillNameRequest) returns(SetCurrentBillNameResponse){}
+  rpc ListAllBill(ListAllBillRequest) returns(ListAllBillResponse){}
+  rpc GetBill(GetBillRequest) returns(GetBillResponse){}
+  rpc CreateBill(CreateBillRequest) returns(CreateBillResponse){}
+  rpc DeleteBill(DeleteBillRequest) returns(DeleteBillResponse){}
+
+  rpc ListAllDayEntry(ListAllDayEntryRequest) returns(ListAllDayEntryResponse){}
+  rpc GetDayEntry(GetDayEntryRequest) returns(GetDayEntryResponse){}
+  rpc CreateDayEntry(CreateDayEntryRequest) returns(CreateDayEntryResponse){}
+  rpc DeleteDayEntry(DeleteDayEntryRequest) returns(DeleteDayEntryResponse){}
+
+  rpc GetRecord(GetRecordRequest) returns(GetRecordResponse){}
+  rpc CreateRecord(CreateRecordRequest) returns(CreateRecordEntryResponse){}
+  rpc DeleteRecord(DeleteRecordRequest) returns(DeleteRecordResponse){}
+}
+
+message GetCurrentBillNameRequest {
+}
+
+message GetCurrentBillNameResponse{
+  string name = 1;
+}
+
+message SetCurrentBillNameRequest {
+  string name = 1;
+}
+
+message SetCurrentBillNameResponse{
+}
+
+message ListAllBillRequest {
+}
+
+message ListAllBillResponse{
+  repeated BillInfo bill_list = 1;
+}
+
+message GetBillRequest {
+  string name = 1;
+}
+
+message GetBillResponse{
+  BillInfo bill = 1;
+}
+
+message CreateBillRequest {
+  string name = 1;
+}
+
+message CreateBillResponse{
+
+}
+
+message DeleteBillRequest {
+  string name = 1;
+}
+
+message DeleteBillResponse{
+}
+
+message ListAllDayEntryRequest {
+}
+
+message ListAllDayEntryResponse{
+  repeated DayEntryInfo day_entry_list = 1;
+}
+
+message GetDayEntryRequest {
+  string name = 1;
+}
+
+message GetDayEntryResponse{
+  DayEntryInfo day_entry = 1;
+}
+
+message CreateDayEntryRequest {
+  DayEntryInfo day_entry = 1;
+}
+
+message CreateDayEntryResponse{
+}
+
+message DeleteDayEntryRequest {
+  string name = 1;
+}
+
+message DeleteDayEntryResponse{
+}
+
+message GetRecordRequest {
+  string day_entry_name = 1;
+  string id = 2;
+}
+
+message GetRecordResponse{
+  RecordInfo record = 1;
+}
+
+message CreateRecordRequest {
+  RecordInfo record = 1;
+}
+
+message CreateRecordEntryResponse{
+}
+
+message DeleteRecordRequest {
+  string day_entry_name = 1;
+  string id = 2;
+}
+
+message DeleteRecordResponse{
+}
+
+message BillInfo{
+  TypeMeta type_meta = 1;
+  ObjectMeta object_meta = 2;
+  string user = 3;
+}
+
+message DayEntryInfo{
+  TypeMeta type_meta = 1;
+  ObjectMeta object_meta = 2;
+  uint32 current_id = 3;
+  map<string, RecordInfo> record_map = 4;
+}
+
+message RecordInfo{
+  TypeMeta type_meta = 1;
+  ObjectMeta object_meta = 2;
+  string id = 3;
+  float cost = 4;
+  uint32 label = 5;
+  string description = 6;
+  int64 consumption_time = 7;
+}
+
+message TypeMeta{
+  string kind = 1;
+  string api_version = 2;
+}
+
+message ObjectMeta{
+  string name = 1;
+  int64 creation_timestamp = 2;
+  int64 modify_timestamp = 3;
+}
