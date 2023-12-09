@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -11,11 +12,14 @@ import (
 	logger "k8s.io/klog/v2"
 
 	constant "ljw/billadm/const"
+	"ljw/billadm/pkg/api/service"
 	"ljw/billadm/pkg/api/v1"
 	configutils "ljw/billadm/utils/config"
 	"ljw/billadm/utils/fileutils"
 	timeutils "ljw/billadm/utils/time"
 )
+
+var _ service.StorageServiceServer = &Storage{}
 
 var storage *Storage
 var once sync.Once
@@ -40,7 +44,7 @@ func GetStorage() (*Storage, error) {
 				return
 			}
 			res = strings.TrimSpace(res)
-			err = storage.SetCurrentBillName(res)
+			_, err = storage.SetCurrentBillName(context.Background(), &service.SetCurrentBillNameRequest{Name: res})
 		}
 	})
 	if err != nil {
@@ -55,6 +59,7 @@ func GetStorage() (*Storage, error) {
 // 硬盘操作较多，简化逻辑
 
 type Storage struct {
+	service.UnimplementedStorageServiceServer
 	billadmDataDir string
 	// currentBillName的bill必然是存在的
 	currentBillName string
@@ -62,51 +67,57 @@ type Storage struct {
 	rwMutex         sync.RWMutex
 }
 
-func (s *Storage) GetCurrentBillName() string {
+func (s *Storage) GetCurrentBillName(ctx context.Context, request *service.GetCurrentBillNameRequest) (*service.GetCurrentBillNameResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
-	return s.currentBillName
+	out := new(service.GetCurrentBillNameResponse)
+	out.Name = s.currentBillName
+	return out, nil
 }
 
-func (s *Storage) SetCurrentBillName(name string) error {
+func (s *Storage) SetCurrentBillName(ctx context.Context, request *service.SetCurrentBillNameRequest) (*service.SetCurrentBillNameResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
-	if name == "" {
+	if request.Name == "" {
 		s.currentBillName = ""
-		return nil
+		return nil, nil
 	}
-	if _, ok := s.billMapper[name]; !ok {
-		return fmt.Errorf("bill [%s] not existed", name)
+	if _, ok := s.billMapper[request.Name]; !ok {
+		return nil, fmt.Errorf("bill [%s] not existed", request.Name)
 	}
-	s.currentBillName = name
-	return nil
+	s.currentBillName = request.Name
+	return nil, nil
 }
 
-func (s *Storage) ListAllBill() []v1.IBill {
+func (s *Storage) ListAllBill(ctx context.Context, request *service.ListAllBillRequest) (*service.ListAllBillResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
-	res := make([]v1.IBill, 0, len(s.billMapper))
+	out := new(service.ListAllBillResponse)
+	billInfoList := make([]*service.BillInfo, 0, len(s.billMapper))
 	for key := range s.billMapper {
-		res = append(res, s.billMapper[key].bill)
+		billInfoList = append(billInfoList, s.billMapper[key].bill.ToBillInfo())
 	}
-	return res
+	return out, nil
 }
 
-func (s *Storage) GetBill(name string) (v1.IBill, error) {
+func (s *Storage) GetBill(ctx context.Context, request *service.GetBillRequest) (*service.GetBillResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
-	if _, ok := s.billMapper[name]; !ok {
-		return nil, fmt.Errorf("bill [%s] not existed", name)
+	if _, ok := s.billMapper[request.Name]; !ok {
+		return nil, fmt.Errorf("bill [%s] not existed", request.Name)
 	}
-	return s.billMapper[name].bill, nil
+	out := new(service.GetBillResponse)
+	out.Bill = s.billMapper[request.Name].bill.ToBillInfo()
+	return out, nil
 }
 
-func (s *Storage) CreateBill(name string) error {
+func (s *Storage) CreateBill(ctx context.Context, request *service.CreateBillRequest) (*service.CreateBillResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
+	name := request.Name
 	// 如果没有被标记未删除且bill存在，则报错
 	if _, ok := s.billMapper[name]; ok {
-		return fmt.Errorf("bill [%s] existed", name)
+		return nil, fmt.Errorf("bill [%s] existed", name)
 	}
 	// 创建一个新的bill
 	s.billMapper[name] = &billManager{
@@ -116,82 +127,103 @@ func (s *Storage) CreateBill(name string) error {
 	}
 	s.billMapper[name].bill = v1.NewBill(name)
 	if err := fileutils.CreateDirectory(s.billMapper[name].dataPath); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return nil, nil
 }
 
-func (s *Storage) DeleteBill(name string) error {
+func (s *Storage) DeleteBill(ctx context.Context, request *service.DeleteBillRequest) (*service.DeleteBillResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
+	name := request.Name
 	if _, ok := s.billMapper[name]; !ok {
-		return fmt.Errorf("bill [%s] not existed", name)
+		return nil, fmt.Errorf("bill [%s] not existed", name)
 	}
 	if err := fileutils.RemoveDirectoryOrFile(s.billMapper[name].dataPath); err != nil {
-		return err
+		return nil, err
 	}
 	delete(s.billMapper, name)
 	if strings.EqualFold(name, s.currentBillName) {
 		s.currentBillName = ""
 	}
-	return nil
+	return nil, nil
 }
 
-func (s *Storage) ListAllDayEntry() ([]v1.IDayEntry, error) {
+func (s *Storage) ListAllDayEntry(ctx context.Context, request *service.ListAllDayEntryRequest) (*service.ListAllDayEntryResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
-	return s.billMapper[s.currentBillName].ListAllDayEntry(), nil
+	out := new(service.ListAllDayEntryResponse)
+	res := s.billMapper[s.currentBillName].ListAllDayEntry()
+	dayEntryInfoList := make([]*service.DayEntryInfo, 0, len(res))
+	for i := range res {
+		dayEntryInfoList = append(dayEntryInfoList, res[i].ToDayEntryInfo())
+	}
+	return out, nil
 }
 
-func (s *Storage) GetDayEntry(name string) (v1.IDayEntry, error) {
+func (s *Storage) GetDayEntry(ctx context.Context, request *service.GetDayEntryRequest) (*service.GetDayEntryResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
-	return s.billMapper[s.currentBillName].getDayEntry(name)
-}
-
-func (s *Storage) CreateDayEntry(name string) error {
-	s.rwMutex.RLock()
-	defer s.rwMutex.RUnlock()
-	if s.currentBillName == "" {
-		return fmt.Errorf("please activate a bill")
+	out := new(service.GetDayEntryResponse)
+	dayEntry, err := s.billMapper[s.currentBillName].getDayEntry(request.Name)
+	if err != nil {
+		return nil, err
 	}
-	return s.billMapper[s.currentBillName].createDayEntry(name)
+	out.DayEntry = dayEntry.ToDayEntryInfo()
+	return out, nil
 }
 
-func (s *Storage) DeleteDayEntry(name string) error {
-	s.rwMutex.RLock()
-	defer s.rwMutex.RUnlock()
-	if s.currentBillName == "" {
-		return fmt.Errorf("please activate a bill")
-	}
-	return s.billMapper[s.currentBillName].deleteDayEntry(name)
-}
-
-func (s *Storage) GetRecord(deName, id string) (v1.IRecord, error) {
+func (s *Storage) CreateDayEntry(ctx context.Context, request *service.CreateDayEntryRequest) (*service.CreateDayEntryResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
-	return s.billMapper[s.currentBillName].getRecord(deName, id)
+	return nil, s.billMapper[s.currentBillName].createDayEntry(request.DayEntry.ObjectMeta.Name)
 }
 
-func (s *Storage) CreateRecord(name string) (v1.IRecord, error) {
+func (s *Storage) DeleteDayEntry(ctx context.Context, request *service.DeleteDayEntryRequest) (*service.DeleteDayEntryResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
-	return s.billMapper[s.currentBillName].createRecord(name)
+	return nil, s.billMapper[s.currentBillName].deleteDayEntry(request.Name)
 }
 
-func (s *Storage) DeleteRecord(deName, id string) error {
+func (s *Storage) GetRecord(ctx context.Context, request *service.GetRecordRequest) (*service.GetRecordResponse, error) {
+	s.rwMutex.RLock()
+	defer s.rwMutex.RUnlock()
+	if s.currentBillName == "" {
+		return nil, fmt.Errorf("please activate a bill")
+	}
+	out := new(service.GetRecordResponse)
+	record, err := s.billMapper[s.currentBillName].getRecord(request.DayEntryName, request.Id)
+	if err != nil {
+		return nil, err
+	}
+	out.Record = record.ToRecordInfo()
+	return out, nil
+}
+
+func (s *Storage) CreateRecord(ctx context.Context, request *service.CreateRecordRequest) (*service.CreateRecordEntryResponse, error) {
+	s.rwMutex.RLock()
+	defer s.rwMutex.RUnlock()
+	if s.currentBillName == "" {
+		return nil, fmt.Errorf("please activate a bill")
+	}
+	record := v1.NewRecord("")
+	record.FromRecordInfo(request.Record)
+	return nil, s.billMapper[s.currentBillName].createRecord(record)
+}
+
+func (s *Storage) DeleteRecord(ctx context.Context, request *service.DeleteRecordRequest) (*service.DeleteRecordResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
 	if s.currentBillName == "" {
@@ -311,14 +343,15 @@ func (b *billManager) createDayEntry(deName string) error {
 	return nil
 }
 
-func (b *billManager) createRecord(deName string) (v1.IRecord, error) {
+func (b *billManager) createRecord(record *v1.IRecord) error {
 	b.mutex.Lock()
 	defer b.mutex.Unlock()
 	if _, ok := b.dayEntryCache[deName]; !ok {
-		return nil, fmt.Errorf("DayEntry [%s] not exsited", deName)
+		return fmt.Errorf("DayEntry [%s] not exsited", deName)
 	}
 	de := b.dayEntryCache[deName]
-	return de.AddRecord(), nil
+	de.AddRecord(record)
+	return nil
 }
 
 func (b *billManager) ListAllDayEntry() []v1.IDayEntry {

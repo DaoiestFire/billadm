@@ -5,7 +5,7 @@
 
 #### proto定义文件编译命令
 ```shell
-protoc -I proto/ --go_opt=paths=source_relative --go_out=pkg/api/storage --go-grpc_out=pkg/api/storage proto/storage_service.proto
+protoc -I proto/ --go_opt=paths=source_relative --go_out=pkg/api/service --go-grpc_out=pkg/api/service proto/storage_service.proto
 ```
 
 #### v1.0 - 2023/10/02

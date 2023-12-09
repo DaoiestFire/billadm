@@ -2,11 +2,12 @@ package v1
 
 import (
 	"encoding/json"
+	"time"
 
 	constant "ljw/billadm/const"
 	metav1 "ljw/billadm/pkg/api/meta/v1"
+	"ljw/billadm/pkg/api/service"
 	"ljw/billadm/utils/fileutils"
-	timeutils "ljw/billadm/utils/time"
 )
 
 type BillSpec struct {
@@ -22,10 +23,11 @@ type Bill struct {
 
 type IBill interface {
 	GetName() string
-	GetCreationTime() string
-	GetModifyTime() string
+	GetCreationTime() int64
+	GetModifyTime() int64
 	SetUser(user string)
 	GetUser() string
+	ToBillInfo() *service.BillInfo
 }
 
 var _ IBill = &Bill{}
@@ -35,8 +37,8 @@ func NewBill(name string) *Bill {
 	bill.Kind = metav1.Bill
 	bill.APIVersion = metav1.V1
 	bill.Name = name
-	bill.CreationTimestamp = timeutils.GetNowTimeString()
-	bill.ModifyTimestamp = timeutils.GetNowTimeString()
+	bill.CreationTimestamp = time.Now().Unix()
+	bill.ModifyTimestamp = time.Now().Unix()
 	bill.Spec.User = constant.DefaultUserName
 	return bill
 }
@@ -46,7 +48,7 @@ func (b *Bill) GetUser() string {
 }
 
 func (b *Bill) SetUser(user string) {
-	b.ModifyTimestamp = timeutils.GetNowTimeString()
+	b.ModifyTimestamp = time.Now().Unix()
 	b.Spec.User = user
 }
 
@@ -54,12 +56,27 @@ func (b *Bill) GetName() string {
 	return b.Name
 }
 
-func (b *Bill) GetCreationTime() string {
+func (b *Bill) GetCreationTime() int64 {
 	return b.CreationTimestamp
 }
 
-func (b *Bill) GetModifyTime() string {
+func (b *Bill) GetModifyTime() int64 {
 	return b.ModifyTimestamp
+}
+
+func (b *Bill) ToBillInfo() *service.BillInfo {
+	return &service.BillInfo{
+		TypeMeta: &service.TypeMeta{
+			Kind:       b.Kind,
+			ApiVersion: b.APIVersion,
+		},
+		ObjectMeta: &service.ObjectMeta{
+			Name:              b.Name,
+			CreationTimestamp: b.CreationTimestamp,
+			ModifyTimestamp:   b.ModifyTimestamp,
+		},
+		User: b.Spec.User,
+	}
 }
 
 func (b *Bill) UnmarshalFrom(data []byte) error {

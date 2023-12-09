@@ -16,6 +16,6 @@ type TypeMeta struct {
 type ObjectMeta struct {
 	Name string `json:"name,omitempty"`
 
-	CreationTimestamp string `json:"creationTimestamp,omitempty"`
-	ModifyTimestamp   string `json:"modifyTimestamp,omitempty"`
+	CreationTimestamp int64 `json:"creationTimestamp,omitempty"`
+	ModifyTimestamp   int64 `json:"modifyTimestamp,omitempty"`
 }

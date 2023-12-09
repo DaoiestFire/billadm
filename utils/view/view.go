@@ -59,7 +59,7 @@ func PrintDEs(des []v1.IDayEntry) error {
 }
 
 func PrintRecords(records []v1.IRecord) error {
-	tb, err := gotable.Create("ID", "label", "cost", "description", "consumption_time", "creation_time", "modify_time")
+	tb, err := gotable.Create("Id", "label", "cost", "description", "consumption_time", "creation_time", "modify_time")
 	if err != nil {
 		return err
 	}

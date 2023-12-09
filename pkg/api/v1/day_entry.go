@@ -3,15 +3,16 @@ package v1
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	metav1 "ljw/billadm/pkg/api/meta/v1"
+	"ljw/billadm/pkg/api/service"
 	"ljw/billadm/utils/fileutils"
-	timeutils "ljw/billadm/utils/time"
 )
 
 type DayEntrySpec struct {
-	CurrentId uint32             `json:"current_id"`
-	Records   map[string]*Record `json:"records,omitempty"`
+	CurrentId uint32    `json:"current_id"`
+	Records   RecordMap `json:"records,omitempty"`
 }
 
 type DayEntry struct {
@@ -22,16 +23,22 @@ type DayEntry struct {
 }
 
 type IDayEntry interface {
-	AddRecord() IRecord
+	AddRecord(IRecord)
 	DeleteRecord(string) error
 	GetRecord(string) (IRecord, error)
 	ListRecords() []IRecord
 
 	GetName() string
-	GetCreationTime() string
-	GetModifyTime() string
+	GetCreationTime() int64
+	GetModifyTime() int64
 	GetCurrentID() uint32
 	GetLen() int
+
+	UnmarshalFrom([]byte) error
+	MarshalTo() ([]byte, error)
+
+	ToDayEntryInfo() *service.DayEntryInfo
+	FromDayEntryInfo(*service.DayEntryInfo)
 }
 
 var _ IDayEntry = &DayEntry{}
@@ -41,9 +48,9 @@ func NewDayEntry(name string) *DayEntry {
 	de.Kind = metav1.DayEntry
 	de.APIVersion = metav1.V1
 	de.Name = name
-	de.CreationTimestamp = timeutils.GetNowTimeString()
-	de.ModifyTimestamp = timeutils.GetNowTimeString()
-	de.Spec.Records = make(map[string]*Record)
+	de.CreationTimestamp = time.Now().Unix()
+	de.ModifyTimestamp = time.Now().Unix()
+	de.Spec.Records = RecordMap{}
 	return de
 }
 
@@ -55,36 +62,43 @@ func (d *DayEntry) MarshalTo() ([]byte, error) {
 	return fileutils.GenerateJsonData(d)
 }
 
-func (d *DayEntry) AddRecord() IRecord {
-	r := NewRecord(d.getNextID())
-	if d.Spec.Records == nil {
-		d.Spec.Records = make(map[string]*Record)
+// AddRecord 如果record已存在则更新，不存在则创建
+func (d *DayEntry) AddRecord(record IRecord) {
+	var r IRecord
+	r, ok := d.Spec.Records[record.GetName()]
+	if !ok {
+		r = NewRecord(d.getNextName())
+		d.Spec.Records[r.GetName()] = r
 	}
-	d.Spec.Records[r.Spec.ID] = r
-	return r
+	r.SetCost(record.GetCost())
+	r.SetLabel(record.GetLabel())
+	r.SetDescription(record.GetDescription())
+	r.SetConsumptionTime(record.GetConsumptionTime())
+	r.SetModifyTime(time.Now().Unix())
 }
 
-func (d *DayEntry) DeleteRecord(id string) error {
-	if _, ok := d.Spec.Records[id]; !ok {
-		return fmt.Errorf("record [%s] not existed", id)
+func (d *DayEntry) DeleteRecord(name string) error {
+	if _, ok := d.Spec.Records[name]; !ok {
+		return fmt.Errorf("record [%s] not existed", name)
+	}
+	delete(d.Spec.Records, name)
+	return nil
+}
+
+// GetRecord 获取已存在record的复制
+func (d *DayEntry) GetRecord(name string) (IRecord, error) {
+	if r, ok := d.Spec.Records[name]; !ok {
+		return nil, fmt.Errorf("record [%s] not existed", name)
 	} else {
-		delete(d.Spec.Records, id)
-		return nil
+		return r.Clone(), nil
 	}
 }
 
-func (d *DayEntry) GetRecord(id string) (IRecord, error) {
-	if r, ok := d.Spec.Records[id]; !ok {
-		return nil, fmt.Errorf("record [%s] not existed", id)
-	} else {
-		return r, nil
-	}
-}
-
+// ListRecords 获取所有record的复制
 func (d *DayEntry) ListRecords() []IRecord {
 	res := make([]IRecord, 0, len(d.Spec.Records))
 	for key := range d.Spec.Records {
-		res = append(res, d.Spec.Records[key])
+		res = append(res, d.Spec.Records[key].Clone())
 	}
 	return res
 }
@@ -93,11 +107,11 @@ func (d *DayEntry) GetName() string {
 	return d.Name
 }
 
-func (d *DayEntry) GetCreationTime() string {
+func (d *DayEntry) GetCreationTime() int64 {
 	return d.CreationTimestamp
 }
 
-func (d *DayEntry) GetModifyTime() string {
+func (d *DayEntry) GetModifyTime() int64 {
 	return d.ModifyTimestamp
 }
 
@@ -109,8 +123,36 @@ func (d *DayEntry) GetLen() int {
 	return len(d.Spec.Records)
 }
 
-func (d *DayEntry) getNextID() string {
-	id := fmt.Sprintf("%03d", d.Spec.CurrentId)
+func (d *DayEntry) ToDayEntryInfo() *service.DayEntryInfo {
+	return &service.DayEntryInfo{
+		TypeMeta: &service.TypeMeta{
+			Kind:       d.Kind,
+			ApiVersion: d.APIVersion,
+		},
+		ObjectMeta: &service.ObjectMeta{
+			Name:              d.Name,
+			CreationTimestamp: d.CreationTimestamp,
+			ModifyTimestamp:   d.ModifyTimestamp,
+		},
+		CurrentId: d.Spec.CurrentId,
+		RecordMap: d.Spec.Records.ToRecordInfoMap(),
+	}
+}
+
+func (d *DayEntry) FromDayEntryInfo(info *service.DayEntryInfo) {
+	d.Kind = info.TypeMeta.Kind
+	d.APIVersion = info.TypeMeta.ApiVersion
+	d.Name = info.ObjectMeta.Name
+	d.CreationTimestamp = info.ObjectMeta.CreationTimestamp
+	d.ModifyTimestamp = info.ObjectMeta.ModifyTimestamp
+	d.Spec.CurrentId = info.CurrentId
+	recordMap := RecordMap{}
+	recordMap.FromRecordInfoMap(info.RecordMap)
+	d.Spec.Records = recordMap
+}
+
+func (d *DayEntry) getNextName() string {
+	id := fmt.Sprintf("%s/%03d", d.GetName(), d.Spec.CurrentId)
 	d.Spec.CurrentId++
 	return id
 }
