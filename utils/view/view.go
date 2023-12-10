@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/liushuochen/gotable"
 
-	v1 "ljw/billadm/pkg/api/v1"
+	constant "ljw/billadm/const"
+	"ljw/billadm/pkg/api/v1"
 )
 
 func PrintBills(bills []v1.IBill, currentBill string) error {
@@ -25,8 +27,8 @@ func PrintBills(bills []v1.IBill, currentBill string) error {
 		}
 
 		r = append(r, b.GetUser())
-		r = append(r, b.GetCreationTime())
-		r = append(r, b.GetModifyTime())
+		r = append(r, time.Unix(b.GetCreationTime(), 0).Format(constant.TimeFormat))
+		r = append(r, time.Unix(b.GetModifyTime(), 0).Format(constant.TimeFormat))
 		err = tb.AddRow(r)
 		if err != nil {
 			return err
@@ -47,8 +49,8 @@ func PrintDEs(des []v1.IDayEntry) error {
 		r = append(r, de.GetName())
 		r = append(r, fmt.Sprintf("%03d", de.GetCurrentID()))
 		r = append(r, fmt.Sprintf("%d", de.GetLen()))
-		r = append(r, de.GetCreationTime())
-		r = append(r, de.GetModifyTime())
+		r = append(r, time.Unix(de.GetCreationTime(), 0).Format(constant.TimeFormat))
+		r = append(r, time.Unix(de.GetModifyTime(), 0).Format(constant.TimeFormat))
 		err = tb.AddRow(r)
 		if err != nil {
 			return err
@@ -70,9 +72,9 @@ func PrintRecords(records []v1.IRecord) error {
 		r = append(r, v1.LabelToChinese[re.GetLabel()])
 		r = append(r, fmt.Sprintf("%f", re.GetCost()))
 		r = append(r, re.GetDescription())
-		r = append(r, re.GetConsumptionTime())
-		r = append(r, re.GetCreationTime())
-		r = append(r, re.GetModifyTime())
+		r = append(r, time.Unix(re.GetConsumptionTime(), 0).Format(constant.TimeFormat))
+		r = append(r, time.Unix(re.GetCreationTime(), 0).Format(constant.TimeFormat))
+		r = append(r, time.Unix(re.GetModifyTime(), 0).Format(constant.TimeFormat))
 		err = tb.AddRow(r)
 		if err != nil {
 			return err
