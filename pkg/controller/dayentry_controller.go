@@ -54,6 +54,7 @@ func (d *DayEntryController) Create(ctx context.Context, storageClient service.S
 			},
 		},
 	}
+	fmt.Println(createDayEntryRequest.DayEntry.ObjectMeta.Name)
 	_, err := storageClient.CreateDayEntry(ctx, createDayEntryRequest)
 	if err != nil {
 		return err

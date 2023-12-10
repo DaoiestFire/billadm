@@ -113,6 +113,7 @@ func run(op, resource string, opts *options.Options) {
 		fmt.Printf("transfer to Config failed -> <%v>", err)
 		return
 	}
+	fmt.Println(cfg.Time)
 
 	switch op {
 	case constant.Get:
