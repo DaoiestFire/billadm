@@ -97,9 +97,11 @@ func (s *Storage) ListAllBill(ctx context.Context, request *service.ListAllBillR
 	klog.Info("list all bills")
 	out := new(service.ListAllBillResponse)
 	billInfoList := make([]*service.BillInfo, 0, len(s.billMapper))
+	fmt.Println("len is : ", len(s.billMapper))
 	for key := range s.billMapper {
 		billInfoList = append(billInfoList, s.billMapper[key].bill.ToBillInfo())
 	}
+	fmt.Println(billInfoList)
 	out.BillList = billInfoList
 	return out, nil
 }
