@@ -24,7 +24,7 @@ func (d *DayEntryController) Get(ctx context.Context, storageClient service.Stor
 		for i := range listAllDayEntryResponse.DayEntryList {
 			dayEntry := v1.NewDayEntry("")
 			dayEntry.FromDayEntryInfo(listAllDayEntryResponse.DayEntryList[i])
-			dayEntryList = append(dayEntryList)
+			dayEntryList = append(dayEntryList, dayEntry)
 		}
 		err = view.PrintDEs(dayEntryList)
 		if err != nil {

@@ -25,7 +25,7 @@ func (b *BillController) Get(ctx context.Context, storageClient service.StorageS
 	for i := range listAllBillResponse.BillList {
 		bill := v1.NewBill("")
 		bill.FromBillInfo(listAllBillResponse.BillList[i])
-		bills = append(bills)
+		bills = append(bills, bill)
 	}
 	getCurrentBillNameResponse, err := storageClient.GetCurrentBillName(ctx, &service.GetCurrentBillNameRequest{})
 	if err != nil {
