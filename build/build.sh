@@ -7,12 +7,12 @@ readonly CURRENT_PATH=$(
   pwd
 )
 
-readonly BILLADM_PATH=${CURRENT_PATH}/../cmd
-readonly INSTALL_PATH=/opt/billadm
+readonly BILL_CLIENT_PATH=${CURRENT_PATH}/../cmd/billclient
+readonly BILL_SERVER_PATH=${CURRENT_PATH}/../cmd/billserver
+readonly INSTALL_PATH=/opt/bill
 readonly BIN_PATH=${INSTALL_PATH}/bin
 readonly DATA_PATH=${INSTALL_PATH}/data
 readonly LOG_PATH=${INSTALL_PATH}/log
-readonly EXECUTABLE_NAME=billadm
 
 function log_info() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')]" "[INFO]" "$@"
@@ -23,16 +23,18 @@ function log_error() {
 }
 
 function build() {
-  cd ${BILLADM_PATH} || return 1
-  rm ${EXECUTABLE_NAME}
+  path=$1
+  file=$2
+  cd $path || return 1
+  rm $file
   rm -rf go.sum
   go mod tidy
-  go build -ldflags '-s -w' -o ${EXECUTABLE_NAME}
-  if [ ! -f ${EXECUTABLE_NAME} ]; then
-    log_error "build ${EXECUTABLE_NAME} failed"
+  go build -ldflags '-s -w' -o $file
+  if [ ! -f $file ]; then
+    log_error "build $file failed"
     return 1
   fi
-  log_info "build ${EXECUTABLE_NAME} success"
+  log_info "build $file success"
   return 0
 }
 
@@ -46,15 +48,17 @@ function install() {
     exit 1
   fi
 
-  build || exit 1
+  build ${BILL_CLIENT_PATH} billctl || exit 1
+  build ${BILL_SERVER_PATH} billserver || exit 1
 
   mkdir -p ${BIN_PATH} || exit 1
   mkdir -p ${DATA_PATH} || exit 1
   mkdir -p ${LOG_PATH} || exit 1
 
-  cp ${EXECUTABLE_NAME} ${BIN_PATH}
+  cp billctl ${BIN_PATH}
+  cp billserver ${BIN_PATH}
   find ${INSTALL_PATH} -type d | xargs -i chmod 750 {}
-  chmod 500 ${BIN_PATH}/${EXECUTABLE_NAME}
+  chmod 500 ${BIN_PATH}/*
   log_info "install billadm success"
 }
 
