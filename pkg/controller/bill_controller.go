@@ -17,7 +17,7 @@ type BillController struct {
 }
 
 func (b *BillController) Get(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
-	listAllBillResponse, err := storageClient.ListAllBill(ctx, nil)
+	listAllBillResponse, err := storageClient.ListAllBill(ctx, &service.ListAllBillRequest{})
 	if err != nil {
 		return err
 	}
@@ -27,7 +27,7 @@ func (b *BillController) Get(ctx context.Context, storageClient service.StorageS
 		bill.FromBillInfo(listAllBillResponse.BillList[i])
 		bills = append(bills)
 	}
-	getCurrentBillNameResponse, err := storageClient.GetCurrentBillName(ctx, nil)
+	getCurrentBillNameResponse, err := storageClient.GetCurrentBillName(ctx, &service.GetCurrentBillNameRequest{})
 	if err != nil {
 		return err
 	}

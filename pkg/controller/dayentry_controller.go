@@ -16,7 +16,7 @@ type DayEntryController struct {
 
 func (d *DayEntryController) Get(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
 	if config.All {
-		listAllDayEntryResponse, err := storageClient.ListAllDayEntry(ctx, nil)
+		listAllDayEntryResponse, err := storageClient.ListAllDayEntry(ctx, &service.ListAllDayEntryRequest{})
 		if err != nil {
 			return err
 		}

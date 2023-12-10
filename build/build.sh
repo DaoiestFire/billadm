@@ -35,6 +35,7 @@ function build() {
     return 1
   fi
   log_info "build $file success"
+  cp $file ${BIN_PATH}
   return 0
 }
 
@@ -55,8 +56,6 @@ function install() {
   mkdir -p ${DATA_PATH} || exit 1
   mkdir -p ${LOG_PATH} || exit 1
 
-  cp billctl ${BIN_PATH}
-  cp billserver ${BIN_PATH}
   find ${INSTALL_PATH} -type d | xargs -i chmod 750 {}
   chmod 500 ${BIN_PATH}/*
   log_info "install billadm success"

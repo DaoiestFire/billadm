@@ -2,7 +2,6 @@ package command
 
 import (
 	"net"
-	"os"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
@@ -12,6 +11,7 @@ import (
 	"ljw/billadm/pkg/api/service"
 	"ljw/billadm/pkg/api/v1"
 	"ljw/billadm/pkg/storage"
+	"ljw/billadm/utils/fileutils"
 	"ljw/billadm/utils/logger"
 )
 
@@ -51,7 +51,7 @@ func NewBillServerCommand() *cobra.Command {
 }
 
 func runBillServer(bsc *v1.BillServerConfig) error {
-	if err := os.Remove(bsc.SocketPath); err != nil {
+	if err := fileutils.RemoveDirectoryOrFile(bsc.SocketPath); err != nil {
 		return err
 	}
 	lis, err := net.Listen("unix", bsc.SocketPath)
