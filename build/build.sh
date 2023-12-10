@@ -49,12 +49,12 @@ function install() {
     exit 1
   fi
 
-  build ${BILL_CLIENT_PATH} billctl || exit 1
-  build ${BILL_SERVER_PATH} billserver || exit 1
-
   mkdir -p ${BIN_PATH} || exit 1
   mkdir -p ${DATA_PATH} || exit 1
   mkdir -p ${LOG_PATH} || exit 1
+
+  build ${BILL_CLIENT_PATH} billctl || exit 1
+  build ${BILL_SERVER_PATH} billserver || exit 1
 
   find ${INSTALL_PATH} -type d | xargs -i chmod 750 {}
   chmod 500 ${BIN_PATH}/*

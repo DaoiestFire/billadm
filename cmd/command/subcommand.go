@@ -9,8 +9,6 @@ import (
 
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
-	"k8s.io/klog/v2"
-
 	"ljw/billadm/cmd/options"
 	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/api/service"
@@ -98,7 +96,6 @@ func run(op, resource string, opts *options.Options) {
 
 	if strings.EqualFold(op, constant.Activate) {
 		if _, err := stc.SetCurrentBillName(ctx, &service.SetCurrentBillNameRequest{Name: resource}); err != nil {
-			klog.Errorf("activate current bill failed -> <%v>", err)
 			fmt.Printf("activate current bill failed -> <%v>\n", err)
 			return
 		}
@@ -107,14 +104,12 @@ func run(op, resource string, opts *options.Options) {
 
 	//验证opts的有效性
 	if err := opts.Validate(op, resource); err != nil {
-		klog.Errorf("options Validate failed -> <%v>", err)
 		fmt.Printf("options Validate failed -> <%v>\n", err)
 		return
 	}
 
 	cfg, err := opts.Config()
 	if err != nil {
-		klog.Errorf("transfer to Config failed -> <%v>", err)
 		fmt.Printf("transfer to Config failed -> <%v>", err)
 		return
 	}
@@ -129,14 +124,11 @@ func run(op, resource string, opts *options.Options) {
 	case constant.Edit:
 		err = controllers[resource].Edit(ctx, stc, cfg)
 	default:
-		klog.Errorf("op [%s] is invalid", op)
 		fmt.Printf("op [%s] is invalid\n", op)
 	}
 
 	if err != nil {
-		klog.Errorf("%s %s failed -> <%v>", op, resource, err)
 		fmt.Printf("%s %s failed -> <%v>\n", op, resource, err)
 		return
 	}
-	klog.Infof("%s %s success", op, resource)
 }
