@@ -21,7 +21,6 @@ func (b *BillController) Get(ctx context.Context, storageClient service.StorageS
 	if err != nil {
 		return err
 	}
-	fmt.Println(listAllBillResponse.BillList)
 	bills := make([]v1.IBill, 0, len(listAllBillResponse.BillList))
 	for i := range listAllBillResponse.BillList {
 		bill := v1.NewBill("")
