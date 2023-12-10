@@ -1,13 +1,15 @@
 package controller
 
 import (
-	v1 "ljw/billadm/pkg/api/v1"
-	"ljw/billadm/pkg/storage"
+	"context"
+	"ljw/billadm/pkg/api/service"
+
+	"ljw/billadm/pkg/api/v1"
 )
 
 type Controller interface {
-	Get(storage *storage.Storage, config *v1.Config) error
-	Delete(storage *storage.Storage, config *v1.Config) error
-	Create(storage *storage.Storage, config *v1.Config) error
-	Edit(storage *storage.Storage, config *v1.Config) error
+	Get(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error
+	Delete(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error
+	Create(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error
+	Edit(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error
 }

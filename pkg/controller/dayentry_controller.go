@@ -1,10 +1,11 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 
-	v1 "ljw/billadm/pkg/api/v1"
-	"ljw/billadm/pkg/storage"
+	"ljw/billadm/pkg/api/service"
+	"ljw/billadm/pkg/api/v1"
 	"ljw/billadm/utils/view"
 )
 
@@ -13,22 +14,30 @@ var _ Controller = &DayEntryController{}
 type DayEntryController struct {
 }
 
-func (d *DayEntryController) Get(storage *storage.Storage, config *v1.Config) error {
+func (d *DayEntryController) Get(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
 	if config.All {
-		des, err := storage.ListAllDayEntry()
+		listAllDayEntryResponse, err := storageClient.ListAllDayEntry(ctx, nil)
 		if err != nil {
 			return err
 		}
-		err = view.PrintDEs(des)
+		dayEntryList := make([]v1.IDayEntry, 0, len(listAllDayEntryResponse.DayEntryList))
+		for i := range listAllDayEntryResponse.DayEntryList {
+			dayEntry := v1.NewDayEntry("")
+			dayEntry.FromDayEntryInfo(listAllDayEntryResponse.DayEntryList[i])
+			dayEntryList = append(dayEntryList)
+		}
+		err = view.PrintDEs(dayEntryList)
 		if err != nil {
 			return err
 		}
 		return nil
 	}
-	de, err := storage.GetDayEntry(config.Time)
+	getDayEntryResponse, err := storageClient.GetDayEntry(ctx, &service.GetDayEntryRequest{Name: config.Time})
 	if err != nil {
 		return err
 	}
+	de := v1.NewDayEntry("")
+	de.FromDayEntryInfo(getDayEntryResponse.DayEntry)
 	records := de.ListRecords()
 	err = view.PrintRecords(records)
 	if err != nil {
@@ -37,22 +46,32 @@ func (d *DayEntryController) Get(storage *storage.Storage, config *v1.Config) er
 	return nil
 }
 
-func (d *DayEntryController) Create(storage *storage.Storage, config *v1.Config) error {
-	err := storage.CreateDayEntry(config.Time)
+func (d *DayEntryController) Create(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
+	createDayEntryRequest := &service.CreateDayEntryRequest{
+		DayEntry: &service.DayEntryInfo{
+			ObjectMeta: &service.ObjectMeta{
+				Name: config.Name,
+			},
+		},
+	}
+	_, err := storageClient.CreateDayEntry(ctx, createDayEntryRequest)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (d *DayEntryController) Delete(storage *storage.Storage, config *v1.Config) error {
-	err := storage.DeleteDayEntry(config.Time)
+func (d *DayEntryController) Delete(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
+	deleteDayEntryRequest := &service.DeleteDayEntryRequest{
+		Name: config.Time,
+	}
+	_, err := storageClient.DeleteDayEntry(ctx, deleteDayEntryRequest)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (d *DayEntryController) Edit(storage *storage.Storage, config *v1.Config) error {
+func (d *DayEntryController) Edit(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
 	return fmt.Errorf("not supported")
 }

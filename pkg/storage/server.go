@@ -9,12 +9,11 @@ import (
 	"strings"
 	"sync"
 
-	logger "k8s.io/klog/v2"
+	"k8s.io/klog/v2"
 
 	constant "ljw/billadm/const"
 	"ljw/billadm/pkg/api/service"
 	"ljw/billadm/pkg/api/v1"
-	configutils "ljw/billadm/utils/config"
 	"ljw/billadm/utils/fileutils"
 	timeutils "ljw/billadm/utils/time"
 )
@@ -24,13 +23,13 @@ var _ service.StorageServiceServer = &Storage{}
 var storage *Storage
 var once sync.Once
 
-func GetStorage() (*Storage, error) {
+func NewStorage(installPath string) (*Storage, error) {
 	if storage != nil {
 		return storage, nil
 	}
 	var err error
 	once.Do(func() {
-		billadmDataDir := filepath.Join(configutils.InstallPath, constant.Data)
+		billadmDataDir := filepath.Join(installPath, constant.Data)
 		storage = &Storage{
 			billadmDataDir: billadmDataDir,
 			billMapper:     make(map[string]*billManager),
@@ -70,6 +69,7 @@ type Storage struct {
 func (s *Storage) GetCurrentBillName(ctx context.Context, request *service.GetCurrentBillNameRequest) (*service.GetCurrentBillNameResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
+	klog.Info("get current bill name")
 	out := new(service.GetCurrentBillNameResponse)
 	out.Name = s.currentBillName
 	return out, nil
@@ -78,6 +78,7 @@ func (s *Storage) GetCurrentBillName(ctx context.Context, request *service.GetCu
 func (s *Storage) SetCurrentBillName(ctx context.Context, request *service.SetCurrentBillNameRequest) (*service.SetCurrentBillNameResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
+	klog.Infof("set currrent bill name to : %s", request.Name)
 	if request.Name == "" {
 		s.currentBillName = ""
 		return nil, nil
@@ -92,6 +93,7 @@ func (s *Storage) SetCurrentBillName(ctx context.Context, request *service.SetCu
 func (s *Storage) ListAllBill(ctx context.Context, request *service.ListAllBillRequest) (*service.ListAllBillResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
+	klog.Info("list all bills")
 	out := new(service.ListAllBillResponse)
 	billInfoList := make([]*service.BillInfo, 0, len(s.billMapper))
 	for key := range s.billMapper {
@@ -104,6 +106,7 @@ func (s *Storage) ListAllBill(ctx context.Context, request *service.ListAllBillR
 func (s *Storage) GetBill(ctx context.Context, request *service.GetBillRequest) (*service.GetBillResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
+	klog.Infof("get bill [%s]", request.Name)
 	if _, ok := s.billMapper[request.Name]; !ok {
 		return nil, fmt.Errorf("bill [%s] not found", request.Name)
 	}
@@ -115,9 +118,11 @@ func (s *Storage) GetBill(ctx context.Context, request *service.GetBillRequest) 
 func (s *Storage) CreateBill(ctx context.Context, request *service.CreateBillRequest) (*service.CreateBillResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
+	klog.Infof("create bill [%s]", request.Name)
 	name := request.Name
 	// 如果没有被标记未删除且bill存在，则报错
 	if _, ok := s.billMapper[name]; ok {
+		klog.Errorf("create bill failed: bill [%s] existed", request.Name)
 		return nil, fmt.Errorf("bill [%s] existed", name)
 	}
 	// 创建一个新的bill
@@ -136,8 +141,10 @@ func (s *Storage) CreateBill(ctx context.Context, request *service.CreateBillReq
 func (s *Storage) DeleteBill(ctx context.Context, request *service.DeleteBillRequest) (*service.DeleteBillResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
+	klog.Infof("delete bill [%s]", request.Name)
 	name := request.Name
 	if _, ok := s.billMapper[name]; !ok {
+		klog.Errorf("delete bill failed: bill [%s] not found", request.Name)
 		return nil, fmt.Errorf("bill [%s] not found", name)
 	}
 	if err := fileutils.RemoveDirectoryOrFile(s.billMapper[name].dataPath); err != nil {
@@ -153,6 +160,7 @@ func (s *Storage) DeleteBill(ctx context.Context, request *service.DeleteBillReq
 func (s *Storage) ListAllDayEntry(ctx context.Context, request *service.ListAllDayEntryRequest) (*service.ListAllDayEntryResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
+	klog.Info("list all day entry")
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -169,6 +177,7 @@ func (s *Storage) ListAllDayEntry(ctx context.Context, request *service.ListAllD
 func (s *Storage) GetDayEntry(ctx context.Context, request *service.GetDayEntryRequest) (*service.GetDayEntryResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
+	klog.Infof("get day entry [%s]", request.Name)
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -184,6 +193,7 @@ func (s *Storage) GetDayEntry(ctx context.Context, request *service.GetDayEntryR
 func (s *Storage) CreateDayEntry(ctx context.Context, request *service.CreateDayEntryRequest) (*service.CreateDayEntryResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
+	klog.Infof("create day entry [%s]", request.DayEntry.ObjectMeta.Name)
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -193,6 +203,7 @@ func (s *Storage) CreateDayEntry(ctx context.Context, request *service.CreateDay
 func (s *Storage) DeleteDayEntry(ctx context.Context, request *service.DeleteDayEntryRequest) (*service.DeleteDayEntryResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
+	klog.Infof("delete day entry [%s]", request.Name)
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -202,6 +213,7 @@ func (s *Storage) DeleteDayEntry(ctx context.Context, request *service.DeleteDay
 func (s *Storage) GetRecord(ctx context.Context, request *service.GetRecordRequest) (*service.GetRecordResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
+	klog.Infof("get record [%s/%s]", request.DayEntryName, request.Id)
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -217,6 +229,7 @@ func (s *Storage) GetRecord(ctx context.Context, request *service.GetRecordReque
 func (s *Storage) CreateRecord(ctx context.Context, request *service.CreateRecordRequest) (*service.CreateRecordEntryResponse, error) {
 	s.rwMutex.Lock()
 	defer s.rwMutex.Unlock()
+	klog.Infof("create record [%s]", request.Record.ObjectMeta.Name)
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -228,6 +241,7 @@ func (s *Storage) CreateRecord(ctx context.Context, request *service.CreateRecor
 func (s *Storage) DeleteRecord(ctx context.Context, request *service.DeleteRecordRequest) (*service.DeleteRecordResponse, error) {
 	s.rwMutex.RLock()
 	defer s.rwMutex.RUnlock()
+	klog.Infof("delete record [%s]", request.Id)
 	if s.currentBillName == "" {
 		return nil, fmt.Errorf("please activate a bill")
 	}
@@ -254,7 +268,7 @@ func (s *Storage) Initializer() error {
 		}
 		if err := s.billMapper[billName].initializer(); err != nil {
 			errMsg := fmt.Errorf("initialize billManager [%s] failed -> <%v>", billName, err)
-			logger.Error(errMsg.Error())
+			klog.Error(errMsg.Error())
 			return errMsg
 		}
 	}

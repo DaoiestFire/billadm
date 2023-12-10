@@ -1,10 +1,12 @@
 package controller
 
 import (
+	"context"
 	"fmt"
+	"time"
 
-	v1 "ljw/billadm/pkg/api/v1"
-	"ljw/billadm/pkg/storage"
+	"ljw/billadm/pkg/api/service"
+	"ljw/billadm/pkg/api/v1"
 )
 
 var _ Controller = &RecordController{}
@@ -12,34 +14,38 @@ var _ Controller = &RecordController{}
 type RecordController struct {
 }
 
-func (r *RecordController) Get(storage *storage.Storage, config *v1.Config) error {
+func (r *RecordController) Get(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
 	return fmt.Errorf("not supported")
 }
 
-func (r *RecordController) Create(storage *storage.Storage, config *v1.Config) error {
-	record, err := storage.CreateRecord(config.Time)
-	if err != nil {
-		return err
-	}
+func (r *RecordController) Create(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
+	record := v1.NewRecord("")
 	record.SetCost(config.Cost)
 	record.SetDescription(config.Description)
 	record.SetLabel(config.Label)
-	return nil
-}
-
-func (r *RecordController) Delete(storage *storage.Storage, config *v1.Config) error {
-	err := storage.DeleteRecord(config.Time, config.ID)
+	record.SetConsumptionTime(time.Now().Unix())
+	_, err := storageClient.CreateRecord(ctx, &service.CreateRecordRequest{Record: record.ToRecordInfo()})
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *RecordController) Edit(storage *storage.Storage, config *v1.Config) error {
-	record, err := storage.GetRecord(config.Time, config.ID)
+func (r *RecordController) Delete(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
+	_, err := storageClient.DeleteRecord(ctx, &service.DeleteRecordRequest{DayEntryName: config.Time, Id: config.ID})
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (r *RecordController) Edit(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
+	getRecordResponse, err := storageClient.GetRecord(ctx, &service.GetRecordRequest{DayEntryName: config.Time, Id: config.ID})
+	if err != nil {
+		return err
+	}
+	record := v1.NewRecord("")
+	record.FromRecordInfo(getRecordResponse.Record)
 	if config.Cost > 0 {
 		record.SetCost(config.Cost)
 	}
@@ -48,6 +54,10 @@ func (r *RecordController) Edit(storage *storage.Storage, config *v1.Config) err
 	}
 	if config.Label != 0 {
 		record.SetLabel(config.Label)
+	}
+	_, err = storageClient.CreateRecord(ctx, &service.CreateRecordRequest{Record: record.ToRecordInfo()})
+	if err != nil {
+		return err
 	}
 	return nil
 }

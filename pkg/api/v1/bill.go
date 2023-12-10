@@ -23,8 +23,11 @@ type Bill struct {
 
 type IBill interface {
 	GetName() string
+	SetName(string)
 	GetCreationTime() int64
+	SetCreationTime(int64)
 	GetModifyTime() int64
+	SetModifyTime(int64)
 	GetUser() string
 	SetUser(string)
 
@@ -32,6 +35,7 @@ type IBill interface {
 	MarshalTo() ([]byte, error)
 
 	ToBillInfo() *service.BillInfo
+	FromBillInfo(*service.BillInfo)
 
 	Clone() IBill
 }
@@ -53,12 +57,24 @@ func (b *Bill) GetName() string {
 	return b.Name
 }
 
+func (b *Bill) SetName(name string) {
+	b.Name = name
+}
+
 func (b *Bill) GetCreationTime() int64 {
 	return b.CreationTimestamp
 }
 
+func (b *Bill) SetCreationTime(t int64) {
+	b.CreationTimestamp = t
+}
+
 func (b *Bill) GetModifyTime() int64 {
 	return b.ModifyTimestamp
+}
+
+func (b *Bill) SetModifyTime(t int64) {
+	b.ModifyTimestamp = t
 }
 
 func (b *Bill) GetUser() string {
@@ -83,6 +99,15 @@ func (b *Bill) ToBillInfo() *service.BillInfo {
 		},
 		User: b.Spec.User,
 	}
+}
+
+func (b *Bill) FromBillInfo(info *service.BillInfo) {
+	b.Kind = info.TypeMeta.Kind
+	b.APIVersion = info.TypeMeta.ApiVersion
+	b.Name = info.ObjectMeta.Name
+	b.CreationTimestamp = info.ObjectMeta.CreationTimestamp
+	b.ModifyTimestamp = info.ObjectMeta.ModifyTimestamp
+	b.Spec.User = info.User
 }
 
 func (b *Bill) Clone() IBill {

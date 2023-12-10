@@ -1,16 +1,20 @@
 package command
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
+	"google.golang.org/grpc"
+	"k8s.io/klog/v2"
 
-	logger "k8s.io/klog/v2"
 	"ljw/billadm/cmd/options"
 	constant "ljw/billadm/const"
+	"ljw/billadm/pkg/api/service"
 	"ljw/billadm/pkg/controller"
-	"ljw/billadm/pkg/storage"
 )
 
 var controllers = map[string]controller.Controller{
@@ -76,24 +80,25 @@ func NewActivateCommand() *cobra.Command {
 
 func run(op, resource string, opts *options.Options) {
 	// 获取storage
-	st, err := storage.GetStorage()
+	// 连接grpc服务器
+	conn, err := grpc.Dial("unix:///opt/bill/billserver.sock", grpc.WithInsecure())
 	if err != nil {
-		logger.Errorf("GetStorage failed -> <%v>", err)
-		fmt.Printf("GetStorage failed -> <%v>\n", err)
-		return
+		log.Fatalf("did not connect: %v", err)
 	}
-	defer func() {
-		err := st.Finalizer()
-		if err != nil {
-			logger.Errorf("storage finalizer failed -> <%v>", err)
-			fmt.Printf("storage finalizer failed -> <%v>", err)
-		}
-	}()
+	// 延迟关闭连接
+	defer conn.Close()
+
+	// 初始化Greeter服务客户端
+	stc := service.NewStorageServiceClient(conn)
+
+	// 初始化上下文，设置请求超时时间为1秒
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	// 延迟关闭请求会话
+	defer cancel()
 
 	if strings.EqualFold(op, constant.Activate) {
-		err = st.SetCurrentBillName(resource)
-		if err != nil {
-			logger.Errorf("activate current bill failed -> <%v>", err)
+		if _, err := stc.SetCurrentBillName(ctx, &service.SetCurrentBillNameRequest{Name: resource}); err != nil {
+			klog.Errorf("activate current bill failed -> <%v>", err)
 			fmt.Printf("activate current bill failed -> <%v>\n", err)
 			return
 		}
@@ -101,38 +106,37 @@ func run(op, resource string, opts *options.Options) {
 	}
 
 	//验证opts的有效性
-	err = opts.Validate(op, resource)
-	if err != nil {
-		logger.Errorf("options Validate failed -> <%v>", err)
+	if err := opts.Validate(op, resource); err != nil {
+		klog.Errorf("options Validate failed -> <%v>", err)
 		fmt.Printf("options Validate failed -> <%v>\n", err)
 		return
 	}
 
 	cfg, err := opts.Config()
 	if err != nil {
-		logger.Errorf("transfer to Config failed -> <%v>", err)
+		klog.Errorf("transfer to Config failed -> <%v>", err)
 		fmt.Printf("transfer to Config failed -> <%v>", err)
 		return
 	}
 
 	switch op {
 	case constant.Get:
-		err = controllers[resource].Get(st, cfg)
+		err = controllers[resource].Get(ctx, stc, cfg)
 	case constant.Create:
-		err = controllers[resource].Create(st, cfg)
+		err = controllers[resource].Create(ctx, stc, cfg)
 	case constant.Delete:
-		err = controllers[resource].Delete(st, cfg)
+		err = controllers[resource].Delete(ctx, stc, cfg)
 	case constant.Edit:
-		err = controllers[resource].Edit(st, cfg)
+		err = controllers[resource].Edit(ctx, stc, cfg)
 	default:
-		logger.Errorf("op [%s] is invalid", op)
+		klog.Errorf("op [%s] is invalid", op)
 		fmt.Printf("op [%s] is invalid\n", op)
 	}
 
 	if err != nil {
-		logger.Errorf("%s %s failed -> <%v>", op, resource, err)
+		klog.Errorf("%s %s failed -> <%v>", op, resource, err)
 		fmt.Printf("%s %s failed -> <%v>\n", op, resource, err)
 		return
 	}
-	logger.Infof("%s %s success", op, resource)
+	klog.Infof("%s %s success", op, resource)
 }

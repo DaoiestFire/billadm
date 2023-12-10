@@ -1,10 +1,11 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 
-	v1 "ljw/billadm/pkg/api/v1"
-	"ljw/billadm/pkg/storage"
+	"ljw/billadm/pkg/api/service"
+	"ljw/billadm/pkg/api/v1"
 	"ljw/billadm/utils/view"
 )
 
@@ -13,7 +14,7 @@ var _ Controller = &LabelController{}
 type LabelController struct {
 }
 
-func (l *LabelController) Get(storage *storage.Storage, config *v1.Config) error {
+func (l *LabelController) Get(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
 	err := view.PrintLabels()
 	if err != nil {
 		return err
@@ -21,14 +22,14 @@ func (l *LabelController) Get(storage *storage.Storage, config *v1.Config) error
 	return nil
 }
 
-func (l *LabelController) Create(storage *storage.Storage, config *v1.Config) error {
+func (l *LabelController) Create(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
 	return fmt.Errorf("not supported")
 }
 
-func (l *LabelController) Delete(storage *storage.Storage, config *v1.Config) error {
+func (l *LabelController) Delete(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
 	return fmt.Errorf("not supported")
 }
 
-func (l *LabelController) Edit(storage *storage.Storage, config *v1.Config) error {
+func (l *LabelController) Edit(ctx context.Context, storageClient service.StorageServiceClient, config *v1.Config) error {
 	return fmt.Errorf("not supported")
 }
