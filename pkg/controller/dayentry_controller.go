@@ -50,7 +50,7 @@ func (d *DayEntryController) Create(ctx context.Context, storageClient service.S
 	createDayEntryRequest := &service.CreateDayEntryRequest{
 		DayEntry: &service.DayEntryInfo{
 			ObjectMeta: &service.ObjectMeta{
-				Name: config.Name,
+				Name: config.Time,
 			},
 		},
 	}
