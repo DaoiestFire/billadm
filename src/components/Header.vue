@@ -1,0 +1,64 @@
+<script setup>
+import { ref } from 'vue'
+const activeIndex = ref('bill')
+const billbooks = [
+    {
+        value: "default",
+        label: "默认账本"
+    },
+    {
+        value: "salary",
+        label: "工资账本"
+    }
+]
+const selectedBillBook = ref("default")
+</script>
+
+<template>
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false">
+        <div class="logo">
+            <span>Billadm</span>
+        </div>
+        <el-menu-item index="bill">
+            <el-icon>
+                <Edit />
+            </el-icon>
+            <span>账单</span>
+        </el-menu-item>
+        <el-menu-item index="analysis">
+            <el-icon>
+                <PieChart />
+            </el-icon>
+            <span>统计</span>
+        </el-menu-item>
+        <div class="billbook">
+            <el-select v-model="selectedBillBook" size="large" style="width: 240px;">
+                <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+        </div>
+    </el-menu>
+</template>
+
+<style scoped>
+.logo {
+    width: 200px;
+    position: relative;
+}
+
+.logo span {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--el-color-primary-dark-2);
+}
+
+.billbook {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+</style>

@@ -1,0 +1,24 @@
+{
+  "name": "billadm",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "electron .",
+    "bs": "vite build & electron ."
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@vitejs/plugin-legacy": "^5.4.1",
+    "element-plus": "^2.7.4",
+    "normalize.css": "^8.0.1",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "electron": "^30.0.9",
+    "vite": "^5.2.0"
+  }
+}
