@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import BillTable from './BillTable.vue';
 
 const timerange = ref('')
 const shortcuts = [
@@ -47,7 +48,7 @@ const shortcuts = [
             </div>
         </el-header>
         <el-main>
-            
+            <BillTable />
         </el-main>
     </el-container>
 </template>

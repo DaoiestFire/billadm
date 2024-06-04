@@ -60,7 +60,7 @@ const selectedBillBook = ref("default")
 
 <style scoped>
 .logo {
-    width: 200px;
+    width: 150px;
     position: relative;
     -webkit-app-region: drag;
 }
