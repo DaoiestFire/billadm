@@ -1,18 +1,38 @@
 <script setup>
 import Header from './components/Header.vue';
+import BillDisplay from './components/BillDisplay.vue'
 </script>
 
 <template>
-    <div class="common-layout">
-        <el-container>
-            <el-header>
-                <Header />
-            </el-header>
-            <el-main>
-                <el-empty description="没有数据" />
-            </el-main>
-        </el-container>
-    </div>
+    <el-container class="outer">
+        <el-header>
+            <Header />
+        </el-header>
+        <el-main>
+            <el-card class="max">
+                <BillDisplay />
+            </el-card>
+        </el-main>
+    </el-container>
 </template>
 
-<style scoped></style>
+<style scoped>
+.outer {
+    height: 100vh;
+    width: 100vw;
+}
+
+.max {
+    height: 100%;
+    width: 100%;
+}
+
+::-webkit-scrollbar {
+    width: 0 !important;
+}
+
+::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0;
+}
+</style>

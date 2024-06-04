@@ -1,4 +1,5 @@
 <script setup>
+import { Close, FullScreen } from '@element-plus/icons-vue';
 import { ref } from 'vue'
 const activeIndex = ref('bill')
 const billbooks = [
@@ -31,10 +32,28 @@ const selectedBillBook = ref("default")
             </el-icon>
             <span>统计</span>
         </el-menu-item>
-        <div class="billbook">
+        <div class="right-container">
             <el-select v-model="selectedBillBook" size="large" style="width: 240px;">
                 <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
+            <div class="window-control-container">
+                <el-button type="primary" circle>
+                    <el-icon>
+                        <Minus />
+                    </el-icon>
+                </el-button>
+                <el-button type="primary" circle>
+                    <el-icon>
+                        <FullScreen />
+                    </el-icon>
+                </el-button>
+                <el-button type="primary" circle>
+                    <el-icon>
+                        <Close />
+                    </el-icon>
+                </el-button>
+            </div>
+
         </div>
     </el-menu>
 </template>
@@ -43,6 +62,7 @@ const selectedBillBook = ref("default")
 .logo {
     width: 200px;
     position: relative;
+    -webkit-app-region: drag;
 }
 
 .logo span {
@@ -56,9 +76,15 @@ const selectedBillBook = ref("default")
     color: var(--el-color-primary-dark-2);
 }
 
-.billbook {
+.right-container {
     margin-left: auto;
     display: flex;
     align-items: center;
+}
+
+.window-control-container {
+    width: 200px;
+    display: flex;
+    justify-content: flex-end;
 }
 </style>
