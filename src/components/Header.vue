@@ -1,20 +1,3 @@
-<script setup>
-import { Close, FullScreen } from '@element-plus/icons-vue';
-import { ref } from 'vue'
-const activeIndex = ref('bill')
-const billbooks = [
-    {
-        value: "default",
-        label: "默认账本"
-    },
-    {
-        value: "salary",
-        label: "工资账本"
-    }
-]
-const selectedBillBook = ref("default")
-</script>
-
 <template>
     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :ellipsis="false">
         <div class="logo">
@@ -57,6 +40,23 @@ const selectedBillBook = ref("default")
         </div>
     </el-menu>
 </template>
+
+<script setup>
+import { Close, FullScreen } from '@element-plus/icons-vue';
+import { ref } from 'vue'
+const activeIndex = ref('bill')
+const billbooks = [
+    {
+        value: "default",
+        label: "默认账本"
+    },
+    {
+        value: "salary",
+        label: "工资账本"
+    }
+]
+const selectedBillBook = ref("default")
+</script>
 
 <style scoped>
 .logo {

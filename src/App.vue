@@ -1,8 +1,3 @@
-<script setup>
-import Header from './components/Header.vue';
-import BillDisplay from './components/BillDisplay.vue'
-</script>
-
 <template>
     <el-container class="outer">
         <el-header>
@@ -15,6 +10,12 @@ import BillDisplay from './components/BillDisplay.vue'
         </el-main>
     </el-container>
 </template>
+
+<script setup>
+import Header from './components/Header.vue';
+import BillDisplay from './components/BillDisplay.vue'
+</script>
+
 
 <style scoped>
 .outer {

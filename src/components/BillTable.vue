@@ -1,8 +1,13 @@
 <template>
-    <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="100px" />
-        <el-table-column label="账单信息" />
-        <el-table-column label="操作" width="200px" align="center">
+    <el-table :data="tableData" style="width: 100%" max-height="1000px" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="50px" />
+        <el-table-column label="账单信息">
+            <template #default="scope">
+                <BillInfo>
+                </BillInfo>
+            </template>
+        </el-table-column>
+        <el-table-column label="操作" width="150px" align="center">
             <template #default="scope">
                 <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
                     编辑
@@ -17,6 +22,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import BillInfo from './BillInfo.vue'
 
 const multipleSelection = ref([])
 const handleSelectionChange = (val) => {
@@ -51,6 +57,21 @@ const tableData = [
     },
     {
         date: '2016-05-06',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+        date: '2016-05-07',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+        date: '2016-05-07',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles',
+    },
+    {
+        date: '2016-05-07',
         name: 'Tom',
         address: 'No. 189, Grove St, Los Angeles',
     },
