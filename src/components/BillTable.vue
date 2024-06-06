@@ -1,9 +1,9 @@
 <template>
-    <el-table :data="tableData" style="width: 100%" max-height="1000px" @selection-change="handleSelectionChange">
+    <el-table :data="tableData" style="width: 100%" max-height="500px" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50px" />
         <el-table-column label="账单信息">
             <template #default="scope">
-                <BillInfo>
+                <BillInfo :billInfo="scope.row.data">
                 </BillInfo>
             </template>
         </el-table-column>
@@ -31,54 +31,14 @@ const handleSelectionChange = (val) => {
 
 const tableData = [
     {
-        date: '2016-05-03',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-02',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-04',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-08',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-06',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-07',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-07',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-07',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-07',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
+        data: {
+            money: "37.78",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: true
+        },
     },
 ]
 </script>

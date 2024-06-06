@@ -1,23 +1,23 @@
 <template>
-    <el-card shadow="hover">
+    <el-card shadow="hover" body-style="padding: 0px">
         <div class="billinfo-outer">
             <div class="billinfo-inner">
-                <div class="billinfo-money" :style="billinfo.income ? 'color: #67c23a' : 'color: #f56c6c'">
-                    <span>{{ billinfo.income ? "+" : "-" }}{{ billinfo.money }}</span>
+                <div class="billinfo-money" :style="props.billInfo.income ? 'color: #67c23a' : 'color: #f56c6c'">
+                    <span>{{ props.billInfo.income ? "+" : "-" }}{{ props.billInfo.money }}</span>
                 </div>
                 <div class="billinfo-inner2">
                     <div class="billinfo-description">
                         <span class="billinfo-title">备注:</span>
-                        <span>{{ billinfo.description }}</span>
+                        <span>{{ props.billInfo.description }}</span>
                     </div>
                     <div class="billinfo-inner3">
                         <div class="billinfo-type">
                             <span class="billinfo-title">类别:</span>
-                            <span>{{ billinfo.type }}</span>
+                            <span>{{ props.billInfo.type }}</span>
                         </div>
                         <div class="billinfo-time">
                             <span class="billinfo-title">时间:</span>
-                            <span>{{ billinfo.time }}</span>
+                            <span>{{ props.billInfo.time }}</span>
                         </div>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
             <div class="billinfo-tag">
                 <span class="billinfo-title">标签:</span>
                 <el-space warp>
-                    <el-tag v-for="tag in billinfo.tags">{{ tag }}</el-tag>
+                    <el-tag v-for="tag in props.billInfo.tags">{{ tag }}</el-tag>
                 </el-space>
             </div>
         </div>
@@ -33,16 +33,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { defineProps } from 'vue';
 
-const billinfo = ref({
-    money: "37.78",
-    description: "晚饭",
-    type: "饮食",
-    time: "2024-06-05 08:23:56",
-    tags: ["刘敬威", "吃饭", "正常消费"],
-    income: true
-})
+const props = defineProps(["billInfo"])
 
 </script>
 
@@ -50,7 +43,7 @@ const billinfo = ref({
 .billinfo-outer {
     display: flex;
     flex-direction: column;
-    border-width: 1px;
+    border-width: 0px;
     border-color: var(--el-color-info-light-8);
     border-style: solid;
 }
