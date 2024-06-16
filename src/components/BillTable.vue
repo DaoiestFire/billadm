@@ -1,7 +1,8 @@
 <template>
-    <el-table :data="tableData" style="width: 100%" max-height="2000px" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="50px" />
-        <el-table-column label="账单信息">
+    <el-table :data="tableData" style="width: 100%" cell-class-name="bill-table-cell" max-height="2000px" border
+        @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="50px" align="center" />
+        <el-table-column label="账单信息" align="center">
             <template #default="scope">
                 <BillInfo :billInfo="scope.row.data">
                 </BillInfo>
@@ -23,7 +24,6 @@
 <script setup>
 import { ref } from 'vue'
 import BillInfo from './BillInfo.vue'
-import { fa } from 'element-plus/es/locales.mjs';
 
 const multipleSelection = ref([])
 const handleSelectionChange = (val) => {
@@ -133,3 +133,13 @@ const tableData = [
     },
 ]
 </script>
+
+<style>
+.bill-table-cell {
+    padding: 0px !important;
+}
+
+.bill-table-cell .cell {
+    padding: 0px !important;
+}
+</style>

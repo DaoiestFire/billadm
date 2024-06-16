@@ -1,33 +1,31 @@
 <template>
-    <el-card shadow="hover" body-style="padding: 0px">
-        <div class="billinfo-outer">
-            <div class="billinfo-inner">
-                <div class="billinfo-money" :style="props.billInfo.income ? 'color: #67c23a' : 'color: #f56c6c'">
-                    <span>{{ props.billInfo.income ? "+" : "-" }}{{ props.billInfo.money }}</span>
-                </div>
-                <div class="billinfo-inner2">
-                    <div class="billinfo-type">
-                        <span class="billinfo-title">类别:</span>
-                        <span>{{ props.billInfo.type }}</span>
-                    </div>
-                    <div class="billinfo-time">
-                        <span class="billinfo-title">时间:</span>
-                        <span>{{ props.billInfo.time }}</span>
-                    </div>
-                    <div class="billinfo-description">
-                        <span class="billinfo-title">备注:</span>
-                        <span>{{ props.billInfo.description }}</span>
-                    </div>
-                </div>
+    <div class="billinfo-outer">
+        <div class="billinfo-inner">
+            <div class="billinfo-money" :style="props.billInfo.income ? 'color: #67c23a' : 'color: #f56c6c'">
+                <span>{{ props.billInfo.income ? "+" : "-" }}{{ props.billInfo.money }}</span>
             </div>
-            <div class="billinfo-tag">
-                <span class="billinfo-title">标签:</span>
-                <el-space warp>
-                    <el-tag v-for="tag in props.billInfo.tags">{{ tag }}</el-tag>
-                </el-space>
+            <div class="billinfo-inner2">
+                <div class="billinfo-type">
+                    <span class="billinfo-title">类别:</span>
+                    <span>{{ props.billInfo.type }}</span>
+                </div>
+                <div class="billinfo-time">
+                    <span class="billinfo-title">时间:</span>
+                    <span>{{ props.billInfo.time }}</span>
+                </div>
+                <div class="billinfo-description">
+                    <span class="billinfo-title">备注:</span>
+                    <span>{{ props.billInfo.description }}</span>
+                </div>
             </div>
         </div>
-    </el-card>
+        <div class="billinfo-tag">
+            <span class="billinfo-title">标签:</span>
+            <el-space warp>
+                <el-tag v-for="tag in props.billInfo.tags">{{ tag }}</el-tag>
+            </el-space>
+        </div>
+    </div>
 </template>
 
 <script setup>
