@@ -6,19 +6,17 @@
                     <span>{{ props.billInfo.income ? "+" : "-" }}{{ props.billInfo.money }}</span>
                 </div>
                 <div class="billinfo-inner2">
+                    <div class="billinfo-type">
+                        <span class="billinfo-title">类别:</span>
+                        <span>{{ props.billInfo.type }}</span>
+                    </div>
+                    <div class="billinfo-time">
+                        <span class="billinfo-title">时间:</span>
+                        <span>{{ props.billInfo.time }}</span>
+                    </div>
                     <div class="billinfo-description">
                         <span class="billinfo-title">备注:</span>
                         <span>{{ props.billInfo.description }}</span>
-                    </div>
-                    <div class="billinfo-inner3">
-                        <div class="billinfo-type">
-                            <span class="billinfo-title">类别:</span>
-                            <span>{{ props.billInfo.type }}</span>
-                        </div>
-                        <div class="billinfo-time">
-                            <span class="billinfo-title">时间:</span>
-                            <span>{{ props.billInfo.time }}</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -49,7 +47,7 @@ const props = defineProps(["billInfo"])
 }
 
 .billinfo-inner {
-    height: 60px;
+    height: 40px;
     display: flex;
     border-width: 0px 0px 1px 0px;
     border-color: var(--el-color-info-light-8);
@@ -57,14 +55,14 @@ const props = defineProps(["billInfo"])
 }
 
 .billinfo-tag {
-    height: 40px;
+    height: 30px;
     display: flex;
     align-items: center;
 }
 
 .billinfo-money {
     position: relative;
-    width: 30%;
+    width: 25%;
 
 }
 
@@ -74,44 +72,35 @@ const props = defineProps(["billInfo"])
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 40px;
+    font-size: 30px;
     line-height: 100%;
 }
 
 .billinfo-inner2 {
-    width: 70%;
+    width: 75%;
     display: flex;
-    flex-direction: column;
     border-width: 0px 0px 0px 1px;
-    border-color: var(--el-color-info-light-8);
-    border-style: solid;
-}
-
-.billinfo-description {
-    height: 30px;
-    display: flex;
-    align-items: center;
-}
-
-.billinfo-inner3 {
-    height: 30px;
-    display: flex;
-    border-width: 1px 0px 0px 0px;
     border-color: var(--el-color-info-light-8);
     border-style: solid;
 }
 
 .billinfo-type {
-    width: 40%;
+    width: 20%;
     display: flex;
     align-items: center;
 }
 
 .billinfo-time {
-    width: 60%;
-    border-width: 0px 0px 0px 1px;
+    width: 42%;
+    border-width: 0px 1px 0px 1px;
     border-color: var(--el-color-info-light-8);
     border-style: solid;
+    display: flex;
+    align-items: center;
+}
+
+.billinfo-description {
+    height: 40px;
     display: flex;
     align-items: center;
 }

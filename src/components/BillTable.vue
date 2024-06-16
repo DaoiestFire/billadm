@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="tableData" style="width: 100%" max-height="500px" @selection-change="handleSelectionChange">
+    <el-table :data="tableData" style="width: 100%" max-height="2000px" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50px" />
         <el-table-column label="账单信息">
             <template #default="scope">
@@ -23,6 +23,7 @@
 <script setup>
 import { ref } from 'vue'
 import BillInfo from './BillInfo.vue'
+import { fa } from 'element-plus/es/locales.mjs';
 
 const multipleSelection = ref([])
 const handleSelectionChange = (val) => {
@@ -33,11 +34,101 @@ const tableData = [
     {
         data: {
             money: "37.78",
+            description: "游戏",
+            type: "娱乐",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘vdf", "吃饭", "消费"],
+            income: true
+        },
+    },
+    {
+        data: {
+            money: "3834",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: false
+        },
+    },
+    {
+        data: {
+            money: "37.78",
             description: "晚饭",
             type: "饮食",
             time: "2024-06-05 08:23:56",
             tags: ["刘敬威", "吃饭", "正常消费"],
             income: true
+        },
+    },
+    {
+        data: {
+            money: "37.78",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: true
+        },
+    },
+    {
+        data: {
+            money: "37.78",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: true
+        },
+    },
+    {
+        data: {
+            money: "37.78",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: true
+        },
+    },
+    {
+        data: {
+            money: "3237.8",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: false
+        },
+    },
+    {
+        data: {
+            money: "37.78",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: true
+        },
+    },
+    {
+        data: {
+            money: "37.78",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: true
+        },
+    },
+    {
+        data: {
+            money: "37.78",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05 08:23:56",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: false
         },
     },
 ]
