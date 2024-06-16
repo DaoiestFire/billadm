@@ -20,17 +20,17 @@
                 <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <div class="window-control-container">
-                <el-button type="primary" circle>
+                <el-button type="primary" circle @click="windowMinimize">
                     <el-icon>
                         <Minus />
                     </el-icon>
                 </el-button>
-                <el-button type="primary" circle>
+                <el-button type="primary" circle @click="windowMaximize">
                     <el-icon>
                         <FullScreen />
                     </el-icon>
                 </el-button>
-                <el-button type="primary" circle>
+                <el-button type="primary" circle @click="winClose">
                     <el-icon>
                         <Close />
                     </el-icon>
@@ -44,6 +44,7 @@
 <script setup>
 import { Close, FullScreen } from '@element-plus/icons-vue';
 import { ref } from 'vue'
+
 const activeIndex = ref('bill')
 const billbooks = [
     {
@@ -56,6 +57,19 @@ const billbooks = [
     }
 ]
 const selectedBillBook = ref("default")
+
+// 窗口控制函数
+const winClose = () => {
+    window.windowController.send("window-close")
+}
+
+const windowMaximize = () => {
+    window.windowController.send("window-maximize")
+}
+
+const windowMinimize = () => {
+    window.windowController.send("window-minimize")
+}
 </script>
 
 <style scoped>
