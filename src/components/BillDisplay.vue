@@ -6,7 +6,7 @@
                     <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
                         start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" :size="default" />
                 </div>
-                <el-button type="primary">
+                <el-button type="primary" @click="addBillInfo">
                     <el-icon>
                         <Plus />
                     </el-icon>
@@ -22,6 +22,7 @@
         </el-header>
         <el-main>
             <BillTable />
+            <BillForm v-if="isShowBillForm" />
         </el-main>
     </el-container>
 </template>
@@ -29,8 +30,10 @@
 <script setup>
 import { ref } from 'vue';
 import BillTable from './BillTable.vue';
+import BillForm from './BillForm.vue'
 
 const timerange = ref('')
+const isShowBillForm = ref(false)
 const shortcuts = [
     {
         text: '上周',
@@ -51,6 +54,10 @@ const shortcuts = [
         },
     }
 ]
+
+function addBillInfo() {
+    isShowBillForm.value = true
+}
 </script>
 
 <style scoped>
