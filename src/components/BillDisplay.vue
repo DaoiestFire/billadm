@@ -10,7 +10,7 @@
                     <el-icon>
                         <Plus />
                     </el-icon>
-                    <span> 新增记录</span>
+                    <span>新增记录</span>
                 </el-button>
                 <el-button type="danger">
                     <el-icon>
@@ -22,7 +22,7 @@
         </el-header>
         <el-main>
             <BillTable />
-            <BillForm v-if="isShowBillForm" />
+            <BillForm v-if="show" />
         </el-main>
     </el-container>
 </template>
@@ -33,7 +33,6 @@ import BillTable from './BillTable.vue';
 import BillForm from './BillForm.vue'
 
 const timerange = ref('')
-const isShowBillForm = ref(false)
 const shortcuts = [
     {
         text: '上周',
@@ -55,8 +54,14 @@ const shortcuts = [
     }
 ]
 
+// variable
+const show = ref(false)
+
+// function
 function addBillInfo() {
-    isShowBillForm.value = true
+    console.log(show.value);
+    show.value = true;
+    console.log(show.value);
 }
 </script>
 
