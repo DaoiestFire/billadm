@@ -2,26 +2,24 @@
     <el-table :data="tableData" style="width: 100%" cell-class-name="bill-table-cell" max-height="600px"
         @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50px" align="center" />
-        <el-table-column label="账单信息" align="center">
-            <el-table-column prop="money" label="金额" width="100px" align="center">
-                <template #default="scope">
-                    <span style="margin-left: 10px;" :style="scope.row.income ? 'color: #67c23a' : 'color: #f56c6c'">
-                        {{ scope.row.income ? "+" : "-" }}{{ scope.row.money }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="type" label="类型" width="100px" align="center">
-            </el-table-column>
-            <el-table-column prop="time" label="时间" width="120px" align="center">
-            </el-table-column>
-            <el-table-column prop="description" label="描述" width="150px" align="center">
-            </el-table-column>
-            <el-table-column prop="tags" label="标签">
-                <template #default="scope">
-                    <el-space warp>
-                        <el-tag v-for="tag in scope.row.tags">{{ tag }}</el-tag>
-                    </el-space>
-                </template>
-            </el-table-column>
+        <el-table-column prop="money" label="金额" width="100px" align="center">
+            <template #default="scope">
+                <span style="margin-left: 10px;" :style="scope.row.income ? 'color: #67c23a' : 'color: #f56c6c'">
+                    {{ scope.row.income ? "+" : "-" }}{{ scope.row.money }}</span>
+            </template>
+        </el-table-column>
+        <el-table-column prop="type" label="类型" width="100px" align="center">
+        </el-table-column>
+        <el-table-column prop="time" label="时间" width="120px" align="center">
+        </el-table-column>
+        <el-table-column prop="description" label="描述" width="150px" align="center">
+        </el-table-column>
+        <el-table-column prop="tags" label="标签">
+            <template #default="scope">
+                <el-space warp>
+                    <el-tag v-for="tag in scope.row.tags">{{ tag }}</el-tag>
+                </el-space>
+            </template>
         </el-table-column>
         <el-table-column label="操作" width="150px" align="center">
             <template #default="scope">
