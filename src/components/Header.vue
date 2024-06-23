@@ -31,22 +31,22 @@
             <el-select v-model="selectedBillBook" size="default" style="width: 160px; margin-right: 100px;">
                 <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
+            <div class="control-button" @click="windowMinimize">
+                <el-icon>
+                    <Minus />
+                </el-icon>
+            </div>
+            <div class="control-button" @click="windowMaximize">
+                <el-icon>
+                    <FullScreen />
+                </el-icon>
+            </div>
+            <div class="control-button" @click="winClose">
+                <el-icon>
+                    <Close />
+                </el-icon>
+            </div>
         </div>
-        <el-menu-item index="setting" @click="windowMinimize">
-            <el-icon>
-                <Minus />
-            </el-icon>
-        </el-menu-item>
-        <el-menu-item index="setting" @click="windowMaximize">
-            <el-icon>
-                <FullScreen />
-            </el-icon>
-        </el-menu-item>
-        <el-menu-item index="setting" @click="winClose">
-            <el-icon>
-                <Close />
-            </el-icon>
-        </el-menu-item>
     </el-menu>
 </template>
 
@@ -113,5 +113,16 @@ const windowMinimize = () => {
     width: 200px;
     display: flex;
     justify-content: flex-end;
+}
+
+.control-button {
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.control-button:hover {
+    background-color: var(--el-color-primary-light-9);
 }
 </style>
