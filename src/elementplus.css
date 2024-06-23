@@ -12,3 +12,8 @@
     color: var(--el-color-primary);
     font-weight: bold;
 }
+
+.el-menu-item{
+    padding-left: 10px;
+    padding-right: 10px;
+}

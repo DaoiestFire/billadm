@@ -15,29 +15,38 @@
             </el-icon>
             <span>统计</span>
         </el-menu-item>
+        <el-menu-item index="property">
+            <el-icon>
+                <Coin />
+            </el-icon>
+            <span>资产</span>
+        </el-menu-item>
+        <el-menu-item index="setting">
+            <el-icon>
+                <Setting />
+            </el-icon>
+            <span>设置</span>
+        </el-menu-item>
         <div class="right-container">
-            <el-select v-model="selectedBillBook" size="large" style="width: 240px;">
+            <el-select v-model="selectedBillBook" size="default" style="width: 160px; margin-right: 100px;">
                 <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-            <div class="window-control-container">
-                <el-button type="primary" circle @click="windowMinimize">
-                    <el-icon>
-                        <Minus />
-                    </el-icon>
-                </el-button>
-                <el-button type="primary" circle @click="windowMaximize">
-                    <el-icon>
-                        <FullScreen />
-                    </el-icon>
-                </el-button>
-                <el-button type="primary" circle @click="winClose">
-                    <el-icon>
-                        <Close />
-                    </el-icon>
-                </el-button>
-            </div>
-
         </div>
+        <el-menu-item index="setting" @click="windowMinimize">
+            <el-icon>
+                <Minus />
+            </el-icon>
+        </el-menu-item>
+        <el-menu-item index="setting" @click="windowMaximize">
+            <el-icon>
+                <FullScreen />
+            </el-icon>
+        </el-menu-item>
+        <el-menu-item index="setting" @click="winClose">
+            <el-icon>
+                <Close />
+            </el-icon>
+        </el-menu-item>
     </el-menu>
 </template>
 
@@ -88,6 +97,10 @@ const windowMinimize = () => {
     font-size: 30px;
     font-weight: bold;
     color: var(--el-color-primary-dark-2);
+}
+
+.el-menu-demo {
+    height: 50px;
 }
 
 .right-container {

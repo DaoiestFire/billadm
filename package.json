@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "start": "electron-forge start",
     "bs": "vite build & electron .",
-    "package": "electron-forge package --dir",
+    "package": "electron-forge package",
     "make": "electron-forge make"
   },
   "dependencies": {
