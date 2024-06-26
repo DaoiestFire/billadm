@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, defineProps } from 'vue'
+import { reactive, ref } from 'vue'
 
 const show = ref(true)
 const billForm = reactive({
@@ -91,7 +91,7 @@ const onCancel = () => {
 }
 
 const onSubmit = () => {
-    
+
     reset()
 }
 
