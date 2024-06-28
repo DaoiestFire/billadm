@@ -40,7 +40,9 @@ import {
     getThisYearDate
 } from '../utils/timeutils';
 
-const timerange = ref(null)
+// variable
+const billFormInstance = ref(null)
+const timerange = ref([new Date(), new Date()])
 const shortcuts = [
     {
         text: '上周',
@@ -72,12 +74,9 @@ const shortcuts = [
     },
     {
         text: '全部',
-        value: null,
+        value: [null, null],
     },
 ]
-
-// variable
-const billFormInstance = ref(null)
 
 // function
 const addBillInfo = () => {
