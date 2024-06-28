@@ -4,7 +4,7 @@
             <div class="header-container">
                 <div class="date-picker-container">
                     <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
-                        start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" :size="default" />
+                        start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" size="default" />
                 </div>
                 <el-button type="primary" @click="addBillInfo">
                     <el-icon>
@@ -12,7 +12,7 @@
                     </el-icon>
                     <span>新增记录</span>
                 </el-button>
-                <el-button type="danger">
+                <el-button type="danger" @click="console.log(toRaw(timerange))">
                     <el-icon>
                         <Delete />
                     </el-icon>
@@ -28,30 +28,52 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import BillTable from './BillTable.vue';
 import BillForm from './BillForm.vue'
+import {
+    getLastMonthDate,
+    getLastWeekData,
+    getLastYearDate,
+    getThisMonthData,
+    getThisWeekData,
+    getThisYearDate
+} from '../utils/timeutils';
 
-const timerange = ref('')
+const timerange = ref(null)
 const shortcuts = [
     {
         text: '上周',
-        value: () => {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-            return [start, end]
-        },
+        value: getLastWeekData(),
     },
     {
         text: '上个月',
-        value: () => {
-            const end = new Date()
-            const start = new Date()
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-            return [start, end]
-        },
-    }
+        value: getLastMonthDate(),
+    },
+    {
+        text: '去年',
+        value: getLastYearDate(),
+    },
+    {
+        text: '本周',
+        value: getThisWeekData(),
+    },
+    {
+        text: '本月',
+        value: getThisMonthData(),
+    },
+    {
+        text: '今年',
+        value: getThisYearDate(),
+    },
+    {
+        text: '今天',
+        value: [],
+    },
+    {
+        text: '全部',
+        value: null,
+    },
 ]
 
 // variable
@@ -70,7 +92,9 @@ const handleSubmitBill = (billFormData) => {
 <style scoped>
 .header-container {
     height: 100%;
-    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: right;
 }
 
 .date-picker-container {

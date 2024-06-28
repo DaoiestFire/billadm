@@ -28,7 +28,7 @@
             <span>设置</span>
         </el-menu-item>
         <div class="right-container">
-            <el-select v-model="selectedBillBook" size="default" style="width: 160px; margin-right: 100px;">
+            <el-select v-model="selectedBillBook" size="default" style="width: 160px; margin-right: 80px;">
                 <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <div class="control-button" @click="windowMinimize">
@@ -107,12 +107,7 @@ const windowMinimize = () => {
     margin-left: auto;
     display: flex;
     align-items: center;
-}
-
-.window-control-container {
-    width: 200px;
-    display: flex;
-    justify-content: flex-end;
+    justify-content: right;
 }
 
 .control-button {
@@ -122,6 +117,7 @@ const windowMinimize = () => {
     justify-content: center;
     align-items: center;
 }
+
 .control-button:hover {
     background-color: var(--el-color-primary-light-9);
 }

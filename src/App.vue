@@ -1,6 +1,6 @@
 <template>
     <el-container class="outer">
-        <el-header height="40px">
+        <el-header height="50px">
             <Header />
         </el-header>
         <el-main>
