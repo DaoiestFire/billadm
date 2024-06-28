@@ -22,7 +22,7 @@
         </el-header>
         <el-main>
             <BillTable />
-            <BillForm v-if="show" />
+            <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill" />
         </el-main>
     </el-container>
 </template>
@@ -55,13 +55,15 @@ const shortcuts = [
 ]
 
 // variable
-const show = ref(false)
+const billFormInstance = ref(null)
 
 // function
-function addBillInfo() {
-    console.log(show.value);
-    show.value = true;
-    console.log(show.value);
+const addBillInfo = () => {
+    billFormInstance.value.showForm()
+}
+
+const handleSubmitBill = (billFormData) => {
+    console.log(billFormData)
 }
 </script>
 

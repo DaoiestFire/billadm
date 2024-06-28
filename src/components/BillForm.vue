@@ -44,6 +44,7 @@
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="onCancel">退出</el-button>
+                <el-button @click="reset">重置</el-button>
                 <el-button type="primary" @click="onSubmit">
                     提交
                 </el-button>
@@ -53,9 +54,12 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, toRaw } from 'vue'
 
-const show = ref(true)
+// variable
+const show = ref(false)
+const isAdding = ref(false)
+const optionName = ref('')
 const billForm = reactive({
     money: "",
     income: "false",
@@ -64,10 +68,12 @@ const billForm = reactive({
     description: "",
     tags: [],
 })
+const emit = defineEmits(['submitBill'])
 
-// variable
-const isAdding = ref(false)
-const optionName = ref('')
+// function
+const showForm = () => {
+    show.value = !show.value
+}
 
 // function: 标签操作
 const onAddOption = () => {
@@ -88,11 +94,13 @@ const clear = () => {
 
 // function: 表单操作
 const onCancel = () => {
+    showForm()
 }
 
 const onSubmit = () => {
-
+    emit("submitBill", toRaw(billForm))
     reset()
+    showForm()
 }
 
 const reset = () => {
@@ -103,6 +111,12 @@ const reset = () => {
     billForm.description = "";
     billForm.tags = [];
 }
+
+// expose
+defineExpose({
+    showForm,
+})
+
 </script>
 <style scoped>
 .option-input {
