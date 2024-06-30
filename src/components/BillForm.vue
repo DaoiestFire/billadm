@@ -61,11 +61,12 @@ const show = ref(false)
 const isAdding = ref(false)
 const optionName = ref('')
 const billForm = reactive({
-    money: "",
-    income: "false",
-    type: "",
+    index: '',
+    money: '',
+    income: 'false',
+    type: '',
     time: new Date(),
-    description: "",
+    description: '',
     tags: [],
 })
 const emit = defineEmits(['submitBill'])
@@ -73,6 +74,16 @@ const emit = defineEmits(['submitBill'])
 // function
 const showForm = () => {
     show.value = !show.value
+}
+
+const setBillForm = (info) => {
+    billForm.index = info.index;
+    billForm.money = info.money;
+    billForm.income = info.income;
+    billForm.type = info.type;
+    billForm.time = info.time;
+    billForm.description = info.description;
+    billForm.tags = info.tags;
 }
 
 // function: 标签操作
@@ -89,7 +100,7 @@ const onConfirm = () => {
 
 const clear = () => {
     isAdding.value = false
-    optionName.value = ""
+    optionName.value = ''
 }
 
 // function: 表单操作
@@ -98,23 +109,24 @@ const onCancel = () => {
 }
 
 const onSubmit = () => {
-    emit("submitBill", toRaw(billForm))
+    emit('submitBill', toRaw(billForm))
     reset()
     showForm()
 }
 
 const reset = () => {
-    billForm.money = "";
-    billForm.income = "false";
-    billForm.type = "";
+    billForm.money = '';
+    billForm.income = 'false';
+    billForm.type = '';
     billForm.time = new Date();
-    billForm.description = "";
+    billForm.description = '';
     billForm.tags = [];
 }
 
 // expose
 defineExpose({
     showForm,
+    setBillForm,
 })
 
 </script>

@@ -40,6 +40,7 @@
 import { computed, onMounted, ref } from 'vue'
 
 // 变量
+const emit = defineEmits(['updateOneBill'])
 const multipleSelection = ref([])
 const windowHeight = ref(window.innerHeight)
 const tableHeight = computed(() => {
@@ -54,11 +55,12 @@ window.addEventListener('resize', () => {
 
 // 单记录操作函数
 const handleEdit = (info) => {
-    console.log(info.index)
+    emit('updateOneBill', info)
+    refreshTableDate
 }
 
 const handleDelete = (index) => {
-    console.log(index)
+    deleteBillsByList([index])
 }
 
 // 表格函数

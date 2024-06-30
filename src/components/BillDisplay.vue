@@ -21,7 +21,7 @@
             </div>
         </el-header>
         <el-main>
-            <BillTable ref="billTableInstance" />
+            <BillTable ref="billTableInstance" @update-one-bill="handleBillEdit" />
             <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill" />
         </el-main>
     </el-container>
@@ -86,6 +86,11 @@ const addBillInfo = () => {
 
 const handleSubmitBill = (billFormData) => {
     console.log(billFormData)
+}
+
+const handleBillEdit = (info) => {
+    billFormInstance.value.setBillForm(info);
+    billFormInstance.value.showForm();
 }
 
 const handleBatchDelete = () => {
