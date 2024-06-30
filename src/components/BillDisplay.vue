@@ -12,12 +12,17 @@
                     </el-icon>
                     <span>新增记录</span>
                 </el-button>
-                <el-button type="danger" @click="handleBatchDelete">
-                    <el-icon>
-                        <Delete />
-                    </el-icon>
-                    <span>批量删除</span>
-                </el-button>
+                <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
+                    @confirm="handleBatchDelete">
+                    <template #reference>
+                        <el-button type="danger">
+                            <el-icon>
+                                <Delete />
+                            </el-icon>
+                            <span>批量删除</span>
+                        </el-button>
+                    </template>
+                </el-popconfirm>
             </div>
         </el-header>
         <el-main>
@@ -28,8 +33,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import BillTable from './BillTable.vue';
+import { ref } from 'vue'
+import BillTable from './BillTable.vue'
 import BillForm from './BillForm.vue'
 import {
     getLastMonthDate,
@@ -38,7 +43,7 @@ import {
     getThisMonthData,
     getThisWeekData,
     getThisYearDate
-} from '../utils/timeutils';
+} from '../utils/timeutils'
 
 // variable
 const billFormInstance = ref(null)
@@ -81,16 +86,18 @@ const shortcuts = [
 
 // function
 const addBillInfo = () => {
+    billFormInstance.value.reset()
     billFormInstance.value.showForm()
 }
 
 const handleSubmitBill = (billFormData) => {
+    // TODO
     console.log(billFormData)
 }
 
 const handleBillEdit = (info) => {
-    billFormInstance.value.setBillForm(info);
-    billFormInstance.value.showForm();
+    billFormInstance.value.setBillForm(info)
+    billFormInstance.value.showForm()
 }
 
 const handleBatchDelete = () => {

@@ -1,5 +1,6 @@
 <template>
-    <el-dialog v-model="show" :show-close="false" :close-on-press-escape="false" title="新建记录">
+    <el-dialog v-model="show" :show-close="false" :close-on-press-escape="false"
+        :title="billForm.index === '' ? '新建记录' : '更新记录'">
         <el-form :model="billForm" label-width="auto" style="max-width: 600px" label-position="left" ref="bill-form">
             <el-form-item label="金额">
                 <el-input v-model.trim="billForm.money" />
@@ -44,7 +45,7 @@
         <template #footer>
             <div class="dialog-footer">
                 <el-button @click="onCancel">退出</el-button>
-                <el-button @click="reset">重置</el-button>
+                <el-button v-if="billForm.index === ''" @click="reset">重置</el-button>
                 <el-button type="primary" @click="onSubmit">
                     提交
                 </el-button>
@@ -77,13 +78,13 @@ const showForm = () => {
 }
 
 const setBillForm = (info) => {
-    billForm.index = info.index;
-    billForm.money = info.money;
-    billForm.income = info.income;
-    billForm.type = info.type;
-    billForm.time = info.time;
-    billForm.description = info.description;
-    billForm.tags = info.tags;
+    billForm.index = info.index
+    billForm.money = info.money
+    billForm.income = info.income
+    billForm.type = info.type
+    billForm.time = info.time
+    billForm.description = info.description
+    billForm.tags = info.tags
 }
 
 // function: 标签操作
@@ -115,18 +116,20 @@ const onSubmit = () => {
 }
 
 const reset = () => {
-    billForm.money = '';
-    billForm.income = 'false';
-    billForm.type = '';
-    billForm.time = new Date();
-    billForm.description = '';
-    billForm.tags = [];
+    billForm.index = ''
+    billForm.money = ''
+    billForm.income = 'false'
+    billForm.type = ''
+    billForm.time = new Date()
+    billForm.description = ''
+    billForm.tags = []
 }
 
 // expose
 defineExpose({
     showForm,
     setBillForm,
+    reset,
 })
 
 </script>
