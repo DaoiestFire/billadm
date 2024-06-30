@@ -1,6 +1,6 @@
 <template>
     <div class="bill-table-outer">
-        <el-table :data="tableData" style="width: 100%" cell-class-name="bill-table-cell" :height="tableHeight"
+        <el-table :data="tableData" style="width: 100%" cell-class-name="bill-table-cell" :max-height="tableHeight"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="50px" align="center" />
             <el-table-column prop="money" label="金额" width="100px" align="center">
@@ -24,10 +24,10 @@
             </el-table-column>
             <el-table-column label="操作" width="150px" align="center">
                 <template #default="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
+                    <el-button size="small" @click="handleEdit(scope.row)">
                         编辑
                     </el-button>
-                    <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">
+                    <el-button size="small" type="danger" @click="handleDelete(scope.row.index)">
                         删除
                     </el-button>
                 </template>
@@ -37,105 +37,89 @@
 </template>
 
 <script setup>
-import { computed, ref, watchEffect } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
+// 变量
 const multipleSelection = ref([])
-const handleSelectionChange = (val) => {
-    multipleSelection.value = val
-}
-
-const tableData = [
-    {
-        money: "37.78",
-        description: "游戏",
-        type: "娱乐",
-        time: "2024-06-05",
-        tags: ["刘vdf", "吃饭", "消费"],
-        income: true
-    },
-    {
-        money: "3834",
-        description: "晚饭",
-        type: "饮食",
-        time: "2024-06-05",
-        tags: ["刘敬威", "吃饭", "正常消费"],
-        income: false
-    },
-    {
-        money: "37.78",
-        description: "晚饭",
-        type: "饮食",
-        time: "2024-06-05",
-        tags: ["刘敬威", "吃饭", "正常消费"],
-        income: true
-    },
-    {
-        money: "37.78",
-        description: "晚饭",
-        type: "饮食",
-        time: "2024-06-05",
-        tags: ["刘敬威", "吃饭", "正常消费"],
-        income: true
-    },
-    {
-        money: "37.78",
-        description: "晚饭",
-        type: "饮食",
-        time: "2024-06-05",
-        tags: ["刘敬威", "吃饭", "正常消费"],
-        income: true
-    },
-    {
-        money: "37.78",
-        description: "晚饭",
-        type: "饮食",
-        time: "2024-06-05",
-        tags: ["刘敬威", "吃饭", "正常消费"],
-        income: true
-    },
-    {
-        money: "3237.8",
-        description: "晚饭",
-        type: "饮食",
-        time: "2024-06-05",
-        tags: ["刘敬威", "吃饭", "正常消费"],
-        income: false
-    },
-    {
-        money: "37.78",
-        description: "晚饭",
-        type: "饮食",
-        time: "2024-06-05",
-        tags: ["刘敬威", "吃饭", "正常消费"],
-        income: true
-    },
-    {
-        money: "37.78",
-        description: "晚饭",
-        type: "饮食",
-        time: "2024-06-05",
-        tags: ["刘敬威", "吃饭", "正常消费"],
-        income: true
-    },
-    {
-        money: "37.78",
-        description: "晚饭",
-        type: "饮食",
-        time: "2024-06-05",
-        tags: ["刘敬威", "吃饭", "正常消费"],
-        income: false
-    },
-]
-
-// variable
 const windowHeight = ref(window.innerHeight)
 const tableHeight = computed(() => {
     return windowHeight.value - 190
 })
+const tableData = ref()
 
-// window function
+// 窗口函数
 window.addEventListener('resize', () => {
     windowHeight.value = window.innerHeight
+})
+
+// 单记录操作函数
+const handleEdit = (info) => {
+    console.log(info.index)
+}
+
+const handleDelete = (index) => {
+    console.log(index)
+}
+
+// 表格函数
+// 根据当前账本与时间刷新表格数据
+const refreshTableDate = () => {
+    tableData.value = [
+        {
+            index: "index1",
+            money: "37.78",
+            description: "游戏",
+            type: "娱乐",
+            time: "2024-06-05",
+            tags: ["刘vdf", "吃饭", "消费"],
+            income: true
+        },
+        {
+            index: "index2",
+            money: "3834",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05",
+            tags: ["刘敬威", "吃饭", "正常消费"],
+            income: false
+        },
+        {
+            index: "index3",
+            money: "384",
+            description: "晚饭",
+            type: "饮食",
+            time: "2024-06-05",
+            tags: ["学习", "吃饭", "消费"],
+            income: false
+        },
+    ]
+}
+
+const handleSelectionChange = (val) => {
+    multipleSelection.value = []
+    val.forEach((info) => {
+        multipleSelection.value.push(info.index)
+    })
+}
+
+const deleteBillsByList = (indexList) => {
+    console.log(indexList)
+}
+
+const deleteSelectedBills = () => {
+    deleteBillsByList(multipleSelection.value)
+    multipleSelection.value = []
+}
+
+// 组件函数
+onMounted(() => {
+    refreshTableDate()
+})
+
+// 导出成员
+defineExpose({
+    refreshTableDate,
+    deleteSelectedBills,
 })
 </script>
 

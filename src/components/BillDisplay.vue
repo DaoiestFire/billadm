@@ -12,7 +12,7 @@
                     </el-icon>
                     <span>新增记录</span>
                 </el-button>
-                <el-button type="danger" @click="console.log(toRaw(timerange))">
+                <el-button type="danger" @click="handleBatchDelete">
                     <el-icon>
                         <Delete />
                     </el-icon>
@@ -21,14 +21,14 @@
             </div>
         </el-header>
         <el-main>
-            <BillTable />
+            <BillTable ref="billTableInstance" />
             <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill" />
         </el-main>
     </el-container>
 </template>
 
 <script setup>
-import { ref, toRaw } from 'vue';
+import { ref } from 'vue';
 import BillTable from './BillTable.vue';
 import BillForm from './BillForm.vue'
 import {
@@ -42,6 +42,7 @@ import {
 
 // variable
 const billFormInstance = ref(null)
+const billTableInstance = ref(null)
 const timerange = ref([new Date(), new Date()])
 const shortcuts = [
     {
@@ -85,6 +86,10 @@ const addBillInfo = () => {
 
 const handleSubmitBill = (billFormData) => {
     console.log(billFormData)
+}
+
+const handleBatchDelete = () => {
+    billTableInstance.value.deleteSelectedBills()
 }
 </script>
 
