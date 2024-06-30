@@ -44,6 +44,7 @@ import {
     getThisWeekData,
     getThisYearDate
 } from '../utils/timeutils'
+import { ElMessage } from 'element-plus';
 
 // variable
 const billFormInstance = ref(null)
@@ -93,6 +94,10 @@ const addBillInfo = () => {
 const handleSubmitBill = (billFormData) => {
     // TODO
     console.log(billFormData)
+    ElMessage({
+        message: '操作成功',
+        type: 'success',
+    })
 }
 
 const handleBillEdit = (info) => {

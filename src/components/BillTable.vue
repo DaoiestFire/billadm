@@ -43,6 +43,7 @@
 </template>
 
 <script setup>
+import { ElMessage } from 'element-plus';
 import { computed, onMounted, ref } from 'vue'
 
 // 变量
@@ -120,6 +121,10 @@ const refreshTableDate = () => {
 const deleteBillsByList = (indexList) => {
     // TODO
     console.log(indexList)
+    ElMessage({
+        message: '删除成功',
+        type: 'success',
+    })
 }
 
 onMounted(() => {

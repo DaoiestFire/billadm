@@ -28,7 +28,8 @@
             <span>设置</span>
         </el-menu-item>
         <div class="right-container">
-            <el-select v-model="selectedBillBook" size="default" style="width: 160px; margin-right: 80px;">
+            <el-select v-model="selectedBillBook" size="default" style="width: 160px; margin-right: 80px;"
+                @change="onSelectChange">
                 <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
             <div class="control-button" @click="windowMinimize">
@@ -52,20 +53,19 @@
 
 <script setup>
 import { Close, FullScreen } from '@element-plus/icons-vue';
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { useBillbookStore } from '../stores/billbook';
 
+// 变量
 const activeIndex = ref('bill')
-const billbooks = [
-    {
-        value: "default",
-        label: "默认账本"
-    },
-    {
-        value: "salary",
-        label: "工资账本"
-    }
-]
-const selectedBillBook = ref("default")
+const billbooks = ref([])
+const selectedBillBook = ref('')
+const billbookStore = useBillbookStore()
+
+// 账本选择器函数
+const onSelectChange = () => {
+    billbookStore.setCurrentBook(selectedBillBook.value)
+}
 
 // 窗口控制函数
 const winClose = () => {
@@ -79,6 +79,16 @@ const windowMaximize = () => {
 const windowMinimize = () => {
     window.windowController.send("window-minimize")
 }
+
+// 组件函数
+onMounted(() => {
+    billbookStore.refreshBillbooks()
+    console.log(billbookStore.getAllBillbooks)
+    billbookStore.getAllBillbooks.forEach((oneBillbook) => {
+        billbooks.value.push(oneBillbook)
+    })
+    selectedBillBook.value = billbookStore.getCurrentBook
+})
 </script>
 
 <style scoped>
