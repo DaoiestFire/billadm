@@ -27,10 +27,9 @@ export const useBillbookStore = defineStore("billbooks", {
     },
     actions: {
         setCurrentBook(bookvalue) {
-            console.log(bookvalue)
             this.currentBook = bookvalue;
             ElMessage({
-                message: `账本[${this.billbooks[bookvalue]}]切换成功`,
+                message: `账本[${this.billbooks.get(bookvalue).label}]切换成功`,
                 type: 'success'
             })
         },
