@@ -139,10 +139,6 @@ defineExpose({
 </script>
 
 <style>
-.bill-table-outer {
-    min-height: 0px;
-}
-
 .bill-table-cell {
     padding: 3px !important;
 }
