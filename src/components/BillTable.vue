@@ -120,9 +120,10 @@ const refreshTableDate = () => {
 
 const deleteBillsByList = (indexList) => {
     // TODO
+    let len = indexList.length
     console.log(indexList)
     ElMessage({
-        message: '删除成功',
+        message: `${len}条记录删除成功`,
         type: 'success',
     })
 }
