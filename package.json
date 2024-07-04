@@ -5,6 +5,7 @@
   "description": "A desktop application featuring bill management and analysis functionalities",
   "main": ".vite/build/main.js",
   "scripts": {
+    "dev": "vite",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
