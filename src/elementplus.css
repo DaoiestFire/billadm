@@ -9,11 +9,6 @@
     --el-menu-item-height: 30px;
 }
 
-.el-select__selected-item {
-    color: var(--el-color-primary);
-    font-weight: bold;
-}
-
 .el-menu {
     border-width: 0px;
 }

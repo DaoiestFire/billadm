@@ -1,7 +1,7 @@
 <template>
-    <el-container>
+    <el-container style="height: 100%;">
         <el-container>
-            <el-header height="70px">
+            <el-header height="50px">
                 <div class="header-container">
                     <div class="date-picker-container">
                         <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
@@ -126,7 +126,7 @@ const handleBatchDelete = () => {
 
 .date-picker-container {
     display: inline-block;
-    margin-right: 50px;
+    margin-right: auto;
 }
 
 .billdispaly-aside {

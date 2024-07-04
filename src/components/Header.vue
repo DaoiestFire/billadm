@@ -1,10 +1,22 @@
 <template>
     <el-menu :default-active="activeIndex" :ellipsis="false">
+        <div class="header-menu">
+            <div class="control-button left-button">
+                <el-icon>
+                    <Menu />
+                </el-icon>
+                <icon-menu />
+            </div>
+            <div class="control-button">
+                <el-icon>
+                    <Plus />
+                </el-icon>
+            </div>
+        </div>
         <div class="billbook-select">
             <el-select v-model="selectedBillBook" size="default" style="width: 160px;" @change="onSelectChange">
                 <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
-
         </div>
         <el-menu-item index="bill">
             <el-icon>
@@ -61,9 +73,30 @@ onMounted(() => {
 
 <style scoped>
 .billbook-select {
-    height: 40px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.header-menu{
+    display: flex;
+    justify-content: end;
+}
+
+.left-button{
+    margin-right: auto;
+}
+
+.control-button {
+    height: 30px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.control-button:hover {
+    background-color: var(--el-color-primary-light-9);
 }
 </style>
