@@ -76,6 +76,7 @@ onMounted(() => {
 
 <style scoped>
 .billbook-select {
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
