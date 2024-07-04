@@ -6,6 +6,7 @@
     --el-color-primary-light-8: var(--el-color-success-light-8);
     --el-color-primary-light-9: var(--el-color-success-light-9);
     --el-color-primary-dark-2: var(--el-color-success-dark-2);
+    --el-menu-item-height: 30px;
 }
 
 .el-select__selected-item {
@@ -13,7 +14,10 @@
     font-weight: bold;
 }
 
-.el-menu-item{
-    padding-left: 10px;
-    padding-right: 10px;
+.el-menu {
+    border-width: 0px;
+}
+
+.el-main {
+    padding: 0px;
 }
