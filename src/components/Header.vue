@@ -3,13 +3,12 @@
         <div class="header-menu">
             <div class="control-button left-button">
                 <el-icon>
-                    <Menu />
+                    <SvgIcon name="menu" size="15" />
                 </el-icon>
-                <icon-menu />
             </div>
             <div class="control-button">
                 <el-icon>
-                    <Plus />
+                    <SvgIcon name="plus" size="15" />
                 </el-icon>
             </div>
         </div>
@@ -20,25 +19,25 @@
         </div>
         <el-menu-item index="bill">
             <el-icon>
-                <Edit />
+                <SvgIcon name="edit" size="15" />
             </el-icon>
             <span>账单</span>
         </el-menu-item>
         <el-menu-item index="analysis">
             <el-icon>
-                <PieChart />
+                <SvgIcon name="pie-chart" size="15" />
             </el-icon>
             <span>统计</span>
         </el-menu-item>
         <el-menu-item index="property">
             <el-icon>
-                <Coin />
+                <SvgIcon name="coins" size="15" />
             </el-icon>
             <span>资产</span>
         </el-menu-item>
         <el-menu-item index="setting">
             <el-icon>
-                <Setting />
+                <SvgIcon name="settings" size="15" />
             </el-icon>
             <span>设置</span>
         </el-menu-item>
@@ -47,7 +46,8 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useBillbookStore } from '../stores/billbook';
+import { useBillbookStore } from '../stores/billbook'
+import SvgIcon from './SvgIcon.vue'
 
 // 变量
 const activeIndex = ref('bill')
@@ -79,12 +79,12 @@ onMounted(() => {
     justify-content: center;
 }
 
-.header-menu{
+.header-menu {
     display: flex;
     justify-content: end;
 }
 
-.left-button{
+.left-button {
     margin-right: auto;
 }
 

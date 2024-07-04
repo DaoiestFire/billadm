@@ -9,7 +9,7 @@
                     </div>
                     <el-button type="primary" @click="addBillInfo">
                         <el-icon>
-                            <Plus />
+                            <SvgIcon name="plus" size="15" />
                         </el-icon>
                         <span>新增记录</span>
                     </el-button>
@@ -18,7 +18,7 @@
                         <template #reference>
                             <el-button type="danger">
                                 <el-icon>
-                                    <Delete />
+                                    <SvgIcon name="trash" size="15" />
                                 </el-icon>
                                 <span>批量删除</span>
                             </el-button>
@@ -51,6 +51,7 @@ import {
     getThisYearDate
 } from '../utils/timeutils'
 import { ElMessage } from 'element-plus';
+import SvgIcon from './SvgIcon.vue';
 
 // variable
 const billFormInstance = ref(null)

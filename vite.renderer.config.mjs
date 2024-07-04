@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 import { pluginExposeRenderer } from './vite.base.config.mjs';
+import path from "path";
 
 // https://vitejs.dev/config
 export default defineConfig((env) => {
@@ -17,7 +19,14 @@ export default defineConfig((env) => {
     build: {
       outDir: `.vite/renderer/${name}`,
     },
-    plugins: [vue(), pluginExposeRenderer(name)],
+    plugins: [
+      vue(),
+      pluginExposeRenderer(name),
+      createSvgIconsPlugin({
+        iconDirs: [path.resolve(__dirname, 'src/icons')],
+        symbolId: 'icon-[dir]-[name]'
+      })
+    ],
     resolve: {
       preserveSymlinks: true,
     },

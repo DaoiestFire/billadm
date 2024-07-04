@@ -6,6 +6,7 @@ import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from './App.vue'
+import 'virtual:svg-icons-register'
 
 const app = createApp(App)
 const pinia = createPinia()

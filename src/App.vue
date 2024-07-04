@@ -3,17 +3,17 @@
         <div class="window-control">
             <div class="control-button" @click="windowMinimize">
                 <el-icon>
-                    <Minus />
+                    <SvgIcon name="minus" size="15" />
                 </el-icon>
             </div>
             <div class="control-button" @click="windowMaximize">
                 <el-icon>
-                    <FullScreen />
+                    <SvgIcon name="square" size="15" />
                 </el-icon>
             </div>
             <div class="control-button" @click="winClose">
                 <el-icon>
-                    <Close />
+                    <SvgIcon name="close" size="15" />
                 </el-icon>
             </div>
         </div>
@@ -33,6 +33,7 @@
 <script setup>
 import Header from './components/Header.vue';
 import BillDisplay from './components/BillDisplay.vue'
+import SvgIcon from './components/SvgIcon.vue';
 
 // 窗口控制函数
 const winClose = () => {
