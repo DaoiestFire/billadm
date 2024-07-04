@@ -33,6 +33,19 @@
 <script setup>
 import Header from './components/Header.vue';
 import BillDisplay from './components/BillDisplay.vue'
+
+// 窗口控制函数
+const winClose = () => {
+    window.windowController.send("window-close")
+}
+
+const windowMaximize = () => {
+    window.windowController.send("window-maximize")
+}
+
+const windowMinimize = () => {
+    window.windowController.send("window-minimize")
+}
 </script>
 
 

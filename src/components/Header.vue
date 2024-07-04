@@ -1,8 +1,7 @@
 <template>
     <el-menu :default-active="activeIndex" :ellipsis="false">
         <div class="billbook-select">
-            <el-select v-model="selectedBillBook" size="default" style="width: 160px;"
-                @change="onSelectChange">
+            <el-select v-model="selectedBillBook" size="default" style="width: 160px;" @change="onSelectChange">
                 <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
 
@@ -35,7 +34,6 @@
 </template>
 
 <script setup>
-import { Close, FullScreen } from '@element-plus/icons-vue';
 import { onMounted, ref } from 'vue'
 import { useBillbookStore } from '../stores/billbook';
 
@@ -48,19 +46,6 @@ const billbookStore = useBillbookStore()
 // 账本选择器函数
 const onSelectChange = () => {
     billbookStore.setCurrentBook(selectedBillBook.value)
-}
-
-// 窗口控制函数
-const winClose = () => {
-    window.windowController.send("window-close")
-}
-
-const windowMaximize = () => {
-    window.windowController.send("window-maximize")
-}
-
-const windowMinimize = () => {
-    window.windowController.send("window-minimize")
 }
 
 // 组件函数
