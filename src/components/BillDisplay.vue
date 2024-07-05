@@ -1,38 +1,47 @@
 <template>
     <el-container style="height: 100%;">
         <el-container>
-            <el-header height="50px">
+            <el-header height="30px">
+                <div class="menu-header">
+                    <el-button-group>
+                        <el-button type="primary" size="small" text @click="addBillInfo">
+                            <el-icon>
+                                <SvgIcon name="plus" size="15" />
+                            </el-icon>
+                            <span>新增记录</span>
+                        </el-button>
+                        <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
+                            @confirm="handleBatchDelete">
+                            <template #reference>
+                                <el-button type="danger" size="small" text>
+                                    <el-icon>
+                                        <SvgIcon name="trash" size="15" />
+                                    </el-icon>
+                                    <span>批量删除</span>
+                                </el-button>
+                            </template>
+                        </el-popconfirm>
+                    </el-button-group>
+                </div>
+            </el-header>
+            <el-container>
+                <el-header height="50px">
+
+                </el-header>
+                <el-main>
+                    <BillTable ref="billTableInstance" @update-one-bill="handleBillEdit" />
+                    <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill" />
+                </el-main>
+            </el-container>
+        </el-container>
+        <div class="billdispaly-aside">
+            <el-aside width="200px">
                 <div class="header-container">
                     <div class="date-picker-container">
                         <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
                             start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" size="default" />
                     </div>
-                    <el-button type="primary" @click="addBillInfo">
-                        <el-icon>
-                            <SvgIcon name="plus" size="15" />
-                        </el-icon>
-                        <span>新增记录</span>
-                    </el-button>
-                    <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
-                        @confirm="handleBatchDelete">
-                        <template #reference>
-                            <el-button type="danger">
-                                <el-icon>
-                                    <SvgIcon name="trash" size="15" />
-                                </el-icon>
-                                <span>批量删除</span>
-                            </el-button>
-                        </template>
-                    </el-popconfirm>
                 </div>
-            </el-header>
-            <el-main>
-                <BillTable ref="billTableInstance" @update-one-bill="handleBillEdit" />
-                <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill" />
-            </el-main>
-        </el-container>
-        <div class="billdispaly-aside">
-            <el-aside width="200px">
             </el-aside>
         </div>
     </el-container>
@@ -118,6 +127,13 @@ const handleBatchDelete = () => {
 </script>
 
 <style scoped>
+.menu-header {
+    height: 30px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
 .header-container {
     height: 100%;
     display: flex;

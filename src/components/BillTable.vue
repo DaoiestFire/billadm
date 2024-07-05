@@ -25,17 +25,24 @@
             </el-table-column>
             <el-table-column label="操作" width="150px" align="center">
                 <template #default="scope">
-                    <el-button size="small" @click="handleEdit(scope.row)">
-                        编辑
-                    </el-button>
-                    <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
-                        @confirm="handleDelete(scope.row.index)">
-                        <template #reference>
-                            <el-button size="small" type="danger">
-                                删除
-                            </el-button>
-                        </template>
-                    </el-popconfirm>
+                    <el-button-group>
+                        <el-button size="small" @click="handleEdit(scope.row)">
+                            <el-icon>
+                                <SvgIcon name="pencil" size="15" />
+                            </el-icon>
+                        </el-button>
+                        <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
+                            @confirm="handleDelete(scope.row.index)">
+                            <template #reference>
+                                <el-button size="small" type="danger">
+                                    <el-icon>
+                                        <SvgIcon name="trash2" size="15" />
+                                    </el-icon>
+                                </el-button>
+                            </template>
+                        </el-popconfirm>
+                    </el-button-group>
+
                 </template>
             </el-table-column>
         </el-table>
@@ -45,6 +52,7 @@
 <script setup>
 import { ElMessage } from 'element-plus';
 import { computed, onMounted, ref } from 'vue'
+import SvgIcon from './SvgIcon.vue';
 
 // 变量
 const emit = defineEmits(['updateOneBill'])
