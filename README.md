@@ -5,3 +5,7 @@
 图标颜色: #67c23a
 
 主题颜色
+
+--el-text-color-primary
+--el-text-color-regular
+--el-text-color-secondary

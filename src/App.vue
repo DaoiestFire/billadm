@@ -20,7 +20,7 @@
         <el-container>
             <div class="app-aside">
                 <el-aside width="200px">
-                    <Header />
+                    <Menu />
                 </el-aside>
             </div>
             <el-main>
@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import Header from './components/Header.vue';
+import Menu from './components/Menu.vue';
 import BillDisplay from './components/BillDisplay.vue'
 import SvgIcon from './components/SvgIcon.vue';
 
