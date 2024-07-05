@@ -1,15 +1,11 @@
 <template>
-    <el-menu :default-active="activeIndex" :ellipsis="false">
+    <el-menu :default-active="activeIndex" :ellipsis="false" background-color="#f1f0f0">
         <div class="header-menu">
             <div class="control-button left-button">
-                <el-icon>
-                    <SvgIcon name="menu" size="15" />
-                </el-icon>
+                <SvgIcon name="menu" size="15" />
             </div>
             <div class="control-button">
-                <el-icon>
-                    <SvgIcon name="plus" size="15" />
-                </el-icon>
+                <SvgIcon name="plus" size="15" />
             </div>
         </div>
         <div class="billbook-select">
@@ -18,27 +14,19 @@
             </el-select>
         </div>
         <el-menu-item index="bill">
-            <el-icon>
-                <SvgIcon name="edit" size="15" />
-            </el-icon>
+            <SvgIcon name="edit" size="15" />
             <span>账单</span>
         </el-menu-item>
         <el-menu-item index="analysis">
-            <el-icon>
-                <SvgIcon name="pie-chart" size="15" />
-            </el-icon>
+            <SvgIcon name="pie-chart" size="15" />
             <span>统计</span>
         </el-menu-item>
         <el-menu-item index="property">
-            <el-icon>
-                <SvgIcon name="coins" size="15" />
-            </el-icon>
+            <SvgIcon name="coins" size="15" />
             <span>资产</span>
         </el-menu-item>
         <el-menu-item index="setting">
-            <el-icon>
-                <SvgIcon name="settings" size="15" />
-            </el-icon>
+            <SvgIcon name="settings" size="15" />
             <span>设置</span>
         </el-menu-item>
     </el-menu>

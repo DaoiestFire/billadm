@@ -42,7 +42,6 @@
                             </template>
                         </el-popconfirm>
                     </el-button-group>
-
                 </template>
             </el-table-column>
         </el-table>

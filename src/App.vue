@@ -87,6 +87,7 @@ const windowMinimize = () => {
 }
 
 .app-aside {
+    background-color: #f1f0f0;
     border-right-width: 1px;
     border-right-color: var(--el-color-info-light-7);
     border-right-style: solid;

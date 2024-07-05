@@ -1,5 +1,13 @@
 :root {
     --el-menu-item-height: 30px;
+    --el-color-primary-dark-2: #529b2e;
+    --el-color-primary: #67c23a;
+    --el-color-primary-light-3: #95d475;
+    --el-color-primary-light-5: #b3e19d;
+    --el-color-primary-light-7: #d1edc4;
+    --el-color-primary-light-8: #e1f3d8;
+    --el-color-primary-light-9: #f0f9eb;
+    --aside-bg-color: #f1f0f0;
 }
 
 .el-menu {

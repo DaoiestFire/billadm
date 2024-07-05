@@ -3,12 +3,18 @@
         <el-container>
             <el-header height="30px">
                 <div class="menu-header">
+                    <div class="header-container">
+                        <div class="date-picker-container">
+                            <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
+                                start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" size="small" />
+                        </div>
+                    </div>
                     <el-button-group>
                         <el-button type="primary" size="small" text @click="addBillInfo">
                             <el-icon>
                                 <SvgIcon name="plus" size="15" />
                             </el-icon>
-                            <span>新增记录</span>
+                            <span style="">新增记录</span>
                         </el-button>
                         <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
                             @confirm="handleBatchDelete">
@@ -36,12 +42,6 @@
         </el-container>
         <div class="billdispaly-aside">
             <el-aside width="200px">
-                <div class="header-container">
-                    <div class="date-picker-container">
-                        <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
-                            start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" size="default" />
-                    </div>
-                </div>
             </el-aside>
         </div>
     </el-container>
@@ -143,12 +143,13 @@ const handleBatchDelete = () => {
 
 .date-picker-container {
     display: inline-block;
-    margin-right: auto;
+    margin-right: 50px;
 }
 
 .billdispaly-aside {
     border-left-width: 1px;
     border-left-color: var(--el-color-info-light-7);
     border-left-style: solid;
+    background-color: #f1f0f0;
 }
 </style>
