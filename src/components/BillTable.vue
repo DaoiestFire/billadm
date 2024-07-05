@@ -58,7 +58,7 @@ const emit = defineEmits(['updateOneBill', 'upateStatisticDispaly'])
 const multipleSelection = ref([])
 const windowHeight = ref(window.innerHeight)
 const tableHeight = computed(() => {
-    return windowHeight.value - 190
+    return windowHeight.value - 90
 })
 const tableData = ref([])
 
@@ -69,8 +69,19 @@ window.addEventListener('resize', () => {
 
 // 单记录操作函数
 const handleEdit = (info) => {
-    emit('updateOneBill', info)
-    refreshTableDate()
+    tableData.value.push(
+        {
+            index: "index1",
+            money: "1.74",
+            description: "游戏",
+            type: "娱乐",
+            time: "2024-06-05",
+            tags: ["吃饭", "消费", "cxbskxs"],
+            income: 'true',
+        }
+    )
+    // emit('updateOneBill', info)
+    // refreshTableDate()
 }
 
 const handleDelete = (index) => {
