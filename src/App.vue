@@ -76,7 +76,7 @@ const windowMinimize = () => {
 
 .control-button {
     height: 30px;
-    width: 40px;
+    width: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -87,7 +87,7 @@ const windowMinimize = () => {
 }
 
 .app-aside {
-    background-color: #f1f0f0;
+    background-color: var(--aside-bg-color-light);
     border-right-width: 1px;
     border-right-color: var(--el-color-info-light-7);
     border-right-style: solid;

@@ -150,6 +150,6 @@ const handleBatchDelete = () => {
     border-left-width: 1px;
     border-left-color: var(--el-color-info-light-7);
     border-left-style: solid;
-    background-color: #f1f0f0;
+    background-color: var(--aside-bg-color-light);
 }
 </style>

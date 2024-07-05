@@ -5,4 +5,4 @@
 图标颜色: #67c23a
 
 主题颜色
-侧栏背景色 #f1f0f0
+侧栏背景色 #E0E0E0 #EEEEEE #F5F5F5 #FAFAFA
