@@ -31,11 +31,26 @@
                 </div>
             </el-header>
             <el-container>
-                <el-header height="50px">
-
+                <el-header height="60px">
+                    <div class="statistic-dispaly">
+                        <el-row>
+                            <el-col :span="8">
+                                <el-statistic title="记录总数/支出记录/收入记录" :value="lengthCost + lengthIncome">
+                                    <template #suffix>/{{ lengthCost }}/{{ lengthIncome }}</template>
+                                </el-statistic>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-statistic title="总支出" :value="totalCost" />
+                            </el-col>
+                            <el-col :span="8">
+                                <el-statistic title="总收入" :value="totalIncome" />
+                            </el-col>
+                        </el-row>
+                    </div>
                 </el-header>
                 <el-main>
-                    <BillTable ref="billTableInstance" @update-one-bill="handleBillEdit" />
+                    <BillTable ref="billTableInstance" @update-one-bill="handleBillEdit"
+                        @upate-statistic-dispaly="handleUpdateStatistic" />
                     <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill" />
                 </el-main>
             </el-container>
@@ -100,6 +115,10 @@ const shortcuts = [
         value: [null, null],
     },
 ]
+const lengthIncome = ref(0)
+const lengthCost = ref(0)
+const totalIncome = ref(0)
+const totalCost = ref(0)
 
 // function
 const addBillInfo = () => {
@@ -119,6 +138,13 @@ const handleSubmitBill = (billFormData) => {
 const handleBillEdit = (info) => {
     billFormInstance.value.setBillForm(info)
     billFormInstance.value.showForm()
+}
+
+const handleUpdateStatistic = (info) => {
+    lengthCost.value = info.lengthCost
+    lengthIncome.value = info.lengthIncome
+    totalCost.value = info.totalCost
+    totalIncome.value = info.totalIncome
 }
 
 const handleBatchDelete = () => {
@@ -151,5 +177,13 @@ const handleBatchDelete = () => {
     border-left-color: var(--el-color-info-light-7);
     border-left-style: solid;
     background-color: var(--aside-bg-color-light);
+}
+
+.el-col {
+    text-align: center;
+}
+
+.statistic-dispaly {
+    padding-top: 10px;
 }
 </style>

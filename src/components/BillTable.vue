@@ -50,17 +50,17 @@
 
 <script setup>
 import { ElMessage } from 'element-plus';
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watchEffect } from 'vue'
 import SvgIcon from './SvgIcon.vue';
 
 // 变量
-const emit = defineEmits(['updateOneBill'])
+const emit = defineEmits(['updateOneBill', 'upateStatisticDispaly'])
 const multipleSelection = ref([])
 const windowHeight = ref(window.innerHeight)
 const tableHeight = computed(() => {
     return windowHeight.value - 190
 })
-const tableData = ref()
+const tableData = ref([])
 
 // 窗口函数
 window.addEventListener('resize', () => {
@@ -134,6 +134,29 @@ const deleteBillsByList = (indexList) => {
         type: 'success',
     })
 }
+
+watchEffect(() => {
+    let lengthIncome = 0
+    let lengthCost = 0
+    let totalIncome = 0
+    let totalCost = 0
+    tableData.value.forEach((info) => {
+        if (info.income == 'true') {
+            totalIncome += Number(info.money)
+            lengthIncome++
+        } else {
+            totalCost += Number(info.money)
+            lengthCost++
+        }
+    })
+
+    emit('upateStatisticDispaly', {
+        lengthIncome: lengthIncome,
+        lengthCost: lengthCost,
+        totalIncome: totalIncome,
+        totalCost: totalCost,
+    })
+})
 
 onMounted(() => {
     refreshTableDate()
