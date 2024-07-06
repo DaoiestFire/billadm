@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="show" :show-close="false" :close-on-press-escape="false"
+    <el-dialog v-model="show" :show-close="false" :close-on-press-escape="false" style="width: 632px;"
         :title="billForm.index === '' ? '新建记录' : '更新记录'">
         <el-form :model="billForm" label-width="auto" style="max-width: 600px" label-position="left" ref="bill-form">
             <el-form-item label="金额">

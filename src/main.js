@@ -1,9 +1,13 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, screen } = require('electron');
 const path = require('node:path');
 
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
+
+let winStartPosition = { x: 0, y: 0 };
+let mouseStartPosition = { x: 0, y: 0 };
+let movingInterval = null;
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -38,6 +42,33 @@ const createWindow = () => {
   ipcMain.on("window-minimize", () => {
     mainWindow.minimize()
   })
+
+  ipcMain.on("window-move", (e, canMoving) => {
+    if (canMoving && !mainWindow.isMaximized()) {
+      const winPosition = mainWindow.getPosition();
+      winStartPosition = { x: winPosition[0], y: winPosition[1] };
+      mouseStartPosition = screen.getCursorScreenPoint();
+      // 清除
+      if (movingInterval) {
+        clearInterval(movingInterval);
+      }
+      // 新开
+      movingInterval = setInterval(() => {
+        // 实时更新位置
+        let contentSize = mainWindow.getContentSize()
+        const cursorPosition = screen.getCursorScreenPoint();
+        const x = winStartPosition.x + cursorPosition.x - mouseStartPosition.x;
+        const y = winStartPosition.y + cursorPosition.y - mouseStartPosition.y;
+        mainWindow.setPosition(x, y, true);
+        mainWindow.setContentSize(contentSize[0], contentSize[1])
+      }, 20);
+    } else {
+      clearInterval(movingInterval);
+      movingInterval = null;
+    }
+  })
+
+  // mainWindow.webContents.openDevTools()
 };
 
 app.whenReady().then(() => {

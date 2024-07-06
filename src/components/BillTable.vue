@@ -69,19 +69,8 @@ window.addEventListener('resize', () => {
 
 // 单记录操作函数
 const handleEdit = (info) => {
-    tableData.value.push(
-        {
-            index: "index1",
-            money: "1.74",
-            description: "游戏",
-            type: "娱乐",
-            time: "2024-06-05",
-            tags: ["吃饭", "消费", "cxbskxs"],
-            income: 'true',
-        }
-    )
-    // emit('updateOneBill', info)
-    // refreshTableDate()
+    emit('updateOneBill', info)
+    refreshTableDate()
 }
 
 const handleDelete = (index) => {
