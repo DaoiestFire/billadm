@@ -1,35 +1,19 @@
 <template>
-    <div class="header-menu">
-        <div class="control-button left-button">
-            <SvgIcon name="menu" size="15" />
-        </div>
-        <div class="control-button">
-            <SvgIcon name="plus" size="15" />
-        </div>
-    </div>
-    <div class="billbook-select">
-        <el-select v-model="selectedBillBook" size="default" style="width: 160px;" @change="onSelectChange">
-            <el-option v-for="item in billbooks" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-    </div>
     <div class="menu-container">
-        <div class="menu-button-outer" :class="{ 'menu-active': activeIndex == item.index }" v-for="item in menuItems"
-            :index="item.index" @click="clickMenuItem(item.index)">
+        <BillButton height="30px" width="180px" radius="8px" :is-active="activeIndex === item.index"
+            v-for="item in menuItems" :index="item.index" @click="clickMenuItem(item.index)">
             <SvgIcon :name="item.icon" size="15" />
-            <span style="display: inline-block;margin-left: 5px;">{{ item.label }}</span>
-        </div>
+            <span style="display: inline-block; margin-left: 10px;">{{ item.label }}</span>
+        </BillButton>
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useBillbookStore } from '../stores/billbook'
+import { ref } from 'vue'
 import SvgIcon from './SvgIcon.vue'
+import BillButton from './BillButton.vue';
 
 // 变量
-const billbooks = ref([])
-const selectedBillBook = ref('')
-const billbookStore = useBillbookStore()
 const activeIndex = ref('bill')
 const menuItems = [
     {
@@ -54,24 +38,9 @@ const menuItems = [
     }
 ]
 
-// 账本选择器函数
-const onSelectChange = () => {
-    billbookStore.setCurrentBook(selectedBillBook.value)
-}
-
 const clickMenuItem = (index) => {
     activeIndex.value = index
 }
-
-// 组件函数
-onMounted(() => {
-    billbookStore.refreshBillbooks()
-    console.log(billbookStore.getAllBillbooks)
-    billbookStore.getAllBillbooks.forEach((oneBillbook) => {
-        billbooks.value.push(oneBillbook)
-    })
-    selectedBillBook.value = billbookStore.getCurrentBook
-})
 </script>
 
 <style scoped>
@@ -80,11 +49,6 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.header-menu {
-    display: flex;
-    justify-content: end;
 }
 
 .menu-container {
@@ -103,30 +67,5 @@ onMounted(() => {
     color: var(--el-text-color-regular);
     border-radius: 8px;
     font-size: 15px;
-}
-
-.menu-button-outer:hover {
-    background-color: var(--el-color-primary-light-9);
-}
-
-.menu-active {
-    color: var(--el-color-primary);
-    background-color: var(--aside-bg-color-light-2);
-}
-
-.left-button {
-    margin-right: auto;
-}
-
-.control-button {
-    height: 30px;
-    width: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.control-button:hover {
-    background-color: var(--el-color-primary-light-9);
 }
 </style>

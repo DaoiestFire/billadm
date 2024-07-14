@@ -3,6 +3,13 @@
         <el-container>
             <el-header height="30px">
                 <div class="menu-header">
+                    <div class="billbook-select">
+                        <el-select v-model="selectedBillBook" size="small" style="width: 160px;"
+                            @change="onSelectChange">
+                            <el-option v-for="item in billbooks" :key="item.value" :label="item.label"
+                                :value="item.value" />
+                        </el-select>
+                    </div>
                     <div class="header-container">
                         <div class="date-picker-container">
                             <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
@@ -55,15 +62,11 @@
                 </el-main>
             </el-container>
         </el-container>
-        <div class="billdispaly-aside">
-            <el-aside width="200px">
-            </el-aside>
-        </div>
     </el-container>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import BillTable from './BillTable.vue'
 import BillForm from './BillForm.vue'
 import {
@@ -76,8 +79,12 @@ import {
 } from '../utils/timeutils'
 import { ElMessage } from 'element-plus';
 import SvgIcon from './SvgIcon.vue';
+import { useBillbookStore } from '../stores/billbook'
 
 // variable
+const billbooks = ref([])
+const selectedBillBook = ref('')
+const billbookStore = useBillbookStore()
 const billFormInstance = ref(null)
 const billTableInstance = ref(null)
 const timerange = ref([new Date(), new Date()])
@@ -120,6 +127,11 @@ const lengthCost = ref(0)
 const totalIncome = ref(0)
 const totalCost = ref(0)
 
+// 账本选择器函数
+const onSelectChange = () => {
+    billbookStore.setCurrentBook(selectedBillBook.value)
+}
+
 // function
 const addBillInfo = () => {
     billFormInstance.value.reset()
@@ -150,6 +162,16 @@ const handleUpdateStatistic = (info) => {
 const handleBatchDelete = () => {
     billTableInstance.value.deleteSelectedBills()
 }
+
+// 组件函数
+onMounted(() => {
+    billbookStore.refreshBillbooks()
+    console.log(billbookStore.getAllBillbooks)
+    billbookStore.getAllBillbooks.forEach((oneBillbook) => {
+        billbooks.value.push(oneBillbook)
+    })
+    selectedBillBook.value = billbookStore.getCurrentBook
+})
 </script>
 
 <style scoped>
@@ -170,13 +192,6 @@ const handleBatchDelete = () => {
 .date-picker-container {
     display: inline-block;
     margin-right: 50px;
-}
-
-.billdispaly-aside {
-    border-left-width: 1px;
-    border-left-color: var(--el-color-info-light-7);
-    border-left-style: solid;
-    background-color: var(--aside-bg-color-light);
 }
 
 .el-col {

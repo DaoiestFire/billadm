@@ -1,33 +1,34 @@
 <template>
     <el-container class="outer" @contextmenu="windowUp">
         <div class="drag-region" @dblclick="doubleClick" @mousedown.self="windowDown" @mouseup.self="windowUp" />
-        <div class="window-control">
-            <div class="control-button" @click="windowMinimize">
-                <el-icon>
-                    <SvgIcon name="minus" size="15" />
-                </el-icon>
-            </div>
-            <div class="control-button" @click="windowMaximize">
-                <el-icon>
-                    <SvgIcon name="square" size="15" />
-                </el-icon>
-            </div>
-            <div class="control-button" @click="winClose">
-                <el-icon>
-                    <SvgIcon name="close" size="15" />
-                </el-icon>
-            </div>
-        </div>
-        <el-container>
-            <div class="app-aside">
+        <el-header height="30px">
+            <el-container>
+                <BillButton height="30px" width="45px">
+                    <SvgIcon name="menu" size="15" />
+                </BillButton>
+                <div class="window-control">
+                    <BillButton height="30px" width="45px" @click="windowMinimize">
+                        <SvgIcon name="minus" size="15" />
+                    </BillButton>
+                    <BillButton height="30px" width="45px" @click="windowMaximize">
+                        <SvgIcon name="square" size="15" />
+                    </BillButton>
+                    <BillButton height="30px" width="45px" @click="winClose">
+                        <SvgIcon name="close" size="15" />
+                    </BillButton>
+                </div>
+            </el-container>
+        </el-header>
+        <el-main>
+            <el-container>
                 <el-aside width="200px">
                     <Menu />
                 </el-aside>
-            </div>
-            <el-main>
-                <BillDisplay />
-            </el-main>
-        </el-container>
+                <el-main>
+                    <BillDisplay />
+                </el-main>
+            </el-container>
+        </el-main>
     </el-container>
 </template>
 
@@ -35,6 +36,7 @@
 import Menu from './components/Menu.vue';
 import BillDisplay from './components/BillDisplay.vue'
 import SvgIcon from './components/SvgIcon.vue';
+import BillButton from './components/BillButton.vue';
 
 // 窗口控制函数
 const winClose = () => {
@@ -76,11 +78,23 @@ const windowUp = () => {
 }
 
 .window-control {
-    z-index: 100;
-    top: 0px;
-    right: 0px;
-    position: absolute;
+    margin-left: auto;
     display: flex;
+}
+
+.el-header {
+    padding: 0px;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--el-color-info-light-7);
+    border-bottom-style: solid;
+}
+
+.el-aside {
+    padding: 5px;
+    height: 100vh;
+    border-right-width: 1px;
+    border-right-color: var(--el-color-info-light-7);
+    border-right-style: solid;
 }
 
 ::-webkit-scrollbar {
@@ -90,24 +104,5 @@ const windowUp = () => {
 ::-webkit-scrollbar {
     width: 0 !important;
     height: 0;
-}
-
-.control-button {
-    height: 30px;
-    width: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.control-button:hover {
-    background-color: var(--el-color-primary-light-9);
-}
-
-.app-aside {
-    background-color: var(--aside-bg-color-light);
-    border-right-width: 1px;
-    border-right-color: var(--el-color-info-light-7);
-    border-right-style: solid;
 }
 </style>
