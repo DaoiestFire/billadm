@@ -1,23 +1,20 @@
 <template>
     <el-container style="height: 100%;">
-        <el-container>
-            <el-header height="30px">
-                <div class="menu-header">
-                    <div class="billbook-select">
-                        <el-select v-model="selectedBillBook" size="small" style="width: 160px;"
-                            @change="onSelectChange">
-                            <el-option v-for="item in billbooks" :key="item.value" :label="item.label"
-                                :value="item.value" />
-                        </el-select>
-                    </div>
-                    <div class="header-container">
-                        <div class="date-picker-container">
-                            <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
-                                start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" size="small" />
-                        </div>
-                    </div>
+        <el-header height="50px">
+            <div class="menu-header">
+                <div class="billbook-select-container">
+                    <el-select v-model="selectedBillBook" style="width: 160px;" @change="onSelectChange">
+                        <el-option v-for="item in billbooks" :key="item.value" :label="item.label"
+                            :value="item.value" />
+                    </el-select>
+                </div>
+                <div class="date-picker-container">
+                    <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
+                        start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" />
+                </div>
+                <div class="button-container">
                     <el-button-group>
-                        <el-button type="primary" size="small" text @click="addBillInfo">
+                        <el-button type="primary" @click="addBillInfo">
                             <el-icon>
                                 <SvgIcon name="plus" size="15" />
                             </el-icon>
@@ -26,7 +23,7 @@
                         <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
                             @confirm="handleBatchDelete">
                             <template #reference>
-                                <el-button type="danger" size="small" text>
+                                <el-button type="danger">
                                     <el-icon>
                                         <SvgIcon name="trash" size="15" />
                                     </el-icon>
@@ -36,31 +33,31 @@
                         </el-popconfirm>
                     </el-button-group>
                 </div>
+            </div>
+        </el-header>
+        <el-container>
+            <el-header height="80px">
+                <div class="statistic-dispaly">
+                    <el-row>
+                        <el-col :span="8">
+                            <el-statistic title="记录总数/支出记录/收入记录" :value="lengthCost + lengthIncome">
+                                <template #suffix>/{{ lengthCost }}/{{ lengthIncome }}</template>
+                            </el-statistic>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-statistic title="总支出" :value="totalCost" />
+                        </el-col>
+                        <el-col :span="8">
+                            <el-statistic title="总收入" :value="totalIncome" />
+                        </el-col>
+                    </el-row>
+                </div>
             </el-header>
-            <el-container>
-                <el-header height="60px">
-                    <div class="statistic-dispaly">
-                        <el-row>
-                            <el-col :span="8">
-                                <el-statistic title="记录总数/支出记录/收入记录" :value="lengthCost + lengthIncome">
-                                    <template #suffix>/{{ lengthCost }}/{{ lengthIncome }}</template>
-                                </el-statistic>
-                            </el-col>
-                            <el-col :span="8">
-                                <el-statistic title="总支出" :value="totalCost" />
-                            </el-col>
-                            <el-col :span="8">
-                                <el-statistic title="总收入" :value="totalIncome" />
-                            </el-col>
-                        </el-row>
-                    </div>
-                </el-header>
-                <el-main>
-                    <BillTable ref="billTableInstance" @update-one-bill="handleBillEdit"
-                        @upate-statistic-dispaly="handleUpdateStatistic" />
-                    <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill" />
-                </el-main>
-            </el-container>
+            <el-main>
+                <BillTable ref="billTableInstance" @update-one-bill="handleBillEdit"
+                    @upate-statistic-dispaly="handleUpdateStatistic" />
+                <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill" />
+            </el-main>
         </el-container>
     </el-container>
 </template>
@@ -175,18 +172,23 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.el-header {
+    padding: 0px;
+    border-bottom-width: 1px;
+    border-bottom-color: var(--el-color-info-light-7);
+    border-bottom-style: solid;
+}
+
 .menu-header {
-    height: 30px;
+    height: 100%;
     display: flex;
     justify-content: end;
     align-items: center;
 }
 
-.header-container {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: right;
+.billbook-select-container {
+    margin-left: 20px;
+    margin-right: auto;
 }
 
 .date-picker-container {
@@ -194,11 +196,15 @@ onMounted(() => {
     margin-right: 50px;
 }
 
+.button-container {
+    margin-right: 10px;
+}
+
 .el-col {
     text-align: center;
 }
 
 .statistic-dispaly {
-    padding-top: 10px;
+    padding-top: 16px;
 }
 </style>
