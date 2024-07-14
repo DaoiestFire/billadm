@@ -172,13 +172,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.el-header {
-    padding: 0px;
-    border-bottom-width: 1px;
-    border-bottom-color: var(--el-color-info-light-7);
-    border-bottom-style: solid;
-}
-
 .menu-header {
     height: 100%;
     display: flex;
