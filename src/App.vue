@@ -1,6 +1,6 @@
 <template>
     <el-container class="outer" @contextmenu="windowUp">
-        <div class="drag-region" @dblclick="doubleClick" @mousedown.self="windowDown" @mouseup.self="windowUp" />
+        <div class="drag-region" />
         <el-header height="30px">
             <el-container>
                 <BillButton height="30px" width="45px">
@@ -50,18 +50,6 @@ const windowMaximize = () => {
 const windowMinimize = () => {
     window.windowController.send("window-minimize")
 }
-
-const doubleClick = () => {
-    window.windowController.send("window-maximize")
-}
-
-const windowDown = () => {
-    window.windowController.send("window-move", true);
-}
-
-const windowUp = () => {
-    window.windowController.send("window-move", false);
-}
 </script>
 
 
@@ -75,6 +63,7 @@ const windowUp = () => {
     width: 100%;
     height: 30px;
     position: absolute;
+    -webkit-app-region: drag;
 }
 
 .window-control {

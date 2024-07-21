@@ -42,6 +42,7 @@ const getStyle = computed(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    -webkit-app-region: no-drag;
 }
 
 .control-button:hover {
