@@ -11,8 +11,10 @@ let movingInterval = null;
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
-    width: 1500,
+    width: 1200,
     height: 900,
+    minWidth: 1024,
+    minHeight: 768,
     frame: false,
     webPreferences: {
       nodeIntegration: false,
