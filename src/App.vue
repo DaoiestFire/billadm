@@ -4,23 +4,23 @@
         <el-header height="40px">
             <el-container>
                 <el-tooltip effect="dark" placement="right-start" content="菜单">
-                    <BillButton height="40px" width="40px">
+                    <BillButton height="40px" width="40px" radius="8px">
                         <SvgIcon name="menu" size="15" />
                     </BillButton>
                 </el-tooltip>
                 <div class="window-control">
                     <el-tooltip effect="dark" placement="bottom-start" content="最小化">
-                        <BillButton height="40px" width="40px" @click="windowMinimize">
+                        <BillButton height="40px" width="40px" radius="8px" @click="windowMinimize">
                             <SvgIcon name="minus" size="15" />
                         </BillButton>
                     </el-tooltip>
                     <el-tooltip effect="dark" placement="bottom-start" content="最大化">
-                        <BillButton height="40px" width="40px" @click="windowMaximize">
+                        <BillButton height="40px" width="40px" radius="8px" @click="windowMaximize">
                             <SvgIcon name="square" size="15" />
                         </BillButton>
                     </el-tooltip>
                     <el-tooltip effect="dark" placement="bottom-start" content="关闭">
-                        <BillButton height="40px" width="40px" @click="winClose">
+                        <BillButton height="40px" width="40px" radius="8px" @click="winClose">
                             <SvgIcon name="close" size="15" />
                         </BillButton>
                     </el-tooltip>

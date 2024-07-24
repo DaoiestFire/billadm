@@ -3,7 +3,7 @@
         <el-tooltip effect="dark" placement="right-start" v-for="item in menuItems" :content="item.label">
             <BillButton height="40px" width="40px" radius="8px" :is-active="activeIndex === item.index"
                 :index="item.index" @click="clickMenuItem(item.index)">
-                <SvgIcon :name="item.icon" size="20" />
+                <SvgIcon :name="item.icon" size="18" />
             </BillButton>
         </el-tooltip>
     </div>

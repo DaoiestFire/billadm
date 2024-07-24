@@ -1,6 +1,8 @@
 <template>
-    <div class="control-button" :style="getStyle" :class="{ active: props.isActive }">
-        <slot></slot>
+    <div class="control-button" :style="getStyle">
+        <div class="inner-button" :style="getInnerStyle" :class="{ active: props.isActive }">
+            <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -27,14 +29,24 @@ const props = defineProps({
 });
 
 const getStyle = computed(() => {
-    const { height, width, radius } = props;
+    const { height, width } = props;
     return {
         height: height,
         width: width,
-        borderRadius: radius,
     };
 });
 
+const getInnerStyle = computed(() => {
+    const { height, width, radius } = props;
+    const value = String(Math.min(Number(height.replace('px', '')), Number(width.replace('px', ''))) - 10) + 'px';
+    console.log(value);
+
+    return {
+        borderRadius: radius,
+        height: value,
+        width: value,
+    };
+});
 </script>
 
 <style scoped>
@@ -45,12 +57,17 @@ const getStyle = computed(() => {
     -webkit-app-region: no-drag;
 }
 
-.control-button:hover {
-    background-color: var(--el-color-primary-light-9);
+.inner-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.active {
-    background-color: var(--el-color-primary-light-9);
-    color: var(--el-color-primary);
+.inner-button:hover {
+    background-color: var(--el-color-primary-light-7);
+}
+
+.inner-button.active {
+    background-color: var(--el-color-primary-light-7);
 }
 </style>
