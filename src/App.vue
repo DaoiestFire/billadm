@@ -4,23 +4,26 @@
         <el-header height="40px">
             <el-container>
                 <el-tooltip effect="dark" placement="right-start" content="菜单">
-                    <BillButton height="40px" width="40px" radius="8px">
+                    <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius" :offset="buttonOffset">
                         <SvgIcon name="menu" size="15" />
                     </BillButton>
                 </el-tooltip>
                 <div class="window-control">
                     <el-tooltip effect="dark" placement="bottom-start" content="最小化">
-                        <BillButton height="40px" width="40px" radius="8px" @click="windowMinimize">
+                        <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
+                            :offset="buttonOffset" @click="windowMinimize">
                             <SvgIcon name="minus" size="15" />
                         </BillButton>
                     </el-tooltip>
                     <el-tooltip effect="dark" placement="bottom-start" content="最大化">
-                        <BillButton height="40px" width="40px" radius="8px" @click="windowMaximize">
+                        <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
+                            :offset="buttonOffset" @click="windowMaximize">
                             <SvgIcon name="square" size="15" />
                         </BillButton>
                     </el-tooltip>
                     <el-tooltip effect="dark" placement="bottom-start" content="关闭">
-                        <BillButton height="40px" width="40px" radius="8px" @click="winClose">
+                        <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
+                            :offset="buttonOffset" @click="winClose">
                             <SvgIcon name="close" size="15" />
                         </BillButton>
                     </el-tooltip>
@@ -48,6 +51,10 @@ import Menu from './components/Menu.vue';
 import BillDisplay from './components/BillDisplay.vue'
 import SvgIcon from './components/base/SvgIcon.vue';
 import BillButton from './components/base/BillButton.vue';
+
+const buttonSize = "40px";
+const buttonRadius = "8px";
+const buttonOffset = "10px";
 
 // 窗口控制函数
 const winClose = () => {

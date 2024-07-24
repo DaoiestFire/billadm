@@ -22,6 +22,10 @@ const props = defineProps({
         type: String,
         default: "0px",
     },
+    offset: {
+        type: String,
+        default: "0px",
+    },
     isActive: {
         type: Boolean,
         default: false
@@ -37,14 +41,14 @@ const getStyle = computed(() => {
 });
 
 const getInnerStyle = computed(() => {
-    const { height, width, radius } = props;
-    const value = String(Math.min(Number(height.replace('px', '')), Number(width.replace('px', ''))) - 10) + 'px';
-    console.log(value);
-
+    const { height, width, radius, offset } = props;
+    const offsetValue = Number(offset.replace('px', ''));
+    const innerHeight = String(Number(height.replace('px', '')) - offsetValue) + 'px';
+    const innerWidth = String(Number(width.replace('px', '')) - offsetValue) + 'px';
     return {
         borderRadius: radius,
-        height: value,
-        width: value,
+        height: innerHeight,
+        width: innerWidth,
     };
 });
 </script>
