@@ -1,27 +1,35 @@
 <template>
-    <el-container class="outer" @contextmenu="windowUp">
+    <el-container class="outer">
         <div class="drag-region" />
-        <el-header height="30px">
+        <el-header height="40px">
             <el-container>
-                <BillButton height="30px" width="45px">
-                    <SvgIcon name="menu" size="15" />
-                </BillButton>
+                <el-tooltip effect="dark" placement="right-start" content="菜单">
+                    <BillButton height="40px" width="40px">
+                        <SvgIcon name="menu" size="15" />
+                    </BillButton>
+                </el-tooltip>
                 <div class="window-control">
-                    <BillButton height="30px" width="45px" @click="windowMinimize">
-                        <SvgIcon name="minus" size="15" />
-                    </BillButton>
-                    <BillButton height="30px" width="45px" @click="windowMaximize">
-                        <SvgIcon name="square" size="15" />
-                    </BillButton>
-                    <BillButton height="30px" width="45px" @click="winClose">
-                        <SvgIcon name="close" size="15" />
-                    </BillButton>
+                    <el-tooltip effect="dark" placement="bottom-start" content="最小化">
+                        <BillButton height="40px" width="40px" @click="windowMinimize">
+                            <SvgIcon name="minus" size="15" />
+                        </BillButton>
+                    </el-tooltip>
+                    <el-tooltip effect="dark" placement="bottom-start" content="最大化">
+                        <BillButton height="40px" width="40px" @click="windowMaximize">
+                            <SvgIcon name="square" size="15" />
+                        </BillButton>
+                    </el-tooltip>
+                    <el-tooltip effect="dark" placement="bottom-start" content="关闭">
+                        <BillButton height="40px" width="40px" @click="winClose">
+                            <SvgIcon name="close" size="15" />
+                        </BillButton>
+                    </el-tooltip>
                 </div>
             </el-container>
         </el-header>
         <el-main>
             <el-container>
-                <el-aside width="200px">
+                <el-aside width="40px">
                     <Menu />
                 </el-aside>
                 <el-main>
@@ -29,6 +37,9 @@
                 </el-main>
             </el-container>
         </el-main>
+        <el-footer height="40px">
+            <span>no data</span>
+        </el-footer>
     </el-container>
 </template>
 
@@ -40,15 +51,15 @@ import BillButton from './components/BillButton.vue';
 
 // 窗口控制函数
 const winClose = () => {
-    window.windowController.send("window-close")
+    window.appObject.send("window-close")
 }
 
 const windowMaximize = () => {
-    window.windowController.send("window-maximize")
+    window.appObject.send("window-maximize")
 }
 
 const windowMinimize = () => {
-    window.windowController.send("window-minimize")
+    window.appObject.send("window-minimize")
 }
 </script>
 
@@ -76,6 +87,13 @@ const windowMinimize = () => {
     border-bottom-width: 1px;
     border-bottom-color: var(--el-color-info-light-7);
     border-bottom-style: solid;
+}
+
+.el-footer {
+    padding: 0px;
+    border-top-width: 1px;
+    border-top-color: var(--el-color-info-light-7);
+    border-top-style: solid;
 }
 
 .el-aside {
