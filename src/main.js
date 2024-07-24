@@ -11,8 +11,8 @@ let movingInterval = null;
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 900,
+    width: Math.floor(screen.getPrimaryDisplay().size.width * 0.6),
+    height: Math.floor(screen.getPrimaryDisplay().workAreaSize.height * 0.8),
     minWidth: 1024,
     minHeight: 768,
     frame: false,
