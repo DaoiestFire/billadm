@@ -1,6 +1,6 @@
 <template>
     <div class="menu-container">
-        <el-tooltip effect="dark" placement="right-start" v-for="item in menuItems" :content="item.label">
+        <el-tooltip effect="dark" placement="right-start" hide-after=0 v-for="item in menuItems" :content="item.label">
             <BillButton height="40px" width="40px" offset="10px" radius="8px" :is-active="activeIndex === item.index"
                 :index="item.index" @click="clickMenuItem(item.index)">
                 <SvgIcon :name="item.icon" size="18" />

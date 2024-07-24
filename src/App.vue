@@ -3,25 +3,25 @@
         <div class="drag-region" />
         <el-header height="40px">
             <el-container>
-                <el-tooltip effect="dark" placement="right-start" content="菜单">
+                <el-tooltip effect="dark" placement="right-start" content="菜单" hide-after=0>
                     <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius" :offset="buttonOffset">
                         <SvgIcon name="menu" size="15" />
                     </BillButton>
                 </el-tooltip>
                 <div class="window-control">
-                    <el-tooltip effect="dark" placement="bottom-start" content="最小化">
+                    <el-tooltip effect="dark" placement="bottom-start" content="最小化" hide-after=0>
                         <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
                             :offset="buttonOffset" @click="windowMinimize">
                             <SvgIcon name="minus" size="15" />
                         </BillButton>
                     </el-tooltip>
-                    <el-tooltip effect="dark" placement="bottom-start" content="最大化">
+                    <el-tooltip effect="dark" placement="bottom-start" content="最大化" hide-after=0>
                         <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
                             :offset="buttonOffset" @click="windowMaximize">
                             <SvgIcon name="square" size="15" />
                         </BillButton>
                     </el-tooltip>
-                    <el-tooltip effect="dark" placement="bottom-start" content="关闭">
+                    <el-tooltip effect="dark" placement="bottom-start" content="关闭" hide-after=0>
                         <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
                             :offset="buttonOffset" @click="winClose">
                             <SvgIcon name="close" size="15" />
@@ -90,21 +90,18 @@ const windowMinimize = () => {
 }
 
 .el-header {
-    padding: 0px;
     border-bottom-width: 1px;
     border-bottom-color: var(--el-color-info-light-7);
     border-bottom-style: solid;
 }
 
 .el-footer {
-    padding: 0px;
     border-top-width: 1px;
     border-top-color: var(--el-color-info-light-7);
     border-top-style: solid;
 }
 
 .el-aside {
-    padding: 5px;
     height: 100vh;
     border-right-width: 1px;
     border-right-color: var(--el-color-info-light-7);
