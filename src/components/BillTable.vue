@@ -51,7 +51,7 @@
 <script setup>
 import { ElMessage } from 'element-plus';
 import { computed, onMounted, ref, watchEffect } from 'vue'
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from './base/SvgIcon.vue';
 
 // 变量
 const emit = defineEmits(['updateOneBill', 'upateStatisticDispaly'])

@@ -75,7 +75,7 @@ import {
     getThisYearDate
 } from '../utils/timeutils'
 import { ElMessage } from 'element-plus';
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from './base/SvgIcon.vue';
 import { useBillbookStore } from '../stores/billbook'
 
 // variable

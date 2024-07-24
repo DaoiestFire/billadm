@@ -3,7 +3,7 @@
         <el-tooltip effect="dark" placement="right-start" v-for="item in menuItems" :content="item.label">
             <BillButton height="40px" width="40px" radius="8px" :is-active="activeIndex === item.index"
                 :index="item.index" @click="clickMenuItem(item.index)">
-                <SvgIcon :name="item.icon" size="15" />
+                <SvgIcon :name="item.icon" size="20" />
             </BillButton>
         </el-tooltip>
     </div>
@@ -11,33 +11,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import SvgIcon from './SvgIcon.vue'
-import BillButton from './BillButton.vue';
+import SvgIcon from './base/SvgIcon.vue'
+import BillButton from './base/BillButton.vue';
+import { menuItems } from '../config/menu';
 
 // 变量
 const activeIndex = ref('bill')
-const menuItems = [
-    {
-        index: 'bill',
-        icon: 'edit',
-        label: '账单',
-    },
-    {
-        index: 'analysis',
-        icon: 'pie-chart',
-        label: '统计',
-    },
-    {
-        index: 'property',
-        icon: 'coins',
-        label: '资产',
-    },
-    {
-        index: 'setting',
-        icon: 'settings',
-        label: '设置',
-    }
-]
 
 const clickMenuItem = (index) => {
     activeIndex.value = index

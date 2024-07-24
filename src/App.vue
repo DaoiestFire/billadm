@@ -46,8 +46,8 @@
 <script setup>
 import Menu from './components/Menu.vue';
 import BillDisplay from './components/BillDisplay.vue'
-import SvgIcon from './components/SvgIcon.vue';
-import BillButton from './components/BillButton.vue';
+import SvgIcon from './components/base/SvgIcon.vue';
+import BillButton from './components/base/BillButton.vue';
 
 // 窗口控制函数
 const winClose = () => {

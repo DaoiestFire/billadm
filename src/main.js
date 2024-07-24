@@ -127,9 +127,9 @@ const createWindow = () => {
     mainWindow.minimize();
   })
 
-  // if (windowState.isDevToolsOpened) {
-  //   mainWindow.webContents.openDevTools({ mode: "bottom" });
-  // }
+  if (windowState.isDevToolsOpened) {
+    mainWindow.webContents.openDevTools({ mode: "bottom" });
+  }
 
   // 主界面事件监听
   mainWindow.once("ready-to-show", () => {
