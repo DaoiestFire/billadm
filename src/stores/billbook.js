@@ -1,3 +1,4 @@
+/*存储账本信息*/
 import { ElMessage } from "element-plus";
 import { defineStore } from "pinia";
 

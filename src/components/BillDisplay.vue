@@ -10,7 +10,7 @@
                         <div class="aside-op-button">
                             <el-tooltip effect="dark" placement="bottom-start" content="隐藏" hide-after=0>
                                 <BillButton height="40px" width="40px" radius="8px" offset="10px"
-                                    @click="toggleShowAside">
+                                    @click="stateStore.toggleShowBillDisplayAside">
                                     <SvgIcon name="eye-off" size="15" />
                                 </BillButton>
                             </el-tooltip>
@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import BillTable from './BillTable.vue';
 import BillForm from './BillForm.vue';
 import SvgIcon from './base/SvgIcon.vue';
@@ -101,10 +101,12 @@ import {
     getThisYearDate
 } from '../utils/timeutils';
 import { ElMessage } from 'element-plus';
-import { useBillbookStore } from '../stores/billbook'
+import { useBillbookStore } from '../stores/billbook';
+import { useStateStore } from '../stores/state';
 
+const stateStore = useStateStore();
 // variable
-const showAside = ref(true);
+const showAside = computed(() => stateStore.showBillDisplayAside);
 const billbooks = ref([]);
 const selectedBillBook = ref('');
 const billbookStore = useBillbookStore();
@@ -156,10 +158,6 @@ const onSelectChange = () => {
 }
 
 // function
-const toggleShowAside = () => {
-    showAside.value = !showAside.value;
-}
-
 const addBillInfo = () => {
     billFormInstance.value.reset()
     billFormInstance.value.showForm()

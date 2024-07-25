@@ -14,13 +14,20 @@ import { ref } from 'vue'
 import SvgIcon from './base/SvgIcon.vue'
 import BillButton from './base/BillButton.vue';
 import { menuItems } from '../config/menu';
+import { useStateStore } from '../stores/state';
+
+const stateStore = useStateStore();
 
 // 变量
-const activeIndex = ref('bill')
+const activeIndex = ref('bill');
 
 const clickMenuItem = (index) => {
-    activeIndex.value = index
-}
+    activeIndex.value = index;
+
+    if (index === 'bill') {
+        stateStore.toggleShowBillDisplayAside();
+    }
+};
 </script>
 
 <style scoped>
