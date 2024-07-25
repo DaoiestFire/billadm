@@ -23,25 +23,27 @@
                     </el-space>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="150px" align="center">
+            <el-table-column label="操作" width="100px" align="center">
                 <template #default="scope">
-                    <el-button-group>
-                        <el-button size="small" @click="handleEdit(scope.row)">
-                            <el-icon>
+                    <div class="billadm-flex">
+                        <el-tooltip effect="dark" placement="bottom-start" content="编辑" hide-after=0>
+                            <BillButton height="30px" width="30px" radius="6px" offset="6px"
+                                @click="handleEdit(scope.row)">
                                 <SvgIcon name="pencil" size="15" />
-                            </el-icon>
-                        </el-button>
-                        <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
-                            @confirm="handleDelete(scope.row.index)">
-                            <template #reference>
-                                <el-button size="small" type="danger">
-                                    <el-icon>
+                            </BillButton>
+                        </el-tooltip>
+                        <el-tooltip effect="dark" placement="bottom-start" content="删除" hide-after=0>
+                            <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
+                                @confirm="handleDelete(scope.row.index)">
+                                <template #reference>
+                                    <BillButton height="30px" width="30px" radius="6px" offset="6px">
                                         <SvgIcon name="trash2" size="15" />
-                                    </el-icon>
-                                </el-button>
-                            </template>
-                        </el-popconfirm>
-                    </el-button-group>
+                                    </BillButton>
+                                </template>
+                            </el-popconfirm>
+                        </el-tooltip>
+
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -52,6 +54,7 @@
 import { ElMessage } from 'element-plus';
 import { computed, onMounted, ref, watchEffect } from 'vue'
 import SvgIcon from './base/SvgIcon.vue';
+import BillButton from './base/BillButton.vue';
 
 // 变量
 const emit = defineEmits(['updateOneBill', 'upateStatisticDispaly'])
@@ -172,5 +175,11 @@ defineExpose({
 <style>
 .bill-table-cell {
     padding: 3px !important;
+}
+
+.billadm-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>

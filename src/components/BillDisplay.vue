@@ -26,7 +26,7 @@
         </el-aside>
         <el-main>
             <el-container>
-                <el-header height="50px">
+                <el-header height="40px">
                     <div class="menu-header">
                         <div class="billbook-select-container">
                             <el-select v-model="selectedBillBook" style="width: 160px;" @change="onSelectChange">
@@ -39,25 +39,21 @@
                                 start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" />
                         </div>
                         <div class="button-container">
-                            <el-button-group>
-                                <el-button type="primary" @click="addBillInfo">
-                                    <el-icon>
-                                        <SvgIcon name="plus" size="15" />
-                                    </el-icon>
-                                    <span style="">新增记录</span>
-                                </el-button>
-                                <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
-                                    @confirm="handleBatchDelete">
-                                    <template #reference>
-                                        <el-button type="danger">
-                                            <el-icon>
-                                                <SvgIcon name="trash" size="15" />
-                                            </el-icon>
-                                            <span>批量删除</span>
-                                        </el-button>
-                                    </template>
-                                </el-popconfirm>
-                            </el-button-group>
+                            <el-tooltip effect="dark" placement="bottom-start" content="新增记录" hide-after=0>
+                                <BillButton height="40px" width="40px" radius="8px" offset="10px" @click="addBillInfo">
+                                    <SvgIcon name="plus" size="15" />
+                                </BillButton>
+                            </el-tooltip>
+                            <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
+                                @confirm="handleBatchDelete">
+                                <template #reference>
+                                    <el-tooltip effect="dark" placement="bottom-start" content="批量删除" hide-after=0>
+                                        <BillButton height="40px" width="40px" radius="8px" offset="10px">
+                                            <SvgIcon name="trash" size="15" />
+                                        </BillButton>
+                                    </el-tooltip>
+                                </template>
+                            </el-popconfirm>
                         </div>
                     </div>
                 </el-header>
@@ -109,7 +105,6 @@ import { useBillbookStore } from '../stores/billbook'
 
 // variable
 const showAside = ref(true);
-const hideAfter = 0
 const billbooks = ref([]);
 const selectedBillBook = ref('');
 const billbookStore = useBillbookStore();
@@ -248,6 +243,7 @@ onMounted(() => {
 
 .button-container {
     margin-right: 10px;
+    display: flex;
 }
 
 .el-col {
