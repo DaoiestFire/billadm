@@ -22,18 +22,24 @@
                         </div>
                     </el-container>
                 </el-header>
+                <el-container>
+                    <el-header height="10px" />
+                    <el-main>
+                        <div class="billadm-vertical-center">
+                            <BillButton height="40px" width="180px" radius="8px" offset="10px" v-for="item in billbooks"
+                                :is-active="selectedBillBook === item.value" :index="item.value"
+                                @click="clickBillbookItem(item.value)">
+                                {{ item.label }}
+                            </BillButton>
+                        </div>
+                    </el-main>
+                </el-container>
             </el-container>
         </el-aside>
         <el-main>
             <el-container>
                 <el-header height="40px">
                     <div class="menu-header">
-                        <div class="billbook-select-container">
-                            <el-select v-model="selectedBillBook" style="width: 160px;" @change="onSelectChange">
-                                <el-option v-for="item in billbooks" :key="item.value" :label="item.label"
-                                    :value="item.value" />
-                            </el-select>
-                        </div>
                         <div class="date-picker-container">
                             <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
                                 start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts" />
@@ -88,80 +94,41 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import { ElMessage } from 'element-plus';
 import BillTable from './BillTable.vue';
 import BillForm from './BillForm.vue';
 import SvgIcon from './base/SvgIcon.vue';
 import BillButton from './base/BillButton.vue';
-import {
-    getLastMonthDate,
-    getLastWeekData,
-    getLastYearDate,
-    getThisMonthData,
-    getThisWeekData,
-    getThisYearDate
-} from '../utils/timeutils';
-import { ElMessage } from 'element-plus';
 import { useBillbookStore } from '../stores/billbook';
 import { useStateStore } from '../stores/state';
-
+import { shortcuts } from '../config/time_shortcuts';
+const fill = ref(true);
+// store
 const stateStore = useStateStore();
+const billbookStore = useBillbookStore();
+// dom
+const billFormInstance = ref(null);
+const billTableInstance = ref(null);
 // variable
 const showAside = computed(() => stateStore.showBillDisplayAside);
 const billbooks = ref([]);
 const selectedBillBook = ref('');
-const billbookStore = useBillbookStore();
-const billFormInstance = ref(null);
-const billTableInstance = ref(null);
 const timerange = ref([new Date(), new Date()]);
-const shortcuts = [
-    {
-        text: '上周',
-        value: getLastWeekData(),
-    },
-    {
-        text: '上个月',
-        value: getLastMonthDate(),
-    },
-    {
-        text: '去年',
-        value: getLastYearDate(),
-    },
-    {
-        text: '本周',
-        value: getThisWeekData(),
-    },
-    {
-        text: '本月',
-        value: getThisMonthData(),
-    },
-    {
-        text: '今年',
-        value: getThisYearDate(),
-    },
-    {
-        text: '今天',
-        value: [],
-    },
-    {
-        text: '全部',
-        value: [null, null],
-    },
-];
 const lengthIncome = ref(0);
 const lengthCost = ref(0);
 const totalIncome = ref(0);
 const totalCost = ref(0);
 
-// 账本选择器函数
-const onSelectChange = () => {
-    billbookStore.setCurrentBook(selectedBillBook.value)
-}
-
 // function
+const clickBillbookItem = (bookname) => {
+    selectedBillBook.value = bookname;
+    billbookStore.setCurrentBook(bookname);
+};
+
 const addBillInfo = () => {
     billFormInstance.value.reset()
     billFormInstance.value.showForm()
-}
+};
 
 const handleSubmitBill = (billFormData) => {
     // TODO
@@ -191,7 +158,6 @@ const handleBatchDelete = () => {
 // 组件函数
 onMounted(() => {
     billbookStore.refreshBillbooks()
-    console.log(billbookStore.getAllBillbooks)
     billbookStore.getAllBillbooks.forEach((oneBillbook) => {
         billbooks.value.push(oneBillbook)
     })
@@ -227,11 +193,6 @@ onMounted(() => {
     display: flex;
     justify-content: end;
     align-items: center;
-}
-
-.billbook-select-container {
-    margin-left: 20px;
-    margin-right: auto;
 }
 
 .date-picker-container {
