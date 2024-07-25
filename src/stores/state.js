@@ -7,9 +7,6 @@ export const useStateStore = defineStore("state", {
             showBillDisplayAside: true,
         }
     },
-    getters: {
-        getShowBillDisplayAside: (state) => state.showBillDisplayAside,
-    },
     actions: {
         toggleShowBillDisplayAside() {
             this.showBillDisplayAside = !this.showBillDisplayAside

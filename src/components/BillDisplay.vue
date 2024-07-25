@@ -5,18 +5,22 @@
                 <el-header height="40px">
                     <el-container>
                         <div class="aside-name">
-                            <span>账本</span>
+                            <el-text size="large" tag="b">账本</el-text>
                         </div>
                         <div class="aside-op-button">
                             <el-tooltip effect="dark" placement="bottom-start" content="隐藏" hide-after=0>
                                 <BillButton height="40px" width="40px" radius="8px" offset="10px"
                                     @click="stateStore.toggleShowBillDisplayAside">
-                                    <SvgIcon name="eye-off" size="15" />
+                                    <el-text>
+                                        <SvgIcon name="eye-off" size="15" />
+                                    </el-text>
                                 </BillButton>
                             </el-tooltip>
                             <el-tooltip effect="dark" placement="bottom-start" content="添加账本" hide-after=0>
                                 <BillButton height="40px" width="40px" radius="8px" offset="10px">
-                                    <SvgIcon name="plus" size="15" />
+                                    <el-text>
+                                        <SvgIcon name="plus" size="15" />
+                                    </el-text>
                                 </BillButton>
                             </el-tooltip>
                         </div>
@@ -29,7 +33,7 @@
                             <BillButton height="40px" width="180px" radius="8px" offset="10px" v-for="item in billbooks"
                                 :is-active="selectedBillBook === item.value" :index="item.value"
                                 @click="clickBillbookItem(item.value)">
-                                {{ item.label }}
+                                <el-text size="large">{{ item.label }}</el-text>
                             </BillButton>
                         </div>
                     </el-main>
@@ -47,7 +51,9 @@
                         <div class="button-container">
                             <el-tooltip effect="dark" placement="bottom-start" content="新增记录" hide-after=0>
                                 <BillButton height="40px" width="40px" radius="8px" offset="10px" @click="addBillInfo">
-                                    <SvgIcon name="plus" size="15" />
+                                    <el-text>
+                                        <SvgIcon name="plus" size="15" />
+                                    </el-text>
                                 </BillButton>
                             </el-tooltip>
                             <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
@@ -55,7 +61,9 @@
                                 <template #reference>
                                     <el-tooltip effect="dark" placement="bottom-start" content="批量删除" hide-after=0>
                                         <BillButton height="40px" width="40px" radius="8px" offset="10px">
-                                            <SvgIcon name="trash" size="15" />
+                                            <el-text>
+                                                <SvgIcon name="trash" size="15" />
+                                            </el-text>
                                         </BillButton>
                                     </el-tooltip>
                                 </template>
@@ -102,7 +110,6 @@ import BillButton from './base/BillButton.vue';
 import { useBillbookStore } from '../stores/billbook';
 import { useStateStore } from '../stores/state';
 import { shortcuts } from '../config/time_shortcuts';
-const fill = ref(true);
 // store
 const stateStore = useStateStore();
 const billbookStore = useBillbookStore();

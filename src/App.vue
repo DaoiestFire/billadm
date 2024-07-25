@@ -5,26 +5,34 @@
             <el-container>
                 <el-tooltip effect="dark" placement="right-start" content="菜单" hide-after=0>
                     <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius" :offset="buttonOffset">
-                        <SvgIcon name="menu" size="15" />
+                        <el-text size="large">
+                            <SvgIcon name="menu" size="15" />
+                        </el-text>
                     </BillButton>
                 </el-tooltip>
                 <div class="window-control">
                     <el-tooltip effect="dark" placement="bottom-start" content="最小化" hide-after=0>
                         <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
                             :offset="buttonOffset" @click="windowMinimize">
-                            <SvgIcon name="minus" size="15" />
+                            <el-text size="large">
+                                <SvgIcon name="minus" size="15" />
+                            </el-text>
                         </BillButton>
                     </el-tooltip>
                     <el-tooltip effect="dark" placement="bottom-start" content="最大化" hide-after=0>
                         <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
                             :offset="buttonOffset" @click="windowMaximize">
-                            <SvgIcon name="square" size="15" />
+                            <el-text size="large">
+                                <SvgIcon name="square" size="15" />
+                            </el-text>
                         </BillButton>
                     </el-tooltip>
                     <el-tooltip effect="dark" placement="bottom-start" content="关闭" hide-after=0>
                         <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
                             :offset="buttonOffset" @click="winClose">
-                            <SvgIcon name="close" size="15" />
+                            <el-text size="large">
+                                <SvgIcon name="close" size="15" />
+                            </el-text>
                         </BillButton>
                     </el-tooltip>
                 </div>
