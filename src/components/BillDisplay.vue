@@ -143,6 +143,7 @@ const handleSubmitBill = (billFormData) => {
     ElMessage({
         message: '操作成功',
         type: 'success',
+        plain: true,
     })
 };
 

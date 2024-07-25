@@ -33,16 +33,11 @@
                             </BillButton>
                         </el-tooltip>
                         <el-tooltip effect="dark" placement="bottom-start" content="删除" hide-after=0>
-                            <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
-                                @confirm="handleDelete(scope.row.index)">
-                                <template #reference>
-                                    <BillButton height="30px" width="30px" radius="6px" offset="6px">
-                                        <SvgIcon name="trash2" size="15" />
-                                    </BillButton>
-                                </template>
-                            </el-popconfirm>
+                            <BillButton height="30px" width="30px" radius="6px" offset="6px"
+                                @click="handleDelete(scope.row.index)">
+                                <SvgIcon name="trash2" size="15" />
+                            </BillButton>
                         </el-tooltip>
-
                     </div>
                 </template>
             </el-table-column>
@@ -135,6 +130,7 @@ const deleteBillsByList = (indexList) => {
     ElMessage({
         message: `${len}条记录删除成功`,
         type: 'success',
+        plain: true,
     })
 }
 
