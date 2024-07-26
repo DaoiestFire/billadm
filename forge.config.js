@@ -46,7 +46,7 @@ module.exports = {
         ],
         renderer: [
           {
-            name: 'main_window',
+            name: 'frontend',
             config: 'vite.renderer.config.mjs',
           },
         ],

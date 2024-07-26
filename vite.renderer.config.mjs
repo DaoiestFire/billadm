@@ -17,7 +17,7 @@ export default defineConfig((env) => {
     mode,
     base: './',
     build: {
-      outDir: `.vite/renderer/${name}`,
+      outDir: `.vite/${name}`,
     },
     plugins: [
       vue(),

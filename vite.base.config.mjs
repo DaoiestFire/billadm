@@ -19,7 +19,7 @@ export const getBuildConfig = (env) => {
       // Prevent multiple builds from interfering with each other.
       emptyOutDir: false,
       // 🚧 Multiple builds may conflict.
-      outDir: '.vite/build',
+      outDir: '.vite/backend',
       watch: command === 'serve' ? {} : null,
       minify: command === 'build',
     },
