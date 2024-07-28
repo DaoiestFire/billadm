@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import {createRouter, createWebHashHistory} from 'vue-router'
 import BillDisplay from '@/components/BillDisplay.vue'
 import AnalysisDisplay from '@/components/AnalysisDisplay.vue'
 import PropertyDisplay from '@/components/PropertyDisplay.vue'

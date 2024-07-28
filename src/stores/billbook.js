@@ -1,6 +1,5 @@
 /*存储账本信息*/
-import { ElMessage } from "element-plus";
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 
 export const useBillbookStore = defineStore("billbooks", {
     state: () => {
@@ -27,8 +26,8 @@ export const useBillbookStore = defineStore("billbooks", {
         getCurrentBook: (state) => state.currentBook,
     },
     actions: {
-        setCurrentBook(bookvalue) {
-            this.currentBook = bookvalue;
+        setCurrentBook(bookValue) {
+            this.currentBook = bookValue;
         },
         refreshBillbooks() {
             //TODO

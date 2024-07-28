@@ -1,5 +1,5 @@
 /*存储各种前端状态*/
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 
 export const useStateStore = defineStore("state", {
     state: () => {
@@ -9,7 +9,7 @@ export const useStateStore = defineStore("state", {
     },
     actions: {
         toggleShowBillDisplayAside() {
-            this.showBillDisplayAside = !this.showBillDisplayAside
+            this.showBillDisplayAside = !this.showBillDisplayAside;
         },
     }
 })

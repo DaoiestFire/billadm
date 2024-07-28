@@ -1,5 +1,5 @@
 <template>
-    <el-empty description="无数据" />
+  <el-empty description="无数据"/>
 </template>
 
 <script setup>
