@@ -29,3 +29,10 @@
     flex-direction: column;
     align-items: center;
 }
+
+.billadm-vertical-all-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

@@ -3,6 +3,7 @@ import BillDisplay from '../components/BillDisplay.vue'
 import AnalysisDisplay from '../components/AnalysisDisplay.vue'
 import PropertyDisplay from '../components/PropertyDisplay.vue'
 import SettingDisplay from '../components/SettingDisplay.vue'
+import EmptyDisplay from '../components/EmptyDisplay.vue'
 
 const routes = [
     {
@@ -13,18 +14,18 @@ const routes = [
     {
         path: '/analysis',
         name: 'analysis',
-        component: AnalysisDisplay,
+        component: EmptyDisplay,
     },
     {
         path: '/property',
         name: 'property',
-        component: PropertyDisplay,
+        component: EmptyDisplay,
     },
     {
         path: '/setting',
         name: 'setting',
-        component: SettingDisplay,
-    }
+        component: EmptyDisplay,
+    },
 ]
 
 const router = createRouter({
