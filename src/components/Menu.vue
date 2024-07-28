@@ -1,8 +1,8 @@
 <template>
     <div class="menu-container">
         <el-tooltip effect="dark" placement="right-start" hide-after=0 v-for="item in menuItems" :content="item.label">
-            <BillButton height="40px" width="40px" offset="10px" radius="8px" :is-active="activeIndex === item.index"
-                :index="item.index" @click="clickMenuItem(item.index)">
+            <BillButton height="40px" width="40px" offset="10px" radius="8px" :is-active="activeName === item.name"
+                @click="clickMenuItem(item.name)">
                 <el-text>
                     <SvgIcon :name="item.icon" size="18" />
                 </el-text>
@@ -12,24 +12,31 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import SvgIcon from './base/SvgIcon.vue'
+import { onMounted, ref } from 'vue';
+import SvgIcon from './base/SvgIcon.vue';
 import BillButton from './base/BillButton.vue';
 import { menuItems } from '../config/menu';
 import { useStateStore } from '../stores/state';
+import { useRouter } from 'vue-router';
 
 const stateStore = useStateStore();
+const router = useRouter();
 
 // 变量
-const activeIndex = ref('bill');
+const activeName = ref('bill');
 
-const clickMenuItem = (index) => {
-    activeIndex.value = index;
+const clickMenuItem = (name) => {
+    activeName.value = name;
+    router.push({ name: name });
 
-    if (index === 'bill') {
+    if (name === 'bill') {
         stateStore.toggleShowBillDisplayAside();
     }
 };
+
+onMounted(() => {
+    router.push({ name: 'bill' });
+});
 </script>
 
 <style scoped>

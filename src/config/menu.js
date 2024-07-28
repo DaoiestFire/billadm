@@ -1,21 +1,21 @@
 export const menuItems = [
     {
-        index: 'bill',
+        name: 'bill',
         icon: 'edit',
         label: '账单',
     },
     {
-        index: 'analysis',
+        name: 'analysis',
         icon: 'pie-chart',
         label: '统计',
     },
     {
-        index: 'property',
+        name: 'property',
         icon: 'coins',
         label: '资产',
     },
     {
-        index: 'setting',
+        name: 'setting',
         icon: 'settings',
         label: '设置',
     },

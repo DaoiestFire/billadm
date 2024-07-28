@@ -44,7 +44,7 @@
                     <Menu />
                 </el-aside>
                 <el-main>
-                    <BillDisplay />
+                    <RouterView />
                 </el-main>
             </el-container>
         </el-main>
@@ -56,9 +56,9 @@
 
 <script setup>
 import Menu from './components/Menu.vue';
-import BillDisplay from './components/BillDisplay.vue'
 import SvgIcon from './components/base/SvgIcon.vue';
 import BillButton from './components/base/BillButton.vue';
+import { RouterView } from 'vue-router';
 
 const buttonSize = "40px";
 const buttonRadius = "8px";
