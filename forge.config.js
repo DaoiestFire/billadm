@@ -1,5 +1,6 @@
 const {FusesPlugin} = require('@electron-forge/plugin-fuses');
 const {FuseV1Options, FuseVersion} = require('@electron/fuses');
+const {globSync} = require('glob');
 
 module.exports = {
     packagerConfig: {
@@ -36,7 +37,7 @@ module.exports = {
                 build: [
                     {
                         // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
-                        entry: 'electron/main.js',
+                        entry: globSync('electron/*.js'),
                         config: 'vite.main.config.mjs',
                     },
                     {
