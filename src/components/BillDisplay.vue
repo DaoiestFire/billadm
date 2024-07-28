@@ -103,13 +103,13 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
-import BillTable from './BillTable.vue';
-import BillForm from './BillForm.vue';
-import SvgIcon from './base/SvgIcon.vue';
-import BillButton from './base/BillButton.vue';
-import { useBillbookStore } from '../stores/billbook';
-import { useStateStore } from '../stores/state';
-import { shortcuts } from '../config/time_shortcuts';
+import BillTable from '@/components/BillTable.vue';
+import BillForm from '@/components/BillForm.vue';
+import SvgIcon from '@/components/base/SvgIcon.vue';
+import BillButton from '@/components/base/BillButton.vue';
+import { useBillbookStore } from '@/stores/billbook';
+import { useStateStore } from '@/stores/state';
+import { shortcuts } from '@/config/time_shortcuts';
 // store
 const stateStore = useStateStore();
 const billbookStore = useBillbookStore();

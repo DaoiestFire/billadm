@@ -13,10 +13,10 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import SvgIcon from './base/SvgIcon.vue';
-import BillButton from './base/BillButton.vue';
-import { menuItems } from '../config/menu';
-import { useStateStore } from '../stores/state';
+import SvgIcon from '@/components/base/SvgIcon.vue';
+import BillButton from '@/components/base/BillButton.vue';
+import { menuItems } from '@/config/menu';
+import { useStateStore } from '@/stores/state';
 import { useRouter } from 'vue-router';
 
 const stateStore = useStateStore();

@@ -55,9 +55,9 @@
 </template>
 
 <script setup>
-import Menu from './components/Menu.vue';
-import SvgIcon from './components/base/SvgIcon.vue';
-import BillButton from './components/base/BillButton.vue';
+import Menu from '@/components/Menu.vue';
+import SvgIcon from '@/components/base/SvgIcon.vue';
+import BillButton from '@/components/base/BillButton.vue';
 import { RouterView } from 'vue-router';
 
 const buttonSize = "40px";

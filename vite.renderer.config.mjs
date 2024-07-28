@@ -29,6 +29,12 @@ export default defineConfig((env) => {
     ],
     resolve: {
       preserveSymlinks: true,
+      alias: [
+        {
+          find: '@',
+          replacement: path.resolve(__dirname, './src')
+        }
+      ],
     },
     clearScreen: false,
   };

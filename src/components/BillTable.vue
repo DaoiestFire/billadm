@@ -48,8 +48,8 @@
 <script setup>
 import { ElMessage } from 'element-plus';
 import { computed, onMounted, ref, watchEffect } from 'vue'
-import SvgIcon from './base/SvgIcon.vue';
-import BillButton from './base/BillButton.vue';
+import SvgIcon from '@/components/base/SvgIcon.vue';
+import BillButton from '@/components/base/BillButton.vue';
 
 // 变量
 const emit = defineEmits(['updateOneBill', 'upateStatisticDispaly'])

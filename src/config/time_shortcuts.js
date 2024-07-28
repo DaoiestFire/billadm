@@ -5,7 +5,7 @@ import {
     getThisMonthData,
     getThisWeekData,
     getThisYearDate
-} from '../utils/timeutils';
+} from '@/utils/timeutils';
 
 export const shortcuts = [
     {
