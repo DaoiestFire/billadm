@@ -29,16 +29,11 @@ export const useBillbookStore = defineStore("billbooks", {
     actions: {
         setCurrentBook(bookvalue) {
             this.currentBook = bookvalue;
-            ElMessage({
-                message: `账本[${this.billbooks.get(bookvalue).label}]切换成功`,
-                type: 'success',
-                plain: true,
-            })
         },
         refreshBillbooks() {
             //TODO
             if (this.currentBook === '') {
-                this.currentBook = 'default'
+                this.currentBook = 'default';
             }
         },
     }

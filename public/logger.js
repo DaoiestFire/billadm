@@ -3,6 +3,7 @@ const fs = require('fs');
 let logFile;
 
 const INFO = 'INFO';
+const ERROR = 'ERROR';
 
 const writeLog = (out, level) => {
     console.log(out);
@@ -31,4 +32,8 @@ exports.init = (f) => {
 
 exports.info = (out) => {
     writeLog(out, INFO);
+};
+
+exports.error = (out) => {
+    writeLog(out, ERROR);
 };
