@@ -1,4 +1,3 @@
-const path = require('node:path');
 const sqlite3 = require('sqlite3').verbose();
 const {init_logger} = require('./logger');
 
