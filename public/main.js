@@ -7,7 +7,8 @@ const {
 } = require('electron');
 const path = require('node:path');
 const fs = require('fs');
-const logger = require('./logger');
+const { init_logger } = require('./logger');
+const db_controller = require('./sqlite');
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -15,9 +16,8 @@ if (require('electron-squirrel-startup')) {
 
 const confDir = path.join(app.getPath("home"), ".config", "billadm");
 const windowStatePath = path.join(confDir, "windowState.json");
+const logger = init_logger(path.join(confDir, 'app.log'));
 let firstOpen = false;
-
-logger.init(path.join(confDir, 'app.log'));
 
 try {
   firstOpen = !fs.existsSync(path.join(confDir, "workspace.json"));
@@ -33,6 +33,7 @@ try {
 logger.info(`start to launch billadm, firstOpen: ${firstOpen}`);
 
 let currentWindow;
+let dbInstance;
 
 const createWindow = () => {
   // 恢复主窗体状态
@@ -129,6 +130,7 @@ const createWindow = () => {
 
 const exitApp = () => {
   logger.info('start to exit app');
+
   const bounds = currentWindow.getBounds();
   fs.writeFileSync(windowStatePath, JSON.stringify({
     isMaximized: currentWindow.isMaximized(),
@@ -139,6 +141,10 @@ const exitApp = () => {
     width: bounds.width,
     height: bounds.height,
   }));
+
+  if (dbInstance) {
+    db_controller.close_db(dbInstance);
+  }
   logger.info('end to exit app');
 }
 

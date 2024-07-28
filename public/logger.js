@@ -1,11 +1,9 @@
 const fs = require('fs');
 
-let logFile;
-
 const INFO = 'INFO';
 const ERROR = 'ERROR';
 
-const writeLog = (out, level) => {
+const writeLog = (out, level, logFile) => {
     console.log(out);
     let log = "";
     const maxLogLines = 1024;
@@ -26,14 +24,15 @@ const writeLog = (out, level) => {
     }
 };
 
-exports.init = (f) => {
-    logFile = f;
-};
 
-exports.info = (out) => {
-    writeLog(out, INFO);
-};
-
-exports.error = (out) => {
-    writeLog(out, ERROR);
+exports.init_logger = (f) => {
+    return {
+        logFile: f,
+        info: function (out) {
+            writeLog(out, INFO, this.logFile);
+        },
+        error: function (out) {
+            writeLog(out, ERROR, this.logFile);
+        },
+    }
 };
