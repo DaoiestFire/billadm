@@ -4,14 +4,14 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
-    icon: 'billadm'
+    icon: 'electron/billadm' // 程序启动后的任务栏图标
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        setupIcon: 'billadm.ico'
+        setupIcon: 'electron/billadm.ico' // 编译打包之后的安装程序的图标
       },
     },
     {
@@ -36,11 +36,11 @@ module.exports = {
         build: [
           {
             // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
-            entry: 'src/main.js',
+            entry: 'electron/main.js',
             config: 'vite.main.config.mjs',
           },
           {
-            entry: 'src/preload.js',
+            entry: 'electron/preload.js',
             config: 'vite.preload.config.mjs',
           },
         ],
