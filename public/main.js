@@ -6,7 +6,8 @@ const {
   dialog,
 } = require('electron');
 const path = require('node:path');
-const fs = require("fs");
+const fs = require('fs');
+const logger = require('./logger');
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -15,6 +16,8 @@ if (require('electron-squirrel-startup')) {
 const confDir = path.join(app.getPath("home"), ".config", "billadm");
 const windowStatePath = path.join(confDir, "windowState.json");
 let firstOpen = false;
+
+logger.init(path.join(confDir, 'app.log'));
 
 try {
   firstOpen = !fs.existsSync(path.join(confDir, "workspace.json"));
@@ -27,29 +30,7 @@ try {
   app.exit();
 }
 
-const writeLog = (out) => {
-  console.log(out);
-  const logFile = path.join(confDir, "app.log");
-  let log = "";
-  const maxLogLines = 1024;
-  try {
-    if (fs.existsSync(logFile)) {
-      log = fs.readFileSync(logFile).toString();
-      let lines = log.split("\n");
-      if (maxLogLines < lines.length) {
-        log = lines.slice(maxLogLines / 2, maxLogLines).join("\n") + "\n";
-      }
-    }
-    out = out.toString();
-    out = new Date().toISOString().replace(/T/, " ").replace(/\..+/, "") + " " + out;
-    log += out + "\n";
-    fs.writeFileSync(logFile, log);
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-writeLog(`start to launch billadm, firstOpen: ${firstOpen}`);
+logger.info(`start to launch billadm, firstOpen: ${firstOpen}`);
 
 let currentWindow;
 
@@ -81,7 +62,7 @@ const createWindow = () => {
     height: defaultHeight,
   }, oldWindowState);
 
-  writeLog("windowStat [x=" + windowState.x + ", y=" + windowState.y + ", width=" + windowState.width + ", height=" + windowState.height + "], default [width=" + defaultWidth + ", height=" + defaultHeight + "], workArea [width=" + workArea.width + ", height=" + workArea.height + "]");
+  logger.info("windowStat [x=" + windowState.x + ", y=" + windowState.y + ", width=" + windowState.width + ", height=" + windowState.height + "], default [width=" + defaultWidth + ", height=" + defaultHeight + "], workArea [width=" + workArea.width + ", height=" + workArea.height + "]");
 
   let x = windowState.x;
   let y = windowState.y;
@@ -147,7 +128,7 @@ const createWindow = () => {
 };
 
 const exitApp = () => {
-  writeLog('start to exit app');
+  logger.info('start to exit app');
   const bounds = currentWindow.getBounds();
   fs.writeFileSync(windowStatePath, JSON.stringify({
     isMaximized: currentWindow.isMaximized(),
@@ -158,7 +139,7 @@ const exitApp = () => {
     width: bounds.width,
     height: bounds.height,
   }));
-  writeLog('end to exit app');
+  logger.info('end to exit app');
 }
 
 app.whenReady().then(() => {

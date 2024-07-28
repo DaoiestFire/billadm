@@ -36,11 +36,11 @@ module.exports = {
         build: [
           {
             // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
-            entry: 'electron/main.js',
+            entry: 'public/main.js',
             config: 'vite.main.config.mjs',
           },
           {
-            entry: 'electron/preload.js',
+            entry: 'public/preload.js',
             config: 'vite.preload.config.mjs',
           },
         ],
