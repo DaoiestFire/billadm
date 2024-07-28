@@ -8,7 +8,7 @@ const {
 const path = require('node:path');
 const fs = require('fs');
 const {init_logger} = require('./logger');
-const db_controller = require('./sqlite');
+const dbController = require('./sqlite');
 
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -143,7 +143,7 @@ const exitApp = () => {
     }));
 
     if (dbInstance) {
-        db_controller.close_db(dbInstance);
+        dbController.close_db(dbInstance);
     }
     logger.info('end to exit app');
 }
