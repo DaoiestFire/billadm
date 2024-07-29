@@ -1,9 +1,10 @@
 {
   "name": "billadm",
   "productName": "billadm",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A desktop application featuring bill management and analysis functionalities",
   "main": ".vite/backend/main.js",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "start": "electron-forge start",
