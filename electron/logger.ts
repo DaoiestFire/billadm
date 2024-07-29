@@ -41,8 +41,8 @@ const writeLog = (out: string, level: string, logFile: string, maxLogLines: numb
 };
 
 class Logger {
-    logFile: string;
-    maxLogLines: number;
+    private readonly logFile: string;
+    private readonly maxLogLines: number;
 
     constructor(logFile?: string, maxLogLines: number = 1024) {
         this.logFile = logFile ? logFile : "";
