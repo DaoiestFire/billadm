@@ -72,6 +72,6 @@ const getInnerStyle = computed(() => {
 }
 
 .inner-button.active {
-  background-color: var(--el-color-primary-light-7);
+  background-color: var(--el-color-primary-light-3);
 }
 </style>

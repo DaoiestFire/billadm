@@ -1,3 +1,7 @@
+import * as path from 'path';
+import * as fs from 'fs';
+import Logger from "./logger";
+
 const {
     app,
     BrowserWindow,
@@ -5,10 +9,6 @@ const {
     screen,
     dialog,
 } = require('electron');
-const path = require('node:path');
-const fs = require('fs');
-const {init_logger} = require('./logger');
-const dbController = require('./sqlite');
 
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -16,7 +16,7 @@ if (require('electron-squirrel-startup')) {
 
 const confDir = path.join(app.getPath("home"), ".config", "billadm");
 const windowStatePath = path.join(confDir, "windowState.json");
-const logger = init_logger(path.join(confDir, 'app.log'));
+const logger = new Logger(path.join(confDir, 'app.log'));
 let firstOpen = false;
 
 try {
@@ -33,7 +33,6 @@ try {
 logger.info(`start to launch billadm, firstOpen: ${firstOpen}`);
 
 let currentWindow;
-let dbInstance;
 
 const createWindow = () => {
     // 恢复主窗体状态
@@ -141,10 +140,6 @@ const exitApp = () => {
         width: bounds.width,
         height: bounds.height,
     }));
-
-    if (dbInstance) {
-        dbController.close_db(dbInstance);
-    }
     logger.info('end to exit app');
 }
 
