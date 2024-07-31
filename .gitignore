@@ -92,4 +92,5 @@ typings/
 out/
 
 # test
+test/*
 !test/*ts
