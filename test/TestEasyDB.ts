@@ -29,6 +29,7 @@ let easyDB = new EasyDB(DB_FILE, DB_LOG_FILE);
 
 const main = async () => {
     try {
+        await easyDB.init();
         await easyDB.runSql(CREATE_TEST_TABLE);
         await easyDB.runSql(INSERT_KEY_VALUE, ['testkey1', 'testvalue1'])
         await easyDB.runSql(INSERT_KEY_VALUE, ['testkey2', 'testvalue2'])

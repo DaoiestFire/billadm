@@ -2,18 +2,27 @@ import * as sqlite3 from "sqlite3";
 import Logger from "./logger";
 
 class EasyDB {
+    private readonly dbFile: string;
     private readonly logger: Logger;
-    private readonly dbInstance: sqlite3.Database;
+    private dbInstance: sqlite3.Database;
 
     constructor(dbFile: string, logFile: string) {
+        this.dbFile = dbFile;
         this.logger = new Logger(logFile);
-        this.dbInstance = new sqlite3.Database(dbFile, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
-            if (err) {
-                this.logger.error(`connect database [${dbFile}] failed, err: ${err.message}`);
-                return;
-            }
-            this.logger.info(`connect database [${dbFile}] success`);
-        });
+    }
+
+    init() {
+        return new Promise((resolve, reject) => {
+            this.dbInstance = new sqlite3.Database(this.dbFile, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+                if (err) {
+                    this.logger.error(`connect database [${this.dbFile}] failed, err: ${err.message}`);
+                    reject(err);
+                    return;
+                }
+                this.logger.info(`connect database [${this.dbFile}] success`);
+                resolve(true)
+            });
+        })
     }
 
     runSql(sql: string, value?: any) {
