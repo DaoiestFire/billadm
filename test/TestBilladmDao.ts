@@ -21,6 +21,12 @@ const main = async () => {
     try {
         await billadmDao.init();
         await billadmDao.initDB();
+        let res = await billadmDao.queryAllType();
+        console.log(res);
+        console.log(`delete type by id ${res[0].id} ${res[0].name}`);
+        await billadmDao.deleteOneType(res[0].id);
+        res = await billadmDao.queryAllType();
+        console.log(res);
     } catch (err) {
         console.log(err);
     }
