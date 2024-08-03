@@ -21,6 +21,7 @@ export const useBilladmStore = defineStore("billbooks", {
                 creationTime: new Date(),
             },
             timeRange: [new Date(), new Date()],
+            billTypes: new Map(),
         }
     },
     actions: {
@@ -137,6 +138,22 @@ export const useBilladmStore = defineStore("billbooks", {
                 description: '',
                 tags: [],
                 creationTime: new Date(),
+            }
+        },
+        async refreshBillTypes() {
+            try {
+                const res = await window.appObject.getAllBillTypes();
+                res.forEach(item => {
+                    this.billTypes.set(item.id, item.name);
+                });
+            } catch (err) {
+                ElNotification({
+                    type: 'error',
+                    message: '获取消费类型失败',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
             }
         },
     }

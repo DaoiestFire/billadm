@@ -14,14 +14,13 @@
       </el-form-item>
       <el-form-item label="类型">
         <el-select v-model="billadmStore.billForm.type" placeholder="选择类型">
-          <el-option label="三餐" value="food"/>
-          <el-option label="游戏" value="game"/>
+          <el-option v-for="key in billadmStore.billTypes.keys()" :label="billadmStore.billTypes.get(key)"
+                     :value="key"/>
         </el-select>
       </el-form-item>
       <el-form-item label="标签">
         <el-select v-model="billadmStore.billForm.tags" multiple placeholder="选择多个标签">
-          <el-option label="Zone one" value="shanghai"/>
-          <el-option label="Zone two" value="beijing"/>
+          <!--新增候选标签-->
           <template #footer>
             <el-button v-if="!isAdding" text bg size="small" @click="onAddOption">
               添加自定义标签

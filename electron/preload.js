@@ -16,4 +16,7 @@ contextBridge.exposeInMainWorld('appObject', {
     deleteBills(idList) {
         return ipcRenderer.invoke('bills.delete-bills', idList);
     },
+    getAllBillTypes() {
+        return ipcRenderer.invoke('billtypes.all-billtypes');
+    }
 })

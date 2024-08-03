@@ -103,6 +103,7 @@ const handleBatchDelete = async () => {
 // 组件函数
 onMounted(async () => {
   await billadmStore.refreshBillbooks();
+  await billadmStore.refreshBillTypes();
   billadmStore.setCurrentBook(BUILT_IN_BILLBOOK.id);
 });
 </script>

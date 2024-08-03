@@ -175,20 +175,25 @@ const createWindow = () => {
     // billbooks
     ipcMain.handle("billbooks.all-billbooks", async () => {
         return await workspace.billadmDao.queryAllBillbook();
-    })
+    });
 
     // bills
     ipcMain.handle("bills.all-bills", async (event, bookId: string) => {
         return await workspace.billadmDao.queryAllBillByBookID(bookId);
-    })
+    });
     ipcMain.handle("bills.add-one-bill", async (event, item) => {
         return await workspace.billadmDao.insertOneBill(item.money, item.type, item.income, item.bookId, item.description, item.tags, item.creationTime);
-    })
+    });
     ipcMain.handle("bills.delete-bills", async (event, idList: string[]) => {
         for (let id of idList) {
             await workspace.billadmDao.deleteOneBillByID(id);
         }
-    })
+    });
+
+    // billtypes
+    ipcMain.handle("billtypes.all-billtypes", async () => {
+        return await workspace.billadmDao.queryAllType();
+    });
 
     if (windowState.isDevToolsOpened) {
         mainWindow.webContents.openDevTools({mode: "bottom"});

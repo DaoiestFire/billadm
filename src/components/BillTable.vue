@@ -10,7 +10,8 @@
                         {{ scope.row.income === 'true' ? "+" : "-" }}{{ scope.row.money }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="type" label="类型" width="100px" align="center">
+      <el-table-column label="类型" width="100px" align="center">
+        <template #default="scope">{{ billadmStore.billTypes.get(scope.row.type) }}</template>
       </el-table-column>
       <el-table-column label="时间" width="120px" align="center">
         <template #default="scope">{{ timestampToLocalTimeString(scope.row.creationTime) }}</template>
