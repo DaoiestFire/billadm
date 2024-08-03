@@ -184,8 +184,4 @@ onMounted(() => {
 .el-col {
   text-align: center;
 }
-
-.statistic-dispaly {
-  padding-top: 16px;
-}
 </style>
