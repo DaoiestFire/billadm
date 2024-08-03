@@ -1,12 +1,17 @@
 import EasyDB from "./easyDB";
-import {UUID} from "./utils";
-import {BUILT_IN_TYPES} from "./constans";
+import {getCurrentUTCTime, UUID} from "./utils";
+import {BUILT_IN_BILLBOOK, BUILT_IN_TYPES} from "./constans";
 
+
+/**
+ * 创建表格
+ * creation_time: 至UTC时间的毫秒数
+ */
 const CREATE_TABLE_BILLBOOKS: string = `CREATE TABLE IF NOT EXISTS t_billbooks (
     id            TEXT PRIMARY KEY NOT NULL,
     name          TEXT NOT NULL,
     description   TEXT DEFAULT '',
-    creation_time TEXT NOT NULL
+    creation_time INTEGER NOT NULL
 );`;
 
 const CREATE_TABLE_BILLS: string = `CREATE TABLE IF NOT EXISTS t_bills (
@@ -30,6 +35,11 @@ const INSERT_ONE_TYPE: string = 'INSERT INTO t_types (id,name) VALUES (?,?);'
 const QUERY_ALL_TYPE: string = 'SELECT * FROM t_types';
 const DELETE_ONE_TYPE_BY_ID: string = 'DELETE FROM t_types WHERE id=?';
 
+/** t_billbooks*/
+const INSERT_ONE_BILLBOOK: string = 'INSERT INTO t_billbooks (id,name,description,creation_time) VALUES (?,?,?,?);';
+const QUERY_ALL_BILLBOOK: string = 'SELECT * FROM t_billbooks';
+const DELETE_ONE_BILLBOOK_BY_ID: string = 'DELETE FROM t_billbooks WHERE id=?';
+
 class BilladmDao {
     private easyDB: EasyDB;
 
@@ -46,6 +56,7 @@ class BilladmDao {
         await this.easyDB.runSql(CREATE_TABLE_BILLBOOKS);
         await this.easyDB.runSql(CREATE_TABLE_BILLS);
         await this.easyDB.runSql(CREATE_TABLE_TYPES);
+        await this.insertOneBillbook(BUILT_IN_BILLBOOK.name, BUILT_IN_BILLBOOK.description);
         for (let value of BUILT_IN_TYPES) {
             await this.insertOneType(value);
         }
@@ -64,6 +75,21 @@ class BilladmDao {
     /** 删除一条消费类型*/
     async deleteOneType(id: string) {
         await this.easyDB.runSql(DELETE_ONE_TYPE_BY_ID, [id]);
+    }
+
+    /** 创建一个账本*/
+    async insertOneBillbook(name: string, description: string) {
+        await this.easyDB.runSql(INSERT_ONE_BILLBOOK, [UUID(), name, description, getCurrentUTCTime()]);
+    }
+
+    /** 查询所有消费类型*/
+    async queryAllBillbook() {
+        return await this.easyDB.querySql(QUERY_ALL_BILLBOOK);
+    }
+
+    /** 删除一个账本*/
+    async deleteOneBillbook(id: string) {
+        await this.easyDB.runSql(DELETE_ONE_BILLBOOK_BY_ID, [id]);
     }
 }
 

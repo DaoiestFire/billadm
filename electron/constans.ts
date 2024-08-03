@@ -32,3 +32,8 @@ export const BUILT_IN_TYPES: string[] = [
     '阅读',
     '游戏',
 ]
+
+export const BUILT_IN_BILLBOOK = {
+    name: '默认账本',
+    description: 'billadm的内置的默认账本',
+}

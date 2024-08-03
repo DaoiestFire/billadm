@@ -27,6 +27,13 @@ const main = async () => {
         await billadmDao.deleteOneType(res[0].id);
         res = await billadmDao.queryAllType();
         console.log(res);
+        await billadmDao.insertOneBillbook('test', 'this a test billbook');
+        res = await billadmDao.queryAllBillbook();
+        console.log(res)
+        console.log(`delete billbook by id ${res[0].id} ${res[0].name}`);
+        await billadmDao.deleteOneBillbook(res[0].id);
+        res = await billadmDao.queryAllBillbook();
+        console.log(res)
     } catch (err) {
         console.log(err);
     }
