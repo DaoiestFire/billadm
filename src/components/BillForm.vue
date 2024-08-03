@@ -87,8 +87,9 @@ const onCancel = () => {
   billadmStore.toggleShowBillForm();
 }
 
-const onSubmit = () => {
-  billadmStore.addOneBill();
+const onSubmit = async () => {
+  await billadmStore.addOneBill();
+  await billadmStore.refreshBills();
   billadmStore.resetBillForm();
   billadmStore.toggleShowBillForm();
 }

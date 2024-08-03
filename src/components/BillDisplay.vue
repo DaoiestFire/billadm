@@ -56,18 +56,13 @@
                   </el-text>
                 </BillButton>
               </el-tooltip>
-              <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
-                             @confirm="handleBatchDelete">
-                <template #reference>
-                  <el-tooltip effect="dark" placement="bottom-start" content="批量删除" v-bind="{ 'hide-after' : 0 }">
-                    <BillButton height="40px" width="40px" radius="8px" offset="10px">
-                      <el-text>
-                        <SvgIcon name="trash" size="15"/>
-                      </el-text>
-                    </BillButton>
-                  </el-tooltip>
-                </template>
-              </el-popconfirm>
+              <el-tooltip effect="dark" placement="bottom-start" content="批量删除" v-bind="{ 'hide-after' : 0 }">
+                <BillButton height="40px" width="40px" radius="8px" offset="10px" @click="handleBatchDelete">
+                  <el-text>
+                    <SvgIcon name="trash" size="15"/>
+                  </el-text>
+                </BillButton>
+              </el-tooltip>
             </div>
           </div>
         </el-header>
@@ -101,13 +96,13 @@ const addBillInfo = () => {
   billadmStore.resetBillForm();
   billadmStore.toggleShowBillForm();
 };
-const handleBatchDelete = () => {
-  billTableInstance.value.deleteSelectedBills();
+const handleBatchDelete = async () => {
+  await billTableInstance.value.deleteSelectedBills();
 };
 
 // 组件函数
-onMounted(() => {
-  billadmStore.refreshBillbooks();
+onMounted(async () => {
+  await billadmStore.refreshBillbooks();
   billadmStore.setCurrentBook(BUILT_IN_BILLBOOK.id);
 });
 </script>

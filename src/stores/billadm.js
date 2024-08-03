@@ -1,6 +1,6 @@
 /*存储账本信息*/
 import {defineStore} from "pinia";
-import {timestampToLocalTimeString} from "@/utils/timeutils";
+import {ElNotification} from "element-plus";
 
 export const useBilladmStore = defineStore("billbooks", {
     state: () => {
@@ -27,18 +27,28 @@ export const useBilladmStore = defineStore("billbooks", {
         setCurrentBook(bookValue) {
             this.currentBook = bookValue;
         },
-        refreshBillbooks() {
-            window.appObject.getAllBillbooks().then((response) => {
+        async refreshBillbooks() {
+            try {
+                const res = await window.appObject.getAllBillbooks()
                 this.billbooks = [];
-                response.forEach(billbook => {
+                res.forEach(billbook => {
                     this.billbooks.push(billbook);
                 });
-            });
+            } catch (err) {
+                ElNotification({
+                    type: 'error',
+                    message: '获取账本失败',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            }
         },
-        refreshBills() {
-            window.appObject.getAllBillsByBookID(this.currentBook).then((response) => {
+        async refreshBills() {
+            try {
+                const res = await window.appObject.getAllBillsByBookID(this.currentBook);
                 let bills = [];
-                response.forEach(item => {
+                res.forEach(item => {
                     let newItem = {
                         id: item.id,
                         money: String(item.money),
@@ -52,9 +62,17 @@ export const useBilladmStore = defineStore("billbooks", {
                     bills.push(newItem);
                 });
                 this.bills = bills;
-            });
+            } catch (err) {
+                ElNotification({
+                    type: 'error',
+                    message: '获取消费记录失败',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            }
         },
-        addOneBill() {
+        async addOneBill() {
             let newItem = {
                 money: Number(this.billForm.money),
                 type: this.billForm.type,
@@ -64,8 +82,44 @@ export const useBilladmStore = defineStore("billbooks", {
                 tags: JSON.stringify(this.billForm.tags),
                 creationTime: this.billForm.creationTime.getTime(),
             };
-            window.appObject.addOneBill(newItem);
-            this.refreshBills();
+            try {
+                await window.appObject.addOneBill(newItem);
+                ElNotification({
+                    type: 'success',
+                    message: '新增消费记录成功',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            } catch (err) {
+                ElNotification({
+                    type: 'error',
+                    message: '新增消费记录失败',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            }
+        },
+        async deleteBills(idList) {
+            try {
+                await window.appObject.deleteBills(idList);
+                ElNotification({
+                    type: 'success',
+                    message: '删除消费记录成功',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            } catch (err) {
+                ElNotification({
+                    type: 'error',
+                    message: '删除消费记录失败',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            }
         },
         toggleShowBillDisplayAside() {
             this.showBillDisplayAside = !this.showBillDisplayAside;

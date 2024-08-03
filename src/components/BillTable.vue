@@ -47,8 +47,7 @@
 </template>
 
 <script setup>
-import {ElMessage} from 'element-plus';
-import {computed, ref, watch} from 'vue'
+import {computed, ref, toRaw, watch} from 'vue'
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 import {useBilladmStore} from '@/stores/billadm';
@@ -57,7 +56,6 @@ import {timestampToLocalTimeString} from "@/utils/timeutils";
 // store
 const billadmStore = useBilladmStore();
 // 变量
-const emit = defineEmits(['updateOneBill', 'updateStatisticDisplay'])
 const multipleSelection = ref([]);
 // 窗口
 const windowHeight = ref(window.innerHeight);
@@ -69,11 +67,10 @@ window.addEventListener('resize', () => {
 });
 // 单记录操作函数
 const handleEdit = (info) => {
-  emit('updateOneBill', info)
 };
 
-const handleDelete = (id) => {
-  deleteBillsByList([id])
+const handleDelete = async (id) => {
+  await deleteBillsByList([id])
 };
 // 表格函数
 const handleSelectionChange = (val) => {
@@ -83,18 +80,14 @@ const handleSelectionChange = (val) => {
   })
 };
 // 组件函数
-const deleteSelectedBills = () => {
-  deleteBillsByList(multipleSelection.value)
+const deleteSelectedBills = async () => {
+  await deleteBillsByList(toRaw(multipleSelection.value))
   multipleSelection.value = []
 };
 
-const deleteBillsByList = (idList) => {
-
-  ElMessage({
-    message: `${idList.length}条记录删除成功`,
-    type: 'success',
-    plain: true,
-  });
+const deleteBillsByList = async (idList) => {
+  await billadmStore.deleteBills(idList);
+  await billadmStore.refreshBills();
 };
 
 watch(computed(() => billadmStore.currentBook), () => {

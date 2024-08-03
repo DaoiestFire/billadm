@@ -13,4 +13,7 @@ contextBridge.exposeInMainWorld('appObject', {
     addOneBill(item) {
         return ipcRenderer.invoke('bills.add-one-bill', item);
     },
+    deleteBills(idList) {
+        return ipcRenderer.invoke('bills.delete-bills', idList);
+    },
 })
