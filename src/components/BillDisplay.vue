@@ -1,6 +1,6 @@
 <template>
   <el-container style="height: 100%;">
-    <el-aside v-if="showAside" width="200px">
+    <el-aside v-if="stateStore.showBillDisplayAside" width="200px">
       <el-container>
         <el-header height="40px">
           <el-container>
@@ -30,10 +30,10 @@
           <el-header height="10px"/>
           <el-main>
             <div class="billadm-vertical-center">
-              <BillButton height="40px" width="180px" radius="8px" offset="10px" v-for="item in billbooks"
-                          :is-active="selectedBillBook === item.value" :index="item.value"
-                          @click="clickBillbookItem(item.value)">
-                <el-text size="large">{{ item.label }}</el-text>
+              <BillButton height="40px" width="180px" radius="8px" offset="10px" v-for="item in billbookStore.billbooks"
+                          :is-active="billbookStore.currentBook === item.id" :key="item.id"
+                          @click="billbookStore.setCurrentBook(item.id)">
+                <el-text size="large">{{ item.name }}</el-text>
               </BillButton>
             </div>
           </el-main>
@@ -45,7 +45,7 @@
         <el-header height="40px">
           <div class="menu-header">
             <div class="date-picker-container">
-              <el-date-picker v-model="timerange" type="daterange" unlink-panels range-separator="至"
+              <el-date-picker v-model="timeRange" type="daterange" unlink-panels range-separator="至"
                               start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts"/>
             </div>
             <div class="button-container">
@@ -101,7 +101,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import {ElMessage} from 'element-plus';
 import BillTable from '@/components/BillTable.vue';
 import BillForm from '@/components/BillForm.vue';
@@ -117,59 +117,46 @@ const billbookStore = useBillbookStore();
 const billFormInstance = ref(null);
 const billTableInstance = ref(null);
 // variable
-const showAside = computed(() => stateStore.showBillDisplayAside);
-const billbooks = ref([]);
-const selectedBillBook = ref('');
-const timerange = ref([new Date(), new Date()]);
+const timeRange = ref([new Date(), new Date()]);
+
 const lengthIncome = ref(0);
 const lengthCost = ref(0);
 const totalIncome = ref(0);
 const totalCost = ref(0);
 
 // function
-const clickBillbookItem = (bookname) => {
-  selectedBillBook.value = bookname;
-  billbookStore.setCurrentBook(bookname);
-};
-
 const addBillInfo = () => {
-  billFormInstance.value.reset()
-  billFormInstance.value.showForm()
+  billFormInstance.value.reset();
+  billFormInstance.value.showForm();
 };
 
 const handleSubmitBill = (billFormData) => {
-  // TODO
-  console.log(billFormData)
   ElMessage({
     message: '操作成功',
     type: 'success',
     plain: true,
-  })
+  });
 };
 
 const handleBillEdit = (info) => {
-  billFormInstance.value.setBillForm(info)
-  billFormInstance.value.showForm()
+  billFormInstance.value.setBillForm(info);
+  billFormInstance.value.showForm();
 };
 
 const handleUpdateStatistic = (info) => {
-  lengthCost.value = info.lengthCost
-  lengthIncome.value = info.lengthIncome
-  totalCost.value = info.totalCost
-  totalIncome.value = info.totalIncome
+  lengthCost.value = info.lengthCost;
+  lengthIncome.value = info.lengthIncome;
+  totalCost.value = info.totalCost;
+  totalIncome.value = info.totalIncome;
 };
 
 const handleBatchDelete = () => {
-  billTableInstance.value.deleteSelectedBills()
+  billTableInstance.value.deleteSelectedBills();
 };
 
 // 组件函数
 onMounted(() => {
-  billbookStore.refreshBillbooks()
-  billbookStore.getAllBillbooks.forEach((oneBillbook) => {
-    billbooks.value.push(oneBillbook)
-  })
-  selectedBillBook.value = billbookStore.getCurrentBook
+  billbookStore.refreshBillbooks();
 });
 </script>
 

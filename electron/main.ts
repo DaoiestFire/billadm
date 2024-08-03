@@ -156,20 +156,25 @@ const createWindow = () => {
         mainWindow.loadFile(path.join(__dirname, `../${FRONTEND_VITE_NAME}/index.html`));
     }
 
-    ipcMain.on("window-close", () => {
+    ipcMain.on("window.close", () => {
         mainWindow.close();
-    })
+    });
 
-    ipcMain.on("window-maximize", () => {
+    ipcMain.on("window.maximize", () => {
         if (mainWindow.isMaximized()) {
             mainWindow.unmaximize();
         } else {
             mainWindow.maximize();
         }
-    })
+    });
 
-    ipcMain.on("window-minimize", () => {
+    ipcMain.on("window.minimize", () => {
         mainWindow.minimize();
+    });
+
+    // billbooks
+    ipcMain.handle("billbooks.all-billbooks", async () => {
+        return  await workspace.billadmDao.queryAllBillbook();
     })
 
     if (windowState.isDevToolsOpened) {

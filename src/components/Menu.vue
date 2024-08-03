@@ -30,7 +30,9 @@ const clickMenuItem = (name) => {
   router.push({name: name});
 
   if (name === 'bill') {
-    stateStore.toggleShowBillDisplayAside();
+    if (!stateStore.showBillDisplayAside) {
+      stateStore.toggleShowBillDisplayAside();
+    }
   }
 };
 

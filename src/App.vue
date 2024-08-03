@@ -66,15 +66,15 @@ const buttonOffset = "10px";
 
 // 窗口控制函数
 const winClose = () => {
-  window.appObject.send("window-close")
+  window.appObject.send("window.close")
 }
 
 const windowMaximize = () => {
-  window.appObject.send("window-maximize")
+  window.appObject.send("window.maximize")
 }
 
 const windowMinimize = () => {
-  window.appObject.send("window-minimize")
+  window.appObject.send("window.minimize")
 }
 </script>
 
