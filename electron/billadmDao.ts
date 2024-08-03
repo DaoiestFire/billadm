@@ -98,14 +98,13 @@ class BilladmDao {
     }
 
     /** 创建一条消费记录*/
-    async insertOneBill(money: number, type: string, income: string, book_id: string, description: string, tags: string) {
-        await this.easyDB.runSql(INSERT_ONE_BILL, [UUID(), money, type, income, book_id, description, tags, getCurrentUTCTime()]);
+    async insertOneBill(money: number, type: string, income: string, bookId: string, description: string, tags: string, creationTime: number) {
+        await this.easyDB.runSql(INSERT_ONE_BILL, [UUID(), money, type, income, bookId, description, tags, creationTime]);
     }
 
     /** 查询一个账本中的所有消费记录*/
-    async queryAllBillByBookID(book_id: string) {
-        console.log(book_id);
-        return await this.easyDB.querySql(QUERY_ALL_BILL_BY_BOOK_ID, [book_id]);
+    async queryAllBillByBookID(bookId: string) {
+        return await this.easyDB.querySql(QUERY_ALL_BILL_BY_BOOK_ID, [bookId]);
     }
 
     /** 删除一条消费记录*/

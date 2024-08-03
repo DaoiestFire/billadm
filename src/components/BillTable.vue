@@ -1,6 +1,6 @@
 <template>
   <div class="bill-table-outer">
-    <el-table :data="tableData" style="width: 100%" cell-class-name="bill-table-cell" :max-height="tableHeight"
+    <el-table :data="billadmStore.bills" style="width: 100%" cell-class-name="bill-table-cell" :max-height="tableHeight"
               @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50px" align="center"/>
       <el-table-column prop="money" label="金额" width="100px" align="center">
@@ -12,7 +12,8 @@
       </el-table-column>
       <el-table-column prop="type" label="类型" width="100px" align="center">
       </el-table-column>
-      <el-table-column prop="time" label="时间" width="120px" align="center">
+      <el-table-column label="时间" width="120px" align="center">
+        <template #default="scope">{{ timestampToLocalTimeString(scope.row.creationTime) }}</template>
       </el-table-column>
       <el-table-column prop="description" label="描述" width="150px" align="center">
       </el-table-column>
@@ -34,7 +35,7 @@
             </el-tooltip>
             <el-tooltip effect="dark" placement="bottom-start" content="删除" v-bind="{ 'hide-after' : 0 }">
               <BillButton height="30px" width="30px" radius="6px" offset="6px"
-                          @click="handleDelete(scope.row.index)">
+                          @click="handleDelete(scope.row.id)">
                 <SvgIcon name="trash2" size="15"/>
               </BillButton>
             </el-tooltip>
@@ -47,125 +48,63 @@
 
 <script setup>
 import {ElMessage} from 'element-plus';
-import {computed, onMounted, ref, watchEffect} from 'vue'
+import {computed, ref, watch} from 'vue'
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
+import {useBilladmStore} from '@/stores/billadm';
+import {timestampToLocalTimeString} from "@/utils/timeutils";
 
+// store
+const billadmStore = useBilladmStore();
 // 变量
 const emit = defineEmits(['updateOneBill', 'updateStatisticDisplay'])
-const multipleSelection = ref([])
-const windowHeight = ref(window.innerHeight)
+const multipleSelection = ref([]);
+// 窗口
+const windowHeight = ref(window.innerHeight);
 const tableHeight = computed(() => {
   return windowHeight.value - 90
-})
-const tableData = ref([])
-
-// 窗口函数
+});
 window.addEventListener('resize', () => {
   windowHeight.value = window.innerHeight
-})
-
+});
 // 单记录操作函数
 const handleEdit = (info) => {
   emit('updateOneBill', info)
-  refreshTableDate()
-}
+};
 
-const handleDelete = (index) => {
-  deleteBillsByList([index])
-}
-
+const handleDelete = (id) => {
+  deleteBillsByList([id])
+};
 // 表格函数
 const handleSelectionChange = (val) => {
   multipleSelection.value = []
   val.forEach((info) => {
-    multipleSelection.value.push(info.index)
+    multipleSelection.value.push(info.id)
   })
-}
-
+};
+// 组件函数
 const deleteSelectedBills = () => {
   deleteBillsByList(multipleSelection.value)
   multipleSelection.value = []
-}
+};
 
-// 组件函数
-// 根据当前账本与时间刷新表格数据
-const refreshTableDate = () => {
-  // TODO
-  tableData.value = [
-    {
-      index: "index1",
-      money: "37.78",
-      description: "游戏",
-      type: "娱乐",
-      time: "2024-06-05",
-      tags: ["刘vdf", "吃饭", "消费"],
-      income: 'true',
-    },
-    {
-      index: "index2",
-      money: "3834",
-      description: "晚饭",
-      type: "饮食",
-      time: "2024-06-05",
-      tags: ["刘敬威", "吃饭", "正常消费"],
-      income: 'false',
-    },
-    {
-      index: "index3",
-      money: "384",
-      description: "晚饭",
-      type: "饮食",
-      time: "2024-06-05",
-      tags: ["学习", "吃饭", "消费"],
-      income: 'true',
-    },
-  ]
-}
+const deleteBillsByList = (idList) => {
 
-const deleteBillsByList = (indexList) => {
-  // TODO
-  let len = indexList.length
-  console.log(indexList)
   ElMessage({
-    message: `${len}条记录删除成功`,
+    message: `${idList.length}条记录删除成功`,
     type: 'success',
     plain: true,
-  })
-}
+  });
+};
 
-watchEffect(() => {
-  let lengthIncome = 0
-  let lengthCost = 0
-  let totalIncome = 0
-  let totalCost = 0
-  tableData.value.forEach((info) => {
-    if (info.income === 'true') {
-      totalIncome += Number(info.money)
-      lengthIncome++
-    } else {
-      totalCost += Number(info.money)
-      lengthCost++
-    }
-  })
-
-  emit('updateStatisticDisplay', {
-    lengthIncome: lengthIncome,
-    lengthCost: lengthCost,
-    totalIncome: totalIncome,
-    totalCost: totalCost,
-  })
-})
-
-onMounted(() => {
-  refreshTableDate()
-})
+watch(computed(() => billadmStore.currentBook), () => {
+  billadmStore.refreshBills();
+});
 
 // 导出成员
 defineExpose({
-  refreshTableDate,
   deleteSelectedBills,
-})
+});
 </script>
 
 <style>

@@ -32,20 +32,36 @@ export function getLastMonthDate() {
 
 export function getThisYearDate() {
     let startDate = new Date();
-    startDate.setMonth(0)
-    startDate.setDate(1)
-    let endDate = new Date(startDate)
-    endDate.setMonth(11)
-    endDate.setDate(31)
-    return [startDate, endDate]
+    startDate.setMonth(0);
+    startDate.setDate(1);
+    let endDate = new Date(startDate);
+    endDate.setMonth(11);
+    endDate.setDate(31);
+    return [startDate, endDate];
 }
 
 
 export function getLastYearDate() {
     let thisYear = getThisYearDate();
-    let startDate = new Date(thisYear[0])
-    let endDate = new Date(thisYear[1])
-    startDate.setFullYear(startDate.getFullYear() - 1)
-    endDate.setFullYear(endDate.getFullYear() - 1)
-    return [startDate, endDate]
+    let startDate = new Date(thisYear[0]);
+    let endDate = new Date(thisYear[1]);
+    startDate.setFullYear(startDate.getFullYear() - 1);
+    endDate.setFullYear(endDate.getFullYear() - 1);
+    return [startDate, endDate];
+}
+
+export function timestampToLocalTimeString(timestamp) {
+    timestamp = timestamp ? timestamp : null;
+    let date = new Date(timestamp);
+    let Y = date.getFullYear() + '-';
+    let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
+    let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+    let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+    let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+    return Y + M + D;
+}
+
+export function localTimeStringToTimeStamp(timeString) {
+
 }

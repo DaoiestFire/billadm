@@ -174,7 +174,15 @@ const createWindow = () => {
 
     // billbooks
     ipcMain.handle("billbooks.all-billbooks", async () => {
-        return  await workspace.billadmDao.queryAllBillbook();
+        return await workspace.billadmDao.queryAllBillbook();
+    })
+
+    // bills
+    ipcMain.handle("bills.all-bills", async (event, bookID) => {
+        return await workspace.billadmDao.queryAllBillByBookID(bookID);
+    })
+    ipcMain.handle("bills.add-one-bill", async (event, item) => {
+        return await workspace.billadmDao.insertOneBill(item.money, item.type, item.income, item.bookId, item.description, item.tags, item.creationTime);
     })
 
     if (windowState.isDevToolsOpened) {

@@ -1,24 +1,25 @@
 <template>
-  <el-dialog v-model="show" :show-close="false" :close-on-press-escape="false" style="width: 632px;"
-             :title="billForm.index === '' ? '新建记录' : '更新记录'">
+  <el-dialog v-model="billadmStore.showBillForm" :show-close="false" :close-on-press-escape="false"
+             style="width: 632px;"
+             :title="billadmStore.billForm.id === '' ? '新建记录' : '更新记录'">
     <el-form :model="billForm" label-width="auto" style="max-width: 600px" label-position="left" ref="bill-form">
       <el-form-item label="金额">
-        <el-input v-model.trim="billForm.money"/>
+        <el-input v-model.trim="billadmStore.billForm.money"/>
       </el-form-item>
       <el-form-item label="收入/支出">
-        <el-radio-group v-model="billForm.income">
+        <el-radio-group v-model="billadmStore.billForm.income">
           <el-radio value="false">支出</el-radio>
           <el-radio value="true">收入</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="类型">
-        <el-select v-model="billForm.type" placeholder="选择类型">
+        <el-select v-model="billadmStore.billForm.type" placeholder="选择类型">
           <el-option label="三餐" value="food"/>
           <el-option label="游戏" value="game"/>
         </el-select>
       </el-form-item>
       <el-form-item label="标签">
-        <el-select v-model="billForm.tags" multiple placeholder="选择多个标签">
+        <el-select v-model="billadmStore.billForm.tags" multiple placeholder="选择多个标签">
           <el-option label="Zone one" value="shanghai"/>
           <el-option label="Zone two" value="beijing"/>
           <template #footer>
@@ -36,16 +37,17 @@
         </el-select>
       </el-form-item>
       <el-form-item label="时间">
-        <el-date-picker v-model="billForm.time" type="date" placeholder="选择时间" style="width: 100%"/>
+        <el-date-picker v-model="billadmStore.billForm.creationTime" type="date" placeholder="选择时间"
+                        style="width: 100%"/>
       </el-form-item>
       <el-form-item label="备注">
-        <el-input v-model.trim="billForm.description" type="textarea"/>
+        <el-input v-model.trim="billadmStore.billForm.description" type="textarea"/>
       </el-form-item>
     </el-form>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="onCancel">退出</el-button>
-        <el-button v-if="billForm.index === ''" @click="reset">重置</el-button>
+        <el-button v-if="billadmStore.billForm.id === ''" @click="reset">重置</el-button>
         <el-button type="primary" @click="onSubmit">
           提交
         </el-button>
@@ -55,38 +57,14 @@
 </template>
 
 <script setup>
-import {reactive, ref, toRaw} from 'vue'
+import {ref} from 'vue';
+import {useBilladmStore} from '@/stores/billadm';
 
+// store
+const billadmStore = useBilladmStore();
 // variable
-const show = ref(false)
 const isAdding = ref(false)
 const optionName = ref('')
-const billForm = reactive({
-  index: '',
-  money: '',
-  income: 'false',
-  type: '',
-  time: new Date(),
-  description: '',
-  tags: [],
-})
-const emit = defineEmits(['submitBill'])
-
-// function
-const showForm = () => {
-  show.value = !show.value
-}
-
-const setBillForm = (info) => {
-  billForm.index = info.index
-  billForm.money = info.money
-  billForm.income = info.income
-  billForm.type = info.type
-  billForm.time = info.time
-  billForm.description = info.description
-  billForm.tags = info.tags
-}
-
 // function: 标签操作
 const onAddOption = () => {
   isAdding.value = true
@@ -94,7 +72,7 @@ const onAddOption = () => {
 
 const onConfirm = () => {
   if (optionName.value) {
-    billForm.tags.push(optionName.value)
+    billadmStore.billForm.tags.push(optionName.value)
     clear()
   }
 }
@@ -106,32 +84,14 @@ const clear = () => {
 
 // function: 表单操作
 const onCancel = () => {
-  showForm()
+  billadmStore.toggleShowBillForm();
 }
 
 const onSubmit = () => {
-  emit('submitBill', toRaw(billForm))
-  reset()
-  showForm()
+  billadmStore.addOneBill();
+  billadmStore.resetBillForm();
+  billadmStore.toggleShowBillForm();
 }
-
-const reset = () => {
-  billForm.index = ''
-  billForm.money = ''
-  billForm.income = 'false'
-  billForm.type = ''
-  billForm.time = new Date()
-  billForm.description = ''
-  billForm.tags = []
-}
-
-// expose
-defineExpose({
-  showForm,
-  setBillForm,
-  reset,
-})
-
 </script>
 <style scoped>
 .option-input {

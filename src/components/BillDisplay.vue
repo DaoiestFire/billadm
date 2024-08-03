@@ -45,7 +45,7 @@
         <el-header height="40px">
           <div class="menu-header">
             <div class="date-picker-container">
-              <el-date-picker v-model="timeRange" type="daterange" unlink-panels range-separator="至"
+              <el-date-picker v-model="billadmStore.timeRange" type="daterange" unlink-panels range-separator="至"
                               start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts"/>
             </div>
             <div class="button-container">
@@ -73,9 +73,8 @@
         </el-header>
         <el-container>
           <el-main>
-            <BillTable ref="billTableInstance" @update-one-bill="handleBillEdit"
-                       @update-statistic-display="handleUpdateStatistic"/>
-            <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill"/>
+            <BillTable ref="billTableInstance"/>
+            <BillForm/>
           </el-main>
         </el-container>
       </el-container>
@@ -85,52 +84,23 @@
 
 <script setup>
 import {onMounted, ref} from 'vue';
-import {ElMessage} from 'element-plus';
 import BillTable from '@/components/BillTable.vue';
 import BillForm from '@/components/BillForm.vue';
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 import {useBilladmStore} from '@/stores/billadm';
 import {shortcuts} from '@/config/time_shortcuts';
+import {BUILT_IN_BILLBOOK} from "@/utils/constants";
+
 // store
 const billadmStore = useBilladmStore();
-// dom
-const billFormInstance = ref(null);
+//dom
 const billTableInstance = ref(null);
-// variable
-const timeRange = ref([new Date(), new Date()]);
-
-const lengthIncome = ref(0);
-const lengthCost = ref(0);
-const totalIncome = ref(0);
-const totalCost = ref(0);
-
 // function
 const addBillInfo = () => {
-  billFormInstance.value.reset();
-  billFormInstance.value.showForm();
+  billadmStore.resetBillForm();
+  billadmStore.toggleShowBillForm();
 };
-
-const handleSubmitBill = (billFormData) => {
-  ElMessage({
-    message: '操作成功',
-    type: 'success',
-    plain: true,
-  });
-};
-
-const handleBillEdit = (info) => {
-  billFormInstance.value.setBillForm(info);
-  billFormInstance.value.showForm();
-};
-
-const handleUpdateStatistic = (info) => {
-  lengthCost.value = info.lengthCost;
-  lengthIncome.value = info.lengthIncome;
-  totalCost.value = info.totalCost;
-  totalIncome.value = info.totalIncome;
-};
-
 const handleBatchDelete = () => {
   billTableInstance.value.deleteSelectedBills();
 };
@@ -138,6 +108,7 @@ const handleBatchDelete = () => {
 // 组件函数
 onMounted(() => {
   billadmStore.refreshBillbooks();
+  billadmStore.setCurrentBook(BUILT_IN_BILLBOOK.id);
 });
 </script>
 
