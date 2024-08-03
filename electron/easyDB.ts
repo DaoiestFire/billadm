@@ -61,7 +61,7 @@ class EasyDB {
         if (value) {
             return new Promise(
                 (resolve, reject) => {
-                    this.dbInstance.all(sql, (err, rows) => {
+                    this.dbInstance.all(sql, value, (err, rows) => {
                         if (err) {
                             this.logger.error(`query data with sql [${sql}] failed, err: ${err.message}`);
                             reject(err);
@@ -75,7 +75,7 @@ class EasyDB {
         } else {
             return new Promise(
                 (resolve, reject) => {
-                    this.dbInstance.all(sql, value, (err, rows) => {
+                    this.dbInstance.all(sql, (err, rows) => {
                         if (err) {
                             this.logger.error(`query data with sql [${sql}] failed, err: ${err.message}`);
                             reject(err);
