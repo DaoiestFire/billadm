@@ -46,7 +46,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="onCancel">退出</el-button>
-        <el-button v-if="billadmStore.billForm.id === ''" @click="reset">重置</el-button>
+        <el-button v-if="billadmStore.billForm.id === ''" @click="billadmStore.resetBillForm">重置</el-button>
         <el-button type="primary" @click="onSubmit">
           提交
         </el-button>

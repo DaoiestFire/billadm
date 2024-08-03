@@ -16,7 +16,7 @@
       <el-table-column label="时间" width="120px" align="center">
         <template #default="scope">{{ timestampToLocalTimeString(scope.row.creationTime) }}</template>
       </el-table-column>
-      <el-table-column prop="description" label="描述" width="150px" align="center">
+      <el-table-column prop="description" label="描述" align="center">
       </el-table-column>
       <el-table-column prop="tags" label="标签">
         <template #default="scope">
