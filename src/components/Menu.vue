@@ -16,10 +16,10 @@ import {onMounted, ref} from 'vue';
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 import {menuItems} from '@/config/menu';
-import {useStateStore} from '@/stores/state';
+import {useBilladmStore} from '@/stores/billadm';
 import {useRouter} from 'vue-router';
 
-const stateStore = useStateStore();
+const billadmStore = useBilladmStore();
 const router = useRouter();
 
 // 变量
@@ -30,8 +30,8 @@ const clickMenuItem = (name) => {
   router.push({name: name});
 
   if (name === 'bill') {
-    if (!stateStore.showBillDisplayAside) {
-      stateStore.toggleShowBillDisplayAside();
+    if (!billadmStore.showBillDisplayAside) {
+      billadmStore.toggleShowBillDisplayAside();
     }
   }
 };

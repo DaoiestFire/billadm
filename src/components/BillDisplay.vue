@@ -1,6 +1,6 @@
 <template>
   <el-container style="height: 100%;">
-    <el-aside v-if="stateStore.showBillDisplayAside" width="200px">
+    <el-aside v-if="billadmStore.showBillDisplayAside" width="200px">
       <el-container>
         <el-header height="40px">
           <el-container>
@@ -10,7 +10,7 @@
             <div class="aside-op-button">
               <el-tooltip effect="dark" placement="bottom-start" content="隐藏" hide-after=0>
                 <BillButton height="40px" width="40px" radius="8px" offset="10px"
-                            @click="stateStore.toggleShowBillDisplayAside">
+                            @click="billadmStore.toggleShowBillDisplayAside">
                   <el-text>
                     <SvgIcon name="eye-off" size="15"/>
                   </el-text>
@@ -30,9 +30,9 @@
           <el-header height="10px"/>
           <el-main>
             <div class="billadm-vertical-center">
-              <BillButton height="40px" width="180px" radius="8px" offset="10px" v-for="item in billbookStore.billbooks"
-                          :is-active="billbookStore.currentBook === item.id" :key="item.id"
-                          @click="billbookStore.setCurrentBook(item.id)">
+              <BillButton height="40px" width="180px" radius="8px" offset="10px" v-for="item in billadmStore.billbooks"
+                          :is-active="billadmStore.currentBook === item.id" :key="item.id"
+                          @click="billadmStore.setCurrentBook(item.id)">
                 <el-text size="large">{{ item.name }}</el-text>
               </BillButton>
             </div>
@@ -107,12 +107,10 @@ import BillTable from '@/components/BillTable.vue';
 import BillForm from '@/components/BillForm.vue';
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
-import {useBillbookStore} from '@/stores/billbook';
-import {useStateStore} from '@/stores/state';
+import {useBilladmStore} from '@/stores/billadm';
 import {shortcuts} from '@/config/time_shortcuts';
 // store
-const stateStore = useStateStore();
-const billbookStore = useBillbookStore();
+const billadmStore = useBilladmStore();
 // dom
 const billFormInstance = ref(null);
 const billTableInstance = ref(null);
@@ -156,7 +154,7 @@ const handleBatchDelete = () => {
 
 // 组件函数
 onMounted(() => {
-  billbookStore.refreshBillbooks();
+  billadmStore.refreshBillbooks();
 });
 </script>
 

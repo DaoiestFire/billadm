@@ -1,11 +1,12 @@
 /*存储账本信息*/
 import {defineStore} from "pinia";
 
-export const useBillbookStore = defineStore("billbooks", {
+export const useBilladmStore = defineStore("billbooks", {
     state: () => {
         return {
             billbooks: [],
             currentBook: '',
+            showBillDisplayAside: true,
         }
     },
     actions: {
@@ -14,10 +15,14 @@ export const useBillbookStore = defineStore("billbooks", {
         },
         refreshBillbooks() {
             window.appObject.getAllBillbooks().then((response) => {
+                this.billbooks = [];
                 response.forEach(billbook => {
                     this.billbooks.push(billbook);
-                })
+                });
             });
+        },
+        toggleShowBillDisplayAside() {
+            this.showBillDisplayAside = !this.showBillDisplayAside;
         },
     }
 })
