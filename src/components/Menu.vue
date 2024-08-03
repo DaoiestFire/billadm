@@ -1,6 +1,6 @@
 <template>
   <div class="menu-container">
-    <el-tooltip effect="dark" placement="right-start" hide-after=0 v-for="item in menuItems" :content="item.label">
+    <el-tooltip effect="dark" placement="right-start" v-bind="{ 'hide-after' : 0 }" v-for="item in menuItems" :content="item.label">
       <BillButton height="40px" width="40px" offset="10px" radius="8px" :is-active="activeName === item.name"
                   @click="clickMenuItem(item.name)">
         <el-text>

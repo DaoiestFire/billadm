@@ -8,7 +8,7 @@
               <el-text size="large" tag="b">账本</el-text>
             </div>
             <div class="aside-op-button">
-              <el-tooltip effect="dark" placement="bottom-start" content="隐藏" hide-after=0>
+              <el-tooltip effect="dark" placement="bottom-start" content="隐藏" v-bind="{ 'hide-after' : 0 }">
                 <BillButton height="40px" width="40px" radius="8px" offset="10px"
                             @click="billadmStore.toggleShowBillDisplayAside">
                   <el-text>
@@ -16,7 +16,7 @@
                   </el-text>
                 </BillButton>
               </el-tooltip>
-              <el-tooltip effect="dark" placement="bottom-start" content="添加账本" hide-after=0>
+              <el-tooltip effect="dark" placement="bottom-start" content="添加账本" v-bind="{ 'hide-after' : 0 }">
                 <BillButton height="40px" width="40px" radius="8px" offset="10px">
                   <el-text>
                     <SvgIcon name="plus" size="15"/>
@@ -49,7 +49,7 @@
                               start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts"/>
             </div>
             <div class="button-container">
-              <el-tooltip effect="dark" placement="bottom-start" content="新增记录" hide-after=0>
+              <el-tooltip effect="dark" placement="bottom-start" content="新增记录" v-bind="{ 'hide-after' : 0 }">
                 <BillButton height="40px" width="40px" radius="8px" offset="10px" @click="addBillInfo">
                   <el-text>
                     <SvgIcon name="plus" size="15"/>
@@ -59,7 +59,7 @@
               <el-popconfirm confirm-button-text="是" cancel-button-text="否" title="确认删除吗?"
                              @confirm="handleBatchDelete">
                 <template #reference>
-                  <el-tooltip effect="dark" placement="bottom-start" content="批量删除" hide-after=0>
+                  <el-tooltip effect="dark" placement="bottom-start" content="批量删除" v-bind="{ 'hide-after' : 0 }">
                     <BillButton height="40px" width="40px" radius="8px" offset="10px">
                       <el-text>
                         <SvgIcon name="trash" size="15"/>
@@ -72,26 +72,9 @@
           </div>
         </el-header>
         <el-container>
-          <el-header height="80px">
-            <div class="statistic-dispaly">
-              <el-row>
-                <el-col :span="8">
-                  <el-statistic title="记录总数/支出记录/收入记录" :value="lengthCost + lengthIncome">
-                    <template #suffix>/{{ lengthCost }}/{{ lengthIncome }}</template>
-                  </el-statistic>
-                </el-col>
-                <el-col :span="8">
-                  <el-statistic title="总支出" :value="totalCost"/>
-                </el-col>
-                <el-col :span="8">
-                  <el-statistic title="总收入" :value="totalIncome"/>
-                </el-col>
-              </el-row>
-            </div>
-          </el-header>
           <el-main>
             <BillTable ref="billTableInstance" @update-one-bill="handleBillEdit"
-                       @upate-statistic-dispaly="handleUpdateStatistic"/>
+                       @update-statistic-display="handleUpdateStatistic"/>
             <BillForm ref="billFormInstance" @submit-bill="handleSubmitBill"/>
           </el-main>
         </el-container>

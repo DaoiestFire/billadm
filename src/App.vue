@@ -3,7 +3,7 @@
     <div class="drag-region"/>
     <el-header height="40px">
       <el-container>
-        <el-tooltip effect="dark" placement="right-start" content="菜单" hide-after=0>
+        <el-tooltip effect="dark" placement="right-start" content="菜单" v-bind="{ 'hide-after' : 0 }">
           <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius" :offset="buttonOffset">
             <el-text size="large">
               <SvgIcon name="menu" size="15"/>
@@ -11,7 +11,7 @@
           </BillButton>
         </el-tooltip>
         <div class="window-control">
-          <el-tooltip effect="dark" placement="bottom-start" content="最小化" hide-after=0>
+          <el-tooltip effect="dark" placement="bottom-start" content="最小化" v-bind="{ 'hide-after' : 0 }">
             <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
                         :offset="buttonOffset" @click="windowMinimize">
               <el-text size="large">
@@ -19,7 +19,7 @@
               </el-text>
             </BillButton>
           </el-tooltip>
-          <el-tooltip effect="dark" placement="bottom-start" content="最大化" hide-after=0>
+          <el-tooltip effect="dark" placement="bottom-start" content="最大化" v-bind="{ 'hide-after' : 0 }">
             <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
                         :offset="buttonOffset" @click="windowMaximize">
               <el-text size="large">
@@ -27,7 +27,7 @@
               </el-text>
             </BillButton>
           </el-tooltip>
-          <el-tooltip effect="dark" placement="bottom-start" content="关闭" hide-after=0>
+          <el-tooltip effect="dark" placement="bottom-start" content="关闭" v-bind="{ 'hide-after' : 0 }">
             <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
                         :offset="buttonOffset" @click="winClose">
               <el-text size="large">

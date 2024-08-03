@@ -26,13 +26,13 @@
       <el-table-column label="操作" width="100px" align="center">
         <template #default="scope">
           <div class="billadm-flex">
-            <el-tooltip effect="dark" placement="bottom-start" content="编辑" hide-after=0>
+            <el-tooltip effect="dark" placement="bottom-start" content="编辑" v-bind="{ 'hide-after' : 0 }">
               <BillButton height="30px" width="30px" radius="6px" offset="6px"
                           @click="handleEdit(scope.row)">
                 <SvgIcon name="pencil" size="15"/>
               </BillButton>
             </el-tooltip>
-            <el-tooltip effect="dark" placement="bottom-start" content="删除" hide-after=0>
+            <el-tooltip effect="dark" placement="bottom-start" content="删除" v-bind="{ 'hide-after' : 0 }">
               <BillButton height="30px" width="30px" radius="6px" offset="6px"
                           @click="handleDelete(scope.row.index)">
                 <SvgIcon name="trash2" size="15"/>
@@ -52,7 +52,7 @@ import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 
 // 变量
-const emit = defineEmits(['updateOneBill', 'upateStatisticDispaly'])
+const emit = defineEmits(['updateOneBill', 'updateStatisticDisplay'])
 const multipleSelection = ref([])
 const windowHeight = ref(window.innerHeight)
 const tableHeight = computed(() => {
@@ -140,7 +140,7 @@ watchEffect(() => {
   let totalIncome = 0
   let totalCost = 0
   tableData.value.forEach((info) => {
-    if (info.income == 'true') {
+    if (info.income === 'true') {
       totalIncome += Number(info.money)
       lengthIncome++
     } else {
@@ -149,7 +149,7 @@ watchEffect(() => {
     }
   })
 
-  emit('upateStatisticDispaly', {
+  emit('updateStatisticDisplay', {
     lengthIncome: lengthIncome,
     lengthCost: lengthCost,
     totalIncome: totalIncome,
