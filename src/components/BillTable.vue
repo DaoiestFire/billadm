@@ -90,11 +90,6 @@ const deleteBillsByList = async (idList) => {
   await billadmStore.deleteBills(idList);
   await billadmStore.refreshBills();
 };
-
-watch(computed(() => billadmStore.currentBook), () => {
-  billadmStore.refreshBills();
-});
-
 // 导出成员
 defineExpose({
   deleteSelectedBills,

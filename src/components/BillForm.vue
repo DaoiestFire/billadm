@@ -2,7 +2,7 @@
   <el-dialog v-model="billadmStore.showBillForm" :show-close="false" :close-on-press-escape="false"
              style="width: 632px;"
              :title="billadmStore.billForm.id === '' ? '新建记录' : '更新记录'">
-    <el-form :model="billForm" label-width="auto" style="max-width: 600px" label-position="left" ref="bill-form">
+    <el-form label-width="auto" style="max-width: 600px" label-position="left">
       <el-form-item label="金额">
         <el-input v-model.trim="billadmStore.billForm.money"/>
       </el-form-item>

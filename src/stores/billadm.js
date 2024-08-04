@@ -6,9 +6,15 @@ export const useBilladmStore = defineStore("billbooks", {
     state: () => {
         return {
             billbooks: [],
-            currentBook: '',
             bills: [],
+            billTypes: new Map(),
+            currentBook: '',
             showBillDisplayAside: true,
+            showBillbookForm: false,
+            billbookForm: {
+                name: '',
+                description: '',
+            },
             showBillForm: false,
             billForm: {
                 id: '',
@@ -21,7 +27,6 @@ export const useBilladmStore = defineStore("billbooks", {
                 creationTime: new Date(),
             },
             timeRange: [new Date(), new Date()],
-            billTypes: new Map(),
         }
     },
     actions: {
@@ -122,11 +127,38 @@ export const useBilladmStore = defineStore("billbooks", {
                 });
             }
         },
+        async addOneBillbook() {
+            try {
+                let newItem = {
+                    name: this.billbookForm.name,
+                    description: this.billForm.description,
+                };
+                await window.appObject.addOneBillbook(newItem);
+                ElNotification({
+                    type: 'success',
+                    message: '新增账本成功',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            } catch (err) {
+                ElNotification({
+                    type: 'error',
+                    message: '新增账本失败',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            }
+        },
         toggleShowBillDisplayAside() {
             this.showBillDisplayAside = !this.showBillDisplayAside;
         },
         toggleShowBillForm() {
             this.showBillForm = !this.showBillForm;
+        },
+        toggleShowBillbookForm() {
+            this.showBillbookForm = !this.showBillbookForm;
         },
         resetBillForm() {
             this.billForm = {
@@ -138,7 +170,13 @@ export const useBilladmStore = defineStore("billbooks", {
                 description: '',
                 tags: [],
                 creationTime: new Date(),
-            }
+            };
+        },
+        resetBillbookForm() {
+            this.billbookForm = {
+                name: '',
+                description: '',
+            };
         },
         async refreshBillTypes() {
             try {

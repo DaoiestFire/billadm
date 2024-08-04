@@ -17,9 +17,17 @@
                 </BillButton>
               </el-tooltip>
               <el-tooltip effect="dark" placement="bottom-start" content="添加账本" v-bind="{ 'hide-after' : 0 }">
-                <BillButton height="40px" width="40px" radius="8px" offset="10px">
+                <BillButton height="40px" width="40px" radius="8px" offset="10px"
+                            @click="addBillbook">
                   <el-text>
                     <SvgIcon name="plus" size="15"/>
+                  </el-text>
+                </BillButton>
+              </el-tooltip>
+              <el-tooltip effect="dark" placement="bottom-start" content="删除账本" v-bind="{ 'hide-after' : 0 }">
+                <BillButton height="40px" width="40px" radius="8px" offset="10px">
+                  <el-text>
+                    <SvgIcon name="trash" size="15"/>
                   </el-text>
                 </BillButton>
               </el-tooltip>
@@ -46,7 +54,8 @@
           <div class="menu-header">
             <div class="date-picker-container">
               <el-date-picker v-model="billadmStore.timeRange" type="daterange" unlink-panels range-separator="至"
-                              start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts"/>
+                              start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts"
+                              @change="console.log(billadmStore.timeRange)"/>
             </div>
             <div class="button-container">
               <el-tooltip effect="dark" placement="bottom-start" content="新增记录" v-bind="{ 'hide-after' : 0 }">
@@ -70,6 +79,7 @@
           <el-main>
             <BillTable ref="billTableInstance"/>
             <BillForm/>
+            <BillbookForm/>
           </el-main>
         </el-container>
       </el-container>
@@ -86,6 +96,7 @@ import BillButton from '@/components/base/BillButton.vue';
 import {useBilladmStore} from '@/stores/billadm';
 import {shortcuts} from '@/config/time_shortcuts';
 import {BUILT_IN_BILLBOOK} from "@/utils/constants";
+import BillbookForm from "@/components/BillbookForm.vue";
 
 // store
 const billadmStore = useBilladmStore();
@@ -99,12 +110,17 @@ const addBillInfo = () => {
 const handleBatchDelete = async () => {
   await billTableInstance.value.deleteSelectedBills();
 };
+const addBillbook = () => {
+  billadmStore.resetBillbookForm();
+  billadmStore.toggleShowBillbookForm();
+};
 
 // 组件函数
 onMounted(async () => {
   await billadmStore.refreshBillbooks();
   await billadmStore.refreshBillTypes();
   billadmStore.setCurrentBook(BUILT_IN_BILLBOOK.id);
+  await billadmStore.refreshBills();
 });
 </script>
 
