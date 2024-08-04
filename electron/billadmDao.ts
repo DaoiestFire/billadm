@@ -44,6 +44,7 @@ const DELETE_ONE_BILLBOOK_BY_ID: string = 'DELETE FROM t_billbooks WHERE id=?';
 const INSERT_ONE_BILL: string = 'INSERT INTO t_bills (id,money,type,income,book_id,description,tags,creation_time) VALUES (?,?,?,?,?,?,?,?);';
 const QUERY_ALL_BILL_BY_BOOK_ID: string = 'SELECT * FROM t_bills WHERE book_id=?';
 const DELETE_ONE_BILL_BY_ID: string = 'DELETE FROM t_bills WHERE id=?';
+const DELETE_BILLS_BY_BOOK_ID: string = 'DELETE FROM t_bills WHERE book_id=?';
 
 class BilladmDao {
     private easyDB: EasyDB;
@@ -94,6 +95,7 @@ class BilladmDao {
 
     /** 删除一个账本*/
     async deleteOneBillbookByID(id: string) {
+        await this.easyDB.runSql(DELETE_BILLS_BY_BOOK_ID, [id]);
         await this.easyDB.runSql(DELETE_ONE_BILLBOOK_BY_ID, [id]);
     }
 

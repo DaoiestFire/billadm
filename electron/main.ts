@@ -177,8 +177,10 @@ const createWindow = () => {
         return await workspace.billadmDao.queryAllBillbook();
     });
     ipcMain.handle("billbooks.add-one-billbook", async (event, item) => {
-        logger.info(item);
         return await workspace.billadmDao.insertOneBillbook(item.name, item.description);
+    });
+    ipcMain.handle("billbooks.delete-one-billbook", async (event, bookId) => {
+        return await workspace.billadmDao.deleteOneBillbookByID(bookId);
     });
 
     // bills

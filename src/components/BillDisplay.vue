@@ -25,7 +25,7 @@
                 </BillButton>
               </el-tooltip>
               <el-tooltip effect="dark" placement="bottom-start" content="删除账本" v-bind="{ 'hide-after' : 0 }">
-                <BillButton height="40px" width="40px" radius="8px" offset="10px">
+                <BillButton height="40px" width="40px" radius="8px" offset="10px" @click="deleteBillbook">
                   <el-text>
                     <SvgIcon name="trash" size="15"/>
                   </el-text>
@@ -40,7 +40,7 @@
             <div class="billadm-vertical-center">
               <BillButton height="40px" width="180px" radius="8px" offset="10px" v-for="item in billadmStore.billbooks"
                           :is-active="billadmStore.currentBook === item.id" :key="item.id"
-                          @click="billadmStore.setCurrentBook(item.id)">
+                          @click="chooseBillbook(item.id)">
                 <el-text size="large">{{ item.name }}</el-text>
               </BillButton>
             </div>
@@ -110,9 +110,18 @@ const addBillInfo = () => {
 const handleBatchDelete = async () => {
   await billTableInstance.value.deleteSelectedBills();
 };
+const chooseBillbook = async (id) => {
+  billadmStore.setCurrentBook(id);
+  await billadmStore.refreshBills();
+};
 const addBillbook = () => {
   billadmStore.resetBillbookForm();
   billadmStore.toggleShowBillbookForm();
+};
+const deleteBillbook = async () => {
+  await billadmStore.deleteOneBillbook();
+  await billadmStore.refreshBillbooks();
+  await billadmStore.refreshBills();
 };
 
 // 组件函数

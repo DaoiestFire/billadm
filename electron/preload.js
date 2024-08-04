@@ -10,6 +10,9 @@ contextBridge.exposeInMainWorld('appObject', {
     addOneBillbook(item) {
         return ipcRenderer.invoke('billbooks.add-one-billbook', item);
     },
+    deleteOneBillbook(item) {
+        return ipcRenderer.invoke('billbooks.delete-one-billbook', item);
+    },
     getAllBillsByBookID(bookId) {
         return ipcRenderer.invoke('bills.all-bills', bookId);
     },

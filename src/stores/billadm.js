@@ -1,6 +1,8 @@
 /*存储账本信息*/
 import {defineStore} from "pinia";
 import {ElNotification} from "element-plus";
+import {BUILT_IN_BILLBOOK} from "@/utils/constants";
+
 
 export const useBilladmStore = defineStore("billbooks", {
     state: () => {
@@ -79,6 +81,16 @@ export const useBilladmStore = defineStore("billbooks", {
             }
         },
         async addOneBill() {
+            if (this.currentBook === '') {
+                ElNotification({
+                    type: 'warning',
+                    message: '未选中任何账本',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+                return;
+            }
             let newItem = {
                 money: Number(this.billForm.money),
                 type: this.billForm.type,
@@ -145,6 +157,37 @@ export const useBilladmStore = defineStore("billbooks", {
                 ElNotification({
                     type: 'error',
                     message: '新增账本失败',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            }
+        },
+        async deleteOneBillbook() {
+            if (this.currentBook === BUILT_IN_BILLBOOK.id) {
+                ElNotification({
+                    type: 'warning',
+                    message: '默认账本无法删除',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+                return;
+            }
+            try {
+                await window.appObject.deleteOneBillbook(this.currentBook);
+                this.currentBook = '';
+                ElNotification({
+                    type: 'success',
+                    message: '删除账本成功',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            } catch (err) {
+                ElNotification({
+                    type: 'error',
+                    message: '删除账本失败',
                     position: 'bottom-right',
                     duration: 2000,
                     offset: 40,
