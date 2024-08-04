@@ -120,6 +120,16 @@ export const useBilladmStore = defineStore("billbooks", {
             }
         },
         async deleteBills(idList) {
+            if (idList.length === 0) {
+                ElNotification({
+                    type: 'warning',
+                    message: '未选中任何记录',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+                return;
+            }
             try {
                 await window.appObject.deleteBills(idList);
                 ElNotification({
