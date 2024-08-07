@@ -86,3 +86,7 @@ export function dateObjectToLocalTimeString(date) {
     let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
     return Y + M + D + h + m + s;
 }
+
+export function isValidDate(date) {
+    return date instanceof Date && !isNaN(date.getTime())
+}

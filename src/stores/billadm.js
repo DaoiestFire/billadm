@@ -2,7 +2,8 @@
 import {defineStore} from "pinia";
 import {ElNotification} from "element-plus";
 import {BUILT_IN_BILLBOOK} from "@/utils/constants";
-import {dateObjectToUTCTimeString, utcTimeStringToDateObject} from "@/utils/timeutils";
+import {dateObjectToUTCTimeString, isValidDate, utcTimeStringToDateObject} from "@/utils/timeutils";
+import {toRaw} from "vue";
 
 
 export const useBilladmStore = defineStore("billbooks", {
@@ -53,9 +54,14 @@ export const useBilladmStore = defineStore("billbooks", {
                 });
             }
         },
-        async refreshBills() {
+        async refreshBills(filters) {
             try {
-                const res = await window.appObject.getAllBillsByBookID(this.currentBook);
+                let res;
+                if (filters) {
+                    res = await window.appObject.getAllBillsByBookIDWithFilters(this.currentBook, filters);
+                } else {
+                    res = await window.appObject.getAllBillsByBookID(this.currentBook);
+                }
                 let bills = [];
                 res.forEach(item => {
                     let newItem = {
@@ -248,5 +254,19 @@ export const useBilladmStore = defineStore("billbooks", {
                 });
             }
         },
+        async handleTimeRangeChange() {
+            let timeRange = toRaw(this.timeRange);
+            if (Array.isArray(timeRange) && isValidDate(timeRange[0]) && isValidDate(timeRange[1])) {
+                timeRange[0].setUTCHours(0, 0, 0);
+                timeRange[1].setUTCHours(23, 59, 59);
+                let filters = {
+                    start_time: dateObjectToUTCTimeString(timeRange[0]),
+                    end_time: dateObjectToUTCTimeString(timeRange[1]),
+                };
+                await this.refreshBills(filters);
+            } else {
+                await this.refreshBills();
+            }
+        }
     }
 })

@@ -55,7 +55,7 @@
             <div class="date-picker-container">
               <el-date-picker v-model="billadmStore.timeRange" type="daterange" unlink-panels range-separator="至"
                               start-placeholder="开始时间" end-placeholder="结束时间" :shortcuts="shortcuts"
-                              @change="console.log(billadmStore.timeRange)"/>
+                              @change="billadmStore.handleTimeRangeChange"/>
             </div>
             <div class="button-container">
               <el-tooltip effect="dark" placement="bottom-start" content="新增记录" v-bind="{ 'hide-after' : 0 }">
@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, toRaw} from 'vue';
 import BillTable from '@/components/BillTable.vue';
 import BillForm from '@/components/BillForm.vue';
 import SvgIcon from '@/components/base/SvgIcon.vue';

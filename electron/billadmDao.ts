@@ -109,6 +109,19 @@ class BilladmDao {
         return await this.easyDB.querySql(QUERY_ALL_BILL_BY_BOOK_ID, [bookId]);
     }
 
+    /** 查询一个账本中的过滤后的消费记录*/
+    async queryAllBillByBookIDWithFilters(bookId: string, filters: object) {
+        let newSql: string;
+        let values: any[] = [];
+        values.push(bookId);
+        if ('start_time' in filters && filters.start_time && 'end_time' in filters && filters.end_time) {
+            newSql = QUERY_ALL_BILL_BY_BOOK_ID + " AND datetime(creation_time) BETWEEN datetime(?) AND datetime(?)";
+            values.push(filters.start_time);
+            values.push(filters.end_time);
+        }
+        return await this.easyDB.querySql(newSql, values);
+    }
+
     /** 删除一条消费记录*/
     async deleteOneBillByID(id: string) {
         await this.easyDB.runSql(DELETE_ONE_BILL_BY_ID, [id]);

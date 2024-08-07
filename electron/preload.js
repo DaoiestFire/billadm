@@ -16,6 +16,9 @@ contextBridge.exposeInMainWorld('appObject', {
     getAllBillsByBookID(bookId) {
         return ipcRenderer.invoke('bills.all-bills', bookId);
     },
+    getAllBillsByBookIDWithFilters(bookId, filters) {
+        return ipcRenderer.invoke('bills.all-bills-with-filters', bookId, filters);
+    },
     addOneBill(item) {
         return ipcRenderer.invoke('bills.add-one-bill', item);
     },
