@@ -1,5 +1,5 @@
 import EasyDB from "./easyDB";
-import {getCurrentUTCTime, UUID} from "./utils";
+import {getCurrentUTCTimeString, UUID} from "./utils";
 import {BUILT_IN_BILLBOOK, BUILT_IN_TYPES} from "./constants";
 
 
@@ -11,7 +11,7 @@ const CREATE_TABLE_BILLBOOKS: string = `CREATE TABLE IF NOT EXISTS t_billbooks (
     id            TEXT PRIMARY KEY NOT NULL,
     name          TEXT NOT NULL,
     description   TEXT DEFAULT '',
-    creation_time INTEGER NOT NULL
+    creation_time TEXT NOT NULL
 )`;
 
 const CREATE_TABLE_BILLS: string = `CREATE TABLE IF NOT EXISTS t_bills (
@@ -22,7 +22,7 @@ const CREATE_TABLE_BILLS: string = `CREATE TABLE IF NOT EXISTS t_bills (
     book_id       TEXT NOT NULL,
     description   TEXT DEFAULT '',
     tags          TEXT NOT NULL DEFAULT '[]',
-    creation_time INTEGER NOT NULL
+    creation_time TEXT NOT NULL
 )`;
 
 const CREATE_TABLE_TYPES: string = `CREATE TABLE IF NOT EXISTS t_types (
@@ -62,7 +62,7 @@ class BilladmDao {
         await this.easyDB.runSql(CREATE_TABLE_BILLBOOKS);
         await this.easyDB.runSql(CREATE_TABLE_BILLS);
         await this.easyDB.runSql(CREATE_TABLE_TYPES);
-        await this.easyDB.runSql(INSERT_ONE_BILLBOOK, [BUILT_IN_BILLBOOK.id, BUILT_IN_BILLBOOK.name, BUILT_IN_BILLBOOK.description, getCurrentUTCTime()]);
+        await this.easyDB.runSql(INSERT_ONE_BILLBOOK, [BUILT_IN_BILLBOOK.id, BUILT_IN_BILLBOOK.name, BUILT_IN_BILLBOOK.description, getCurrentUTCTimeString()]);
         for (let value of BUILT_IN_TYPES) {
             await this.insertOneType(value);
         }
@@ -85,7 +85,7 @@ class BilladmDao {
 
     /** 创建一个账本*/
     async insertOneBillbook(name: string, description: string) {
-        await this.easyDB.runSql(INSERT_ONE_BILLBOOK, [UUID(), name, description, getCurrentUTCTime()]);
+        await this.easyDB.runSql(INSERT_ONE_BILLBOOK, [UUID(), name, description, getCurrentUTCTimeString()]);
     }
 
     /** 查询所有账本*/
@@ -100,7 +100,7 @@ class BilladmDao {
     }
 
     /** 创建一条消费记录*/
-    async insertOneBill(money: number, type: string, income: string, bookId: string, description: string, tags: string, creationTime: number) {
+    async insertOneBill(money: number, type: string, income: string, bookId: string, description: string, tags: string, creationTime: string) {
         await this.easyDB.runSql(INSERT_ONE_BILL, [UUID(), money, type, income, bookId, description, tags, creationTime]);
     }
 

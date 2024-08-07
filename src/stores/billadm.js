@@ -2,6 +2,7 @@
 import {defineStore} from "pinia";
 import {ElNotification} from "element-plus";
 import {BUILT_IN_BILLBOOK} from "@/utils/constants";
+import {dateObjectToUTCTimeString, utcTimeStringToDateObject} from "@/utils/timeutils";
 
 
 export const useBilladmStore = defineStore("billbooks", {
@@ -65,7 +66,7 @@ export const useBilladmStore = defineStore("billbooks", {
                         bookId: item.book_id,
                         description: item.description,
                         tags: JSON.parse(item.tags),
-                        creationTime: new Date(item.creation_time),
+                        creationTime: utcTimeStringToDateObject(item.creation_time),
                     };
                     bills.push(newItem);
                 });
@@ -98,7 +99,7 @@ export const useBilladmStore = defineStore("billbooks", {
                 bookId: this.currentBook,
                 description: this.billForm.description,
                 tags: JSON.stringify(this.billForm.tags),
-                creationTime: this.billForm.creationTime.getTime(),
+                creationTime: dateObjectToUTCTimeString(this.billForm.creationTime),
             };
             try {
                 await window.appObject.addOneBill(newItem);

@@ -50,18 +50,39 @@ export function getLastYearDate() {
     return [startDate, endDate];
 }
 
-export function timestampToLocalTimeString(timestamp) {
-    timestamp = timestamp ? timestamp : null;
-    let date = new Date(timestamp);
+export function dateObjectToUTCTimeString(date) {
+    let Y = date.getUTCFullYear() + '-';
+    let M = (date.getUTCMonth() + 1 < 10 ? '0' + (date.getUTCMonth() + 1) : date.getUTCMonth() + 1) + '-';
+    let D = (date.getUTCDate() < 10 ? '0' + date.getUTCDate() : date.getUTCDate()) + ' ';
+    let h = (date.getUTCHours() < 10 ? '0' + date.getUTCHours() : date.getUTCHours()) + ':';
+    let m = (date.getUTCMinutes() < 10 ? '0' + date.getUTCMinutes() : date.getUTCMinutes()) + ':';
+    let s = date.getUTCSeconds() < 10 ? '0' + date.getUTCSeconds() : date.getUTCSeconds();
+    return Y + M + D + h + m + s;
+}
+
+export function utcTimeStringToDateObject(utcDateString) {
+    let dateString = utcDateString.trim().split(' ')[0].trim().split('-');
+    let timeString = utcDateString.trim().split(' ')[1].trim().split(':');
+    let Y = dateString[0];
+    let M = dateString[1];
+    let D = dateString[2];
+    let h = timeString[0];
+    let m = timeString[1];
+    let s = timeString[2];
+    let date = new Date();
+    date.setUTCFullYear(Number(Y));
+    date.setUTCMonth(Number(M) - 1);
+    date.setUTCDate(Number(D));
+    date.setUTCHours(Number(h), Number(m), Number(s));
+    return date;
+}
+
+export function dateObjectToLocalTimeString(date) {
     let Y = date.getFullYear() + '-';
     let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-    let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
+    let D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
     let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
     let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
     let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-    return Y + M + D;
-}
-
-export function localTimeStringToTimeStamp(timeString) {
-
+    return Y + M + D + h + m + s;
 }

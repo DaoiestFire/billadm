@@ -1,5 +1,5 @@
-import {getCurrentUTCTime, UUID} from "../electron/utils";
+import {getCurrentUTCTimeString, UUID} from "../electron/utils";
 
 
 console.log(UUID());
-console.log(getCurrentUTCTime());
+console.log(getCurrentUTCTimeString());

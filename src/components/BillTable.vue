@@ -14,7 +14,7 @@
         <template #default="scope">{{ billadmStore.billTypes.get(scope.row.type) }}</template>
       </el-table-column>
       <el-table-column label="时间" width="120px" align="center">
-        <template #default="scope">{{ timestampToLocalTimeString(scope.row.creationTime) }}</template>
+        <template #default="scope">{{ dateObjectToLocalTimeString(scope.row.creationTime).split(' ')[0] }}</template>
       </el-table-column>
       <el-table-column prop="description" label="描述" align="center">
       </el-table-column>
@@ -52,7 +52,7 @@ import {computed, ref, toRaw, watch} from 'vue'
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 import {useBilladmStore} from '@/stores/billadm';
-import {timestampToLocalTimeString} from "@/utils/timeutils";
+import {dateObjectToLocalTimeString} from "@/utils/timeutils";
 
 // store
 const billadmStore = useBilladmStore();
