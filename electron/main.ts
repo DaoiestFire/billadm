@@ -53,27 +53,27 @@ if (workspaceState.workspaces.length == 0) {
 
 logger.info(`start to launch billadm, firstOpen: ${firstOpen}`);
 
-const assignWorkspace = (dbFile: string, logFile: string, workspaceDir: string) => {
+const assignWorkspace = async (dbFile: string, logFile: string, workspaceDir: string) => {
     workspace.billadmDao = new BilladmDao(dbFile, logFile);
     workspace.workspaceDir = workspaceDir;
-    workspace.billadmDao.init().then(
-        () => logger.info(`init billadmDao for ${workspace.workspaceDir} success`)
-    ).catch((err: Error) => {
-            logger.info(`init billadmDao for ${workspace.workspaceDir} failed`);
-            dialog.showErrorBox("初始化billadmDao失败", `工作目录【${workspace.workspaceDir}】错误信息【${err.message}】`);
-            app.exit();
-        }
-    );
+    try {
+        await workspace.billadmDao.init();
+        logger.info(`init billadmDao for ${workspace.workspaceDir} success`);
+    } catch (e) {
+        logger.info(`init billadmDao for ${workspace.workspaceDir} failed`);
+        dialog.showErrorBox("初始化billadmDao失败", `工作目录【${workspace.workspaceDir}】错误信息【${e.message}】`);
+        app.exit();
+    }
 }
 
-const connectWorkspace = () => {
+const connectWorkspace = async () => {
     logger.info(`connect workspace: ${workspaceState.last}`);
     let dbFile = path.join(workspaceState.last, 'data', 'billadm.db');
     let logFile = path.join(workspaceState.last, 'billadm.db.log');
-    assignWorkspace(dbFile, logFile, workspaceState.last);
+    await assignWorkspace(dbFile, logFile, workspaceState.last);
 };
 
-const initWorkspace = (workspaceDir: string) => {
+const initWorkspace = async (workspaceDir: string) => {
     try {
         let items = fs.readdirSync(workspaceDir);
         if (items.length != 0) {
@@ -96,15 +96,15 @@ const initWorkspace = (workspaceDir: string) => {
     logger.info(`init workspace: ${workspaceDir}`);
     let dbFile = path.join(dataDir, 'billadm.db');
     let logFile = path.join(workspaceDir, 'billadm.db.log');
-    assignWorkspace(dbFile, logFile, workspaceDir);
-    workspace.billadmDao.initDB(appVersion).then(
-        () => logger.info(`init db for ${workspaceDir} success`)
-    ).catch((err: Error) => {
-            logger.info(`init db for ${workspaceDir} failed`);
-            dialog.showErrorBox("初始化数据库失败", `工作目录【${workspaceDir}】错误信息【${err.message}】`);
-            app.exit();
-        }
-    );
+    await assignWorkspace(dbFile, logFile, workspaceDir);
+    try {
+        await workspace.billadmDao.initDB(appVersion);
+        logger.info(`init db for ${workspaceDir} success`);
+    } catch (e) {
+        logger.info(`init db for ${workspaceDir} failed`);
+        dialog.showErrorBox("初始化数据库失败", `工作目录【${workspaceDir}】错误信息【${e.message}】`);
+        app.exit();
+    }
     workspaceState.last = workspaceDir;
     workspaceState.workspaces.push(workspaceDir);
     return true;
@@ -232,7 +232,7 @@ const createWindow = () => {
         }
     });
     ipcMain.handle('init.init-workspace', async (event, workspaceDir) => {
-        return initWorkspace(workspaceDir);
+        return await initWorkspace(workspaceDir);
     });
 
     if (windowState.isDevToolsOpened) {
@@ -272,9 +272,9 @@ const exitApp = () => {
     logger.info('end to exit app');
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     if (!firstOpen) {
-        connectWorkspace();
+        await connectWorkspace();
     }
     createWindow();
 });

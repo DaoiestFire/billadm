@@ -31,7 +31,7 @@ export const useBilladmStore = defineStore("billbooks", {
                 creationTime: new Date(),
             },
             timeRange: [new Date(), new Date()],
-            showInitWorkspaceForm: true,
+            showInitWorkspaceForm: false,
         }
     },
     actions: {
@@ -300,5 +300,8 @@ export const useBilladmStore = defineStore("billbooks", {
             this.setCurrentBook(BUILT_IN_BILLBOOK.id);
             await this.refreshBills();
         },
+        async isFirstOpen() {
+            return await window.appObject.isFirstOpen();
+        }
     }
 })

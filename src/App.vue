@@ -61,6 +61,11 @@ import Menu from '@/components/Menu.vue';
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 import InitWorkspaceForm from "@/components/InitWorkspaceForm.vue";
+import {onMounted} from "vue";
+import {useBilladmStore} from '@/stores/billadm';
+
+// store
+const billadmStore = useBilladmStore();
 
 const buttonSize = "40px";
 const buttonRadius = "8px";
@@ -78,6 +83,14 @@ const windowMaximize = () => {
 const windowMinimize = () => {
   window.appObject.send("window.minimize")
 }
+
+onMounted(async () => {
+  const firstOpen = await billadmStore.isFirstOpen();
+  billadmStore.showInitWorkspaceForm = firstOpen;
+  if (!firstOpen) {
+    await billadmStore.refreshWorkspace();
+  }
+})
 </script>
 
 

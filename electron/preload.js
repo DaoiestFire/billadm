@@ -34,4 +34,7 @@ contextBridge.exposeInMainWorld('appObject', {
     initWorkspace(workspaceDir) {
         return ipcRenderer.invoke('init.init-workspace', workspaceDir);
     },
+    isFirstOpen(){
+        return ipcRenderer.invoke("init.first-open");
+    },
 })

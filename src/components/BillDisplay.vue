@@ -95,7 +95,6 @@ import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 import {useBilladmStore} from '@/stores/billadm';
 import {shortcuts} from '@/config/time_shortcuts';
-import {BUILT_IN_BILLBOOK} from "@/utils/constants";
 import BillbookForm from "@/components/BillbookForm.vue";
 
 // store
@@ -123,11 +122,6 @@ const deleteBillbook = async () => {
   await billadmStore.refreshBillbooks();
   await billadmStore.refreshBills();
 };
-
-// 组件函数
-onMounted(async () => {
-  await billadmStore.refreshWorkspace();
-});
 </script>
 
 <style scoped>

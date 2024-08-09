@@ -26,7 +26,6 @@
 <script setup>
 import {useBilladmStore} from '@/stores/billadm';
 import {ref} from "vue";
-import {BUILT_IN_BILLBOOK} from "@/utils/constants";
 
 // store
 const billadmStore = useBilladmStore();
