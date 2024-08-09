@@ -99,6 +99,7 @@ export const useBilladmStore = defineStore("billbooks", {
                 });
                 return;
             }
+            this.billForm.creationTime.setHours(12, 12, 12)
             let newItem = {
                 money: Number(this.billForm.money),
                 type: this.billForm.type,

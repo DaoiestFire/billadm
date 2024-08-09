@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import {computed, ref, toRaw, watch} from 'vue'
+import {computed, ref, toRaw} from 'vue'
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 import {useBilladmStore} from '@/stores/billadm';
