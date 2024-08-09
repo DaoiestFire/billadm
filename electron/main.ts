@@ -1,15 +1,9 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import Logger from "./logger";
-import BilladmDao from "./billadmDao";
-
-const {
-    app,
-    BrowserWindow,
-    ipcMain,
-    screen,
-    dialog,
-} = require('electron');
+import {app, BrowserWindow, ipcMain, screen, dialog} from 'electron';
+import Logger from './logger';
+import BilladmDao from './billadmDao';
+import {Workspace, WorkspaceState} from './api';
 
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -20,9 +14,11 @@ const windowStatePath = path.join(confDir, "windowState.json");
 const workspaceStatePath = path.join(confDir, "workspace.json")
 const logger = new Logger(path.join(confDir, 'app.log'));
 let firstOpen = false;
+let workspaceState: WorkspaceState;
+let workspace: Workspace = {billadmDao: null, workspaceDir: '', mainWindow: null};
+
 
 try {
-    firstOpen = !fs.existsSync(workspaceStatePath);
     if (!fs.existsSync(confDir)) {
         fs.mkdirSync(confDir, {mode: 0o755, recursive: true});
     }
@@ -32,67 +28,42 @@ try {
     app.exit();
 }
 
+let oldWorkspace = {};
+try {
+    oldWorkspace = JSON.parse(fs.readFileSync(workspaceStatePath, "utf8"));
+} catch (e) {
+    fs.writeFileSync(workspaceStatePath, "{}");
+}
+workspaceState = Object.assign({}, {
+    last: '',
+    workspaces: [],
+}, oldWorkspace);
+
+if (workspaceState.workspaces.length == 0) {
+    firstOpen = true;
+} else if (!workspaceState.last) {
+    workspaceState.last = workspaceState.workspaces[0];
+    if (fs.existsSync(workspaceState.last) && fs.statSync(workspaceState.last).isFile()) {
+        dialog.showErrorBox("工作目录错误", `工作目录【${workspaceState.last}】已存在同名文件，请检查`);
+        app.exit();
+    }
+    logger.info(`当前工作目录[${workspaceState.last}]`)
+}
+
 logger.info(`start to launch billadm, firstOpen: ${firstOpen}`);
 
-
-interface WorkspaceState {
-    last: string,
-    workspaces: string[],
-}
-
-interface Workspace {
-    billadmDao: BilladmDao;
-    workspaceDir: string;
-}
-
-let currentWindow: any;
-let workspace: Workspace;
-
 const initWorkspace = () => {
-    let oldWorkspace: WorkspaceState = JSON.parse(fs.readFileSync(workspaceStatePath, "utf8"));
-    if (!oldWorkspace.last) {
-        oldWorkspace.last = oldWorkspace.workspaces[0];
-    }
-    if (fs.existsSync(oldWorkspace.last) && fs.statSync(oldWorkspace.last).isFile()) {
-        dialog.showErrorBox("工作目录错误", `工作目录【${oldWorkspace.last}】已存在同名文件，请检查`);
-        app.exit();
-    }
-    logger.info(`当前工作目录[${oldWorkspace.last}]`)
-    let needInit = false;
-    try {
-        if (!fs.existsSync(oldWorkspace.last)) {
-            fs.mkdirSync(oldWorkspace.last, {mode: 0o755, recursive: true});
-            needInit = true;
-        }
-    } catch (e) {
-        console.error(e);
-        dialog.showErrorBox("创建工作目录失败", `工作目录【${oldWorkspace.last}】创建失败，请确保该路径具有写入权限`);
-        app.exit();
-    }
-    if (needInit) {
-        fs.mkdirSync(path.join(oldWorkspace.last, 'data'), {mode: 0o755, recursive: true});
-    }
-    let dbFile = path.join(oldWorkspace.last, 'data', 'billadm.db');
-    let logFile = path.join(oldWorkspace.last, 'billadm.db.log');
-    workspace = {
-        billadmDao: new BilladmDao(dbFile, logFile),
-        workspaceDir: oldWorkspace.last,
-    };
+    logger.info(`init workspace from: ${workspaceState.last}`);
+    let dbFile = path.join(workspaceState.last, 'data', 'billadm.db');
+    let logFile = path.join(workspaceState.last, 'billadm.db.log');
+    workspace.billadmDao = new BilladmDao(dbFile, logFile);
+    workspace.workspaceDir = workspaceState.last;
     workspace.billadmDao.init().then(
         () => logger.info(`init billadmDao for ${workspace.workspaceDir} success`)
     ).catch(
         (err: Error) => {
             logger.info(`init billadmDao for ${workspace.workspaceDir} failed`);
             dialog.showErrorBox("初始化billadmDao失败", `工作目录【${workspace.workspaceDir}】错误信息【${err.message}】`);
-            app.exit();
-        }
-    )
-    if (needInit) workspace.billadmDao.initDB(app.getVersion()).then(
-        () => logger.info(`init db for ${workspace.workspaceDir} success`)
-    ).catch(
-        (err: Error) => {
-            logger.info(`init db for ${workspace.workspaceDir} failed`);
-            dialog.showErrorBox("初始化数据库失败", `工作目录【${workspace.workspaceDir}】错误信息【${err.message}】`);
             app.exit();
         }
     );
@@ -145,10 +116,9 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js'),
         },
     });
+    workspace.mainWindow = mainWindow;
 
     mainWindow.setPosition(x, y);
-
-    currentWindow = mainWindow;
 
     if (FRONTEND_VITE_DEV_SERVER_URL) {
         mainWindow.loadURL(FRONTEND_VITE_DEV_SERVER_URL);
@@ -225,28 +195,33 @@ const createWindow = () => {
 
 const exitApp = () => {
     logger.info('start to exit app');
-
-    const bounds = currentWindow.getBounds();
+    // 保存退出前的窗口状态
+    const bounds = workspace.mainWindow.getBounds();
     fs.writeFileSync(windowStatePath, JSON.stringify({
-        isMaximized: currentWindow.isMaximized(),
-        fullscreen: currentWindow.isFullScreen(),
-        isDevToolsOpened: currentWindow.webContents.isDevToolsOpened(),
+        isMaximized: workspace.mainWindow.isMaximized(),
+        fullscreen: workspace.mainWindow.isFullScreen(),
+        isDevToolsOpened: workspace.mainWindow.webContents.isDevToolsOpened(),
         x: bounds.x,
         y: bounds.y,
         width: bounds.width,
         height: bounds.height,
     }));
+    // 保存全部的工作空间路径和上次打开的工作空间路径
+    fs.writeFileSync(workspaceStatePath, JSON.stringify(workspaceState));
     logger.info('end to exit app');
 }
 
 app.whenReady().then(() => {
-    initWorkspace();
+    if (!firstOpen) {
+        initWorkspace();
+    }
     createWindow();
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
-        }
-    });
+});
+
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+    }
 });
 
 app.on('window-all-closed', () => {
