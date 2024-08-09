@@ -5,7 +5,7 @@ import {BUILT_IN_BILLBOOK, BUILT_IN_TYPES} from "./constants";
 
 /**
  * 创建表格
- * creation_time: 至UTC时间的毫秒数
+ * creation_time: YYYY-MM-DD hh:mm:ss 格式的UTC时间字符串
  */
 const CREATE_TABLE_BILLBOOKS: string = `CREATE TABLE IF NOT EXISTS t_billbooks (
     id            TEXT PRIMARY KEY NOT NULL,
@@ -29,6 +29,14 @@ const CREATE_TABLE_TYPES: string = `CREATE TABLE IF NOT EXISTS t_types (
     id   TEXT PRIMARY KEY NOT NULL,
     name TEXT NOT NULL
 )`;
+
+const CREATE_TABLE_BILLADM: string = `CREATE TABLE IF NOT EXISTS t_billadm (
+    version       TEXT NOT NULL,
+    creation_time TEXT NOT NULL
+)`;
+
+/** t_billadm*/
+const INSERT_BILLADM_INFO: string = 'INSERT INTO t_billadm (version,creation_time) VALUES (?,?)';
 
 /** t_types*/
 const INSERT_ONE_TYPE: string = 'INSERT INTO t_types (id,name) VALUES (?,?)';
@@ -58,10 +66,12 @@ class BilladmDao {
     }
 
     /** 初始化数据库，创建表格*/
-    async initDB() {
+    async initDB(version: string) {
+        await this.easyDB.runSql(CREATE_TABLE_BILLADM);
         await this.easyDB.runSql(CREATE_TABLE_BILLBOOKS);
         await this.easyDB.runSql(CREATE_TABLE_BILLS);
         await this.easyDB.runSql(CREATE_TABLE_TYPES);
+        await this.easyDB.runSql(INSERT_BILLADM_INFO, [version, getCurrentUTCTimeString()]);
         await this.easyDB.runSql(INSERT_ONE_BILLBOOK, [BUILT_IN_BILLBOOK.id, BUILT_IN_BILLBOOK.name, BUILT_IN_BILLBOOK.description, getCurrentUTCTimeString()]);
         for (let value of BUILT_IN_TYPES) {
             await this.insertOneType(value);

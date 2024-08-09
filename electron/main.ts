@@ -87,7 +87,7 @@ const initWorkspace = () => {
             app.exit();
         }
     )
-    if (needInit) workspace.billadmDao.initDB().then(
+    if (needInit) workspace.billadmDao.initDB(app.getVersion()).then(
         () => logger.info(`init db for ${workspace.workspaceDir} success`)
     ).catch(
         (err: Error) => {

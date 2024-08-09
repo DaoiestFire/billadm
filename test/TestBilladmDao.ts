@@ -22,7 +22,7 @@ let billadmDao = new BilladmDao(DB_FILE, DB_LOG_FILE);
 const main = async () => {
     try {
         await billadmDao.init();
-        await billadmDao.initDB();
+        await billadmDao.initDB('test');
         let res = await billadmDao.queryAllType();
         console.log(res);
         console.log(`delete type by id ${res[0].id} ${res[0].name}`);
