@@ -44,6 +44,7 @@
           <Menu/>
         </el-aside>
         <el-main>
+          <InitWorkspaceForm/>
           <RouterView/>
         </el-main>
       </el-container>
@@ -55,10 +56,11 @@
 </template>
 
 <script setup>
+import {RouterView} from 'vue-router';
 import Menu from '@/components/Menu.vue';
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
-import {RouterView} from 'vue-router';
+import InitWorkspaceForm from "@/components/InitWorkspaceForm.vue";
 
 const buttonSize = "40px";
 const buttonRadius = "8px";

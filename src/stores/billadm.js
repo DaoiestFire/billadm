@@ -31,6 +31,7 @@ export const useBilladmStore = defineStore("billbooks", {
                 creationTime: new Date(),
             },
             timeRange: [new Date(), new Date()],
+            showInitWorkspaceForm: true,
         }
     },
     actions: {
@@ -267,6 +268,37 @@ export const useBilladmStore = defineStore("billbooks", {
             } else {
                 await this.refreshBills();
             }
-        }
+        },
+        async chooseWorkspaceDirectory() {
+            return await window.appObject.chooseWorkspaceDirectory();
+        },
+        async initWorkspace(workspaceDir) {
+            const res = await window.appObject.initWorkspace(workspaceDir);
+            if (res) {
+                ElNotification({
+                    type: 'success',
+                    message: '工作空间初始化成功',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            } else {
+                ElNotification({
+                    type: 'error',
+                    message: '工作空间初始化失败',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            }
+            return res;
+        },
+        // 新建或更换工作空间时从新工作空间空间重新初始化内容
+        async refreshWorkspace() {
+            await this.refreshBillbooks();
+            await this.refreshBillTypes();
+            this.setCurrentBook(BUILT_IN_BILLBOOK.id);
+            await this.refreshBills();
+        },
     }
 })

@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import {app, BrowserWindow, ipcMain, screen, dialog} from 'electron';
+import {app, BrowserWindow, ipcMain, screen, dialog, OpenDialogOptions} from 'electron';
 import Logger from './logger';
 import BilladmDao from './billadmDao';
 import {Workspace, WorkspaceState} from './api';
@@ -9,6 +9,7 @@ if (require('electron-squirrel-startup')) {
     app.quit();
 }
 
+const appVersion = app.getVersion();
 const confDir = path.join(app.getPath("home"), ".config", "billadm");
 const windowStatePath = path.join(confDir, "windowState.json");
 const workspaceStatePath = path.join(confDir, "workspace.json")
@@ -52,21 +53,61 @@ if (workspaceState.workspaces.length == 0) {
 
 logger.info(`start to launch billadm, firstOpen: ${firstOpen}`);
 
-const initWorkspace = () => {
-    logger.info(`init workspace from: ${workspaceState.last}`);
-    let dbFile = path.join(workspaceState.last, 'data', 'billadm.db');
-    let logFile = path.join(workspaceState.last, 'billadm.db.log');
+const assignWorkspace = (dbFile: string, logFile: string, workspaceDir: string) => {
     workspace.billadmDao = new BilladmDao(dbFile, logFile);
-    workspace.workspaceDir = workspaceState.last;
+    workspace.workspaceDir = workspaceDir;
     workspace.billadmDao.init().then(
         () => logger.info(`init billadmDao for ${workspace.workspaceDir} success`)
-    ).catch(
-        (err: Error) => {
+    ).catch((err: Error) => {
             logger.info(`init billadmDao for ${workspace.workspaceDir} failed`);
             dialog.showErrorBox("初始化billadmDao失败", `工作目录【${workspace.workspaceDir}】错误信息【${err.message}】`);
             app.exit();
         }
     );
+}
+
+const connectWorkspace = () => {
+    logger.info(`connect workspace: ${workspaceState.last}`);
+    let dbFile = path.join(workspaceState.last, 'data', 'billadm.db');
+    let logFile = path.join(workspaceState.last, 'billadm.db.log');
+    assignWorkspace(dbFile, logFile, workspaceState.last);
+};
+
+const initWorkspace = (workspaceDir: string) => {
+    try {
+        let items = fs.readdirSync(workspaceDir);
+        if (items.length != 0) {
+            dialog.showErrorBox(" 工作空间路径错误", `工作空间不为空：${workspaceDir}`);
+            return false;
+        }
+    } catch (e) {
+        console.error(e);
+        dialog.showErrorBox("读取目录失败", `读取工作空间失败：${workspaceDir}`);
+        return false;
+    }
+    let dataDir = path.join(workspaceDir, 'data');
+    try {
+        fs.mkdirSync(dataDir, {mode: 0o755, recursive: true});
+    } catch (e) {
+        console.error(e);
+        dialog.showErrorBox("创建目录失败", `在工作空间下创建数据目录失败：${dataDir}`);
+        return false;
+    }
+    logger.info(`init workspace: ${workspaceDir}`);
+    let dbFile = path.join(dataDir, 'billadm.db');
+    let logFile = path.join(workspaceDir, 'billadm.db.log');
+    assignWorkspace(dbFile, logFile, workspaceDir);
+    workspace.billadmDao.initDB(appVersion).then(
+        () => logger.info(`init db for ${workspaceDir} success`)
+    ).catch((err: Error) => {
+            logger.info(`init db for ${workspaceDir} failed`);
+            dialog.showErrorBox("初始化数据库失败", `工作目录【${workspaceDir}】错误信息【${err.message}】`);
+            app.exit();
+        }
+    );
+    workspaceState.last = workspaceDir;
+    workspaceState.workspaces.push(workspaceDir);
+    return true;
 };
 
 const createWindow = () => {
@@ -174,6 +215,26 @@ const createWindow = () => {
         return await workspace.billadmDao.queryAllType();
     });
 
+    // 用于初始化工作间
+    ipcMain.handle('init.first-open', async (event, item) => {
+        return firstOpen;
+    });
+    ipcMain.handle('init.choose-workspace-directory', async (event, item) => {
+        const options: OpenDialogOptions = {
+            title: '选择目录',
+            properties: ['openDirectory'],
+        };
+        const {canceled, filePaths} = await dialog.showOpenDialog(options);
+        if (canceled) {
+            return '';
+        } else {
+            return filePaths[0];
+        }
+    });
+    ipcMain.handle('init.init-workspace', async (event, workspaceDir) => {
+        return initWorkspace(workspaceDir);
+    });
+
     if (windowState.isDevToolsOpened) {
         mainWindow.webContents.openDevTools({mode: "bottom"});
     }
@@ -213,7 +274,7 @@ const exitApp = () => {
 
 app.whenReady().then(() => {
     if (!firstOpen) {
-        initWorkspace();
+        connectWorkspace();
     }
     createWindow();
 });

@@ -28,4 +28,10 @@ contextBridge.exposeInMainWorld('appObject', {
     getAllBillTypes() {
         return ipcRenderer.invoke('billtypes.all-billtypes');
     },
+    chooseWorkspaceDirectory() {
+        return ipcRenderer.invoke('init.choose-workspace-directory');
+    },
+    initWorkspace(workspaceDir) {
+        return ipcRenderer.invoke('init.init-workspace', workspaceDir);
+    },
 })

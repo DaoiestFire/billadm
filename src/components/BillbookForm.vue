@@ -7,7 +7,7 @@
         <el-input v-model.trim="billadmStore.billbookForm.name"/>
       </el-form-item>
       <el-form-item label="描述">
-        <el-input v-model.trim="billadmStore.billbookForm.description" type="textarea"/>
+        <el-input v-model="billadmStore.billbookForm.description" type="text" maxlength="20" show-word-limit/>
       </el-form-item>
     </el-form>
     <template #footer>
