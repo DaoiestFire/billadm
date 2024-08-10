@@ -20,7 +20,7 @@
     </BillButton>
   </div>
 
-  <div v-if="showSecondMenu" class="advanced-menu billadm-vertical-all-center" style="left: 220px">
+  <div v-if="showWorkspaceSecondMenu" class="advanced-menu billadm-vertical-all-center" style="left: 220px">
     <BillButton height="40px" width="200px" radius="8px" offset="10px" @click="openOrCreateWorkspace">
       <el-text>
         <div class="billadm-horizontal-left menu-item">
@@ -29,13 +29,34 @@
       </el-text>
     </BillButton>
     <el-divider/>
-    <BillButton v-for="workspace of billadmStore.workspaceState.workspaces" height="40px" width="200px" radius="8px"
+    <BillButton v-for="(workspace,index) of billadmStore.workspaceState.workspaces" height="40px" width="200px"
+                radius="8px"
                 offset="10px" :is-active="billadmStore.workspaceState.current === workspace[0]"
-                @click="switchWorkspace(workspace[1])">
+                @click="onClickOneWorkspace(workspace[1],index)">
       <el-text>
         <div class="billadm-horizontal-left menu-item">
           {{ workspace[0] }}
           <SvgIcon name="chevron-right" size="15" style="margin-left: auto"/>
+        </div>
+      </el-text>
+    </BillButton>
+  </div>
+  <div v-if="showWorkspaceThirdMenu" class="advanced-menu billadm-vertical-all-center" style="left: 430px"
+       :style="getWorkspaceMenuStyle">
+    <BillButton height="40px" width="200px" radius="8px" offset="10px" @click="switchWorkspace">
+      <el-text>
+        <div class="billadm-horizontal-left menu-item">
+          <SvgIcon name="link-external" size="15" style="margin-right: 10px"/>
+          切换到
+        </div>
+      </el-text>
+    </BillButton>
+    <el-divider/>
+    <BillButton height="40px" width="200px" radius="8px" offset="10px" @click="">
+      <el-text>
+        <div class="billadm-horizontal-left menu-item">
+          <SvgIcon name="trash" size="15" style="margin-right: 10px"/>
+          从列表中移除
         </div>
       </el-text>
     </BillButton>
@@ -45,28 +66,44 @@
 <script setup>
 import SvgIcon from "@/components/base/SvgIcon.vue";
 import BillButton from "@/components/base/BillButton.vue";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useBilladmStore} from "@/stores/billadm";
 // store
 const billadmStore = useBilladmStore();
 // 工作空间
-const showSecondMenu = ref(false);
+const showWorkspaceSecondMenu = ref(false);
+const showWorkspaceThirdMenu = ref(false);
+const checkedWorkspaceDir = ref('');
+const workspaceIndex = ref(0);
 const onclickWorkspace = () => {
-  showSecondMenu.value = !showSecondMenu.value;
+  showWorkspaceSecondMenu.value = !showWorkspaceSecondMenu.value;
+  if (!showWorkspaceSecondMenu.value) {
+    showWorkspaceThirdMenu.value = false;
+  }
 }
 const openOrCreateWorkspace = () => {
   billadmStore.showInitWorkspaceFormCloseButton = true;
   billadmStore.showInitWorkspaceForm = true;
 }
-
-const switchWorkspace = async (workspaceDir) => {
-  const flag = await billadmStore.initWorkspace(workspaceDir);
+const onClickOneWorkspace = (workspaceDir, index) => {
+  checkedWorkspaceDir.value = workspaceDir;
+  workspaceIndex.value = index;
+  showWorkspaceThirdMenu.value = true;
+}
+const switchWorkspace = async () => {
+  const flag = await billadmStore.initWorkspace(checkedWorkspaceDir.value);
   if (flag) {
     await billadmStore.refreshWorkspace();
     await billadmStore.refreshWorkspaceState();
     billadmStore.showAdvancedMenu = false;
   }
 }
+const getWorkspaceMenuStyle = computed(() => {
+  const topValue = 80 + workspaceIndex.value * 40
+  return {
+    top: topValue + 'px',
+  };
+});
 // 开发者工具
 const toggleDevTools = () => {
   window.appObject.send('devtools.toggle');

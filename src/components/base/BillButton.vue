@@ -59,6 +59,7 @@ const getInnerStyle = computed(() => {
   justify-content: center;
   align-items: center;
   -webkit-app-region: no-drag;
+  user-select: none;
 }
 
 .inner-button {
