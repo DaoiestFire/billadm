@@ -63,6 +63,7 @@ const switchWorkspace = async (workspaceDir) => {
   const flag = await billadmStore.initWorkspace(workspaceDir);
   if (flag) {
     await billadmStore.refreshWorkspace();
+    await billadmStore.refreshWorkspaceState();
     billadmStore.showAdvancedMenu = false;
   }
 }

@@ -4,14 +4,20 @@
     <el-header height="40px">
       <el-container>
         <AdvancedMenu v-if="billadmStore.showAdvancedMenu"/>
-        <el-tooltip effect="dark" placement="right-start" content="菜单" v-bind="{ 'hide-after' : 0 }">
-          <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius" :offset="buttonOffset"
-                      @click="billadmStore.toggleShowAdvancedMenu">
-            <el-text size="large">
-              <SvgIcon name="menu" size="15"/>
-            </el-text>
-          </BillButton>
-        </el-tooltip>
+        <div class="left-control billadm-horizontal-left">
+          <el-tooltip effect="dark" placement="right-start" content="菜单" v-bind="{ 'hide-after' : 0 }">
+            <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius" :offset="buttonOffset"
+                        @click="billadmStore.toggleShowAdvancedMenu">
+              <el-text size="large">
+                <SvgIcon name="menu" size="15"/>
+              </el-text>
+            </BillButton>
+          </el-tooltip>
+        </div>
+
+        <div class="show-info billadm-vertical-all-center">
+          <el-text>{{ billadmStore.workspaceState.current }}-{{ op }}</el-text>
+        </div>
         <div class="window-control">
           <el-tooltip effect="dark" placement="bottom-start" content="最小化" v-bind="{ 'hide-after' : 0 }">
             <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius"
@@ -63,9 +69,11 @@ import Menu from '@/components/Menu.vue';
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 import InitWorkspaceForm from "@/components/InitWorkspaceForm.vue";
-import {onMounted} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useBilladmStore} from '@/stores/billadm';
 import AdvancedMenu from "@/components/AdvancedMenu.vue";
+import router from "@/router";
+import {menuItems} from "@/config/menu";
 
 // store
 const billadmStore = useBilladmStore();
@@ -73,6 +81,11 @@ const billadmStore = useBilladmStore();
 const buttonSize = "40px";
 const buttonRadius = "8px";
 const buttonOffset = "10px";
+const op = computed(() => {
+  const item = menuItems.find((item) => item.name === router.currentRoute.value.name);
+  return item.label;
+});
+
 
 // 窗口控制函数
 const winClose = () => {
@@ -109,6 +122,16 @@ onMounted(async () => {
   height: 40px;
   position: absolute;
   -webkit-app-region: drag;
+}
+
+.left-control {
+  width: 120px;
+  height: 40px;
+}
+
+.show-info {
+  width: 100%;
+  height: 40px;
 }
 
 .window-control {
