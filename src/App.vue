@@ -3,8 +3,10 @@
     <div class="drag-region"/>
     <el-header height="40px">
       <el-container>
+        <AdvancedMenu v-if="billadmStore.showAdvancedMenu"/>
         <el-tooltip effect="dark" placement="right-start" content="菜单" v-bind="{ 'hide-after' : 0 }">
-          <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius" :offset="buttonOffset">
+          <BillButton :height="buttonSize" :width="buttonSize" :radius="buttonRadius" :offset="buttonOffset"
+                      @click="billadmStore.toggleShowAdvancedMenu">
             <el-text size="large">
               <SvgIcon name="menu" size="15"/>
             </el-text>
@@ -63,6 +65,7 @@ import BillButton from '@/components/base/BillButton.vue';
 import InitWorkspaceForm from "@/components/InitWorkspaceForm.vue";
 import {onMounted} from "vue";
 import {useBilladmStore} from '@/stores/billadm';
+import AdvancedMenu from "@/components/AdvancedMenu.vue";
 
 // store
 const billadmStore = useBilladmStore();
@@ -102,7 +105,7 @@ onMounted(async () => {
 
 .drag-region {
   width: 100%;
-  height: 30px;
+  height: 40px;
   position: absolute;
   -webkit-app-region: drag;
 }

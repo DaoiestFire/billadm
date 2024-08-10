@@ -36,3 +36,10 @@
     align-items: center;
     justify-content: center;
 }
+
+.billadm-horizontal-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}

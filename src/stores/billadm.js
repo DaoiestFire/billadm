@@ -32,6 +32,7 @@ export const useBilladmStore = defineStore("billbooks", {
             },
             timeRange: [new Date(), new Date()],
             showInitWorkspaceForm: false,
+            showAdvancedMenu: false,
         }
     },
     actions: {
@@ -221,6 +222,9 @@ export const useBilladmStore = defineStore("billbooks", {
         },
         toggleShowBillbookForm() {
             this.showBillbookForm = !this.showBillbookForm;
+        },
+        toggleShowAdvancedMenu() {
+            this.showAdvancedMenu = !this.showAdvancedMenu;
         },
         resetBillForm() {
             this.billForm = {
