@@ -40,7 +40,7 @@
                         style="width: 100%"/>
       </el-form-item>
       <el-form-item label="备注">
-        <el-input v-model.trim="billadmStore.billForm.description" type="textarea"/>
+        <el-input v-model="billadmStore.billForm.description" type="text" maxlength="50" show-word-limit/>
       </el-form-item>
     </el-form>
     <template #footer>

@@ -165,6 +165,16 @@ export const useBilladmStore = defineStore("billbooks", {
             }
         },
         async addOneBillbook() {
+            if (toRaw(this.billbookForm.name) === '') {
+                ElNotification({
+                    type: 'error',
+                    message: '账本名称不能为空',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+                return
+            }
             try {
                 let newItem = {
                     name: this.billbookForm.name,
@@ -268,8 +278,8 @@ export const useBilladmStore = defineStore("billbooks", {
         async handleTimeRangeChange() {
             let timeRange = toRaw(this.timeRange);
             if (Array.isArray(timeRange) && isValidDate(timeRange[0]) && isValidDate(timeRange[1])) {
-                timeRange[0].setUTCHours(0, 0, 0);
-                timeRange[1].setUTCHours(23, 59, 59);
+                timeRange[0].setHours(0, 0, 0);
+                timeRange[1].setHours(23, 59, 59);
                 let filters = {
                     start_time: dateObjectToUTCTimeString(timeRange[0]),
                     end_time: dateObjectToUTCTimeString(timeRange[1]),

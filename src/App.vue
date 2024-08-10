@@ -58,7 +58,16 @@
       </el-container>
     </el-main>
     <el-footer height="40px">
-      <span>no data</span>
+      <div class="show-statistic billadm-horizontal-right">
+        <el-text>总记录数：{{ billsCnt }} 支出：{{ billsSpend }} 收入：{{ billsIncome }}</el-text>
+        <el-tooltip effect="dark" placement="right-start" v-bind="{ 'hide-after' : 0 }" content="帮助">
+          <BillButton height="39px" :width="buttonSize" :offset="buttonOffset" :radius="buttonRadius">
+            <el-text>
+              <SvgIcon name="help" size="15"/>
+            </el-text>
+          </BillButton>
+        </el-tooltip>
+      </div>
     </el-footer>
   </el-container>
 </template>
@@ -69,7 +78,7 @@ import Menu from '@/components/Menu.vue';
 import SvgIcon from '@/components/base/SvgIcon.vue';
 import BillButton from '@/components/base/BillButton.vue';
 import InitWorkspaceForm from "@/components/InitWorkspaceForm.vue";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useBilladmStore} from '@/stores/billadm';
 import AdvancedMenu from "@/components/AdvancedMenu.vue";
 import router from "@/router";
@@ -82,9 +91,32 @@ const buttonSize = "40px";
 const buttonRadius = "8px";
 const buttonOffset = "10px";
 const op = computed(() => {
-  const item = menuItems.find((item) => item.name === router.currentRoute.value.name);
+  let name
+  if (router.currentRoute.value.name) {
+    name = router.currentRoute.value.name;
+  } else {
+    name = 'bill';
+  }
+  const item = menuItems.find((item) => item.name === name);
   return item.label;
 });
+
+const billsCnt = ref(0);
+const billsIncome = ref(0);
+const billsSpend = ref(0);
+
+watch(() => billadmStore.bills, (bills) => {
+  billsCnt.value = bills.length;
+  billsIncome.value = 0;
+  billsSpend.value = 0;
+  for (let bill of bills) {
+    if (bill.income === 'false') {
+      billsSpend.value += Number(bill.money);
+    } else {
+      billsIncome.value += Number(bill.money);
+    }
+  }
+})
 
 
 // 窗口控制函数
@@ -137,6 +169,11 @@ onMounted(async () => {
 .window-control {
   margin-left: auto;
   display: flex;
+}
+
+.show-statistic {
+  width: 100%;
+  height: 100%;
 }
 
 .el-header {

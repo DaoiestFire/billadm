@@ -61,7 +61,7 @@ const multipleSelection = ref([]);
 // 窗口
 const windowHeight = ref(window.innerHeight);
 const tableHeight = computed(() => {
-  return windowHeight.value - 90
+  return windowHeight.value - 120
 });
 window.addEventListener('resize', () => {
   windowHeight.value = window.innerHeight
