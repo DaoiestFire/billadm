@@ -1,6 +1,7 @@
 <template>
   <el-container class="outer">
     <div class="drag-region"/>
+    <div v-if="showMaskLayer" class="mask-layer" @click="clickMaskLayer"></div>
     <el-header height="40px">
       <el-container>
         <AdvancedMenu v-if="billadmStore.showAdvancedMenu"/>
@@ -129,6 +130,13 @@ const op = computed(() => {
   const item = menuItems.find((item) => item.name === name);
   return item.label;
 });
+const showMaskLayer = computed(() => {
+  return billadmStore.showAdvancedMenu || billadmStore.showHelpMenu;
+})
+const clickMaskLayer = () => {
+  billadmStore.showAdvancedMenu = false;
+  billadmStore.showHelpMenu = false;
+}
 
 const billsCnt = ref(0);
 const billsIncome = ref(0);
@@ -177,6 +185,13 @@ onMounted(async () => {
 .outer {
   height: 100vh;
   width: 100vw;
+}
+
+.mask-layer {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
 }
 
 .drag-region {
