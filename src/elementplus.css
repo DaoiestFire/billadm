@@ -9,19 +9,23 @@
 }
 
 .el-container {
-    padding: 0px;
+    height: 100%;
+    width: 100%;
+    padding: 0;
 }
 
 .el-header {
-    padding: 0px;
+    padding: 0;
 }
 
 .el-main {
-    padding: 0px;
+    height: 100%;
+    width: 100%;
+    padding: 0;
 }
 
 .el-footer {
-    padding: 0px;
+    padding: 0;
 }
 
 .billadm-vertical-center {

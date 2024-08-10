@@ -129,7 +129,7 @@ onMounted(async () => {
 }
 
 .el-aside {
-  height: 100vh;
+  height: 100%;
   border-right-width: 1px;
   border-right-color: var(--el-color-info-light-7);
   border-right-style: solid;
