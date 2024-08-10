@@ -29,11 +29,12 @@
       </el-text>
     </BillButton>
     <el-divider/>
-    <BillButton height="40px" width="200px" radius="8px" offset="10px">
+    <BillButton v-for="workspace of billadmStore.workspaceState.workspaces" height="40px" width="200px" radius="8px"
+                offset="10px" :is-active="billadmStore.workspaceState.current === workspace[0]"
+                @click="switchWorkspace(workspace[1])">
       <el-text>
         <div class="billadm-horizontal-left menu-item">
-          <SvgIcon name="bug" size="15" style="margin-right: 10px"/>
-          开发者工具
+          {{ workspace[0] }}
           <SvgIcon name="chevron-right" size="15" style="margin-left: auto"/>
         </div>
       </el-text>
@@ -44,7 +45,7 @@
 <script setup>
 import SvgIcon from "@/components/base/SvgIcon.vue";
 import BillButton from "@/components/base/BillButton.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useBilladmStore} from "@/stores/billadm";
 // store
 const billadmStore = useBilladmStore();
@@ -56,10 +57,22 @@ const onclickWorkspace = () => {
 const openOrCreateWorkspace = () => {
   billadmStore.showInitWorkspaceForm = true;
 }
+
+const switchWorkspace = async (workspaceDir) => {
+  const flag = await billadmStore.initWorkspace(workspaceDir);
+  if (flag) {
+    await billadmStore.refreshWorkspace();
+    billadmStore.showAdvancedMenu = false;
+  }
+}
 // 开发者工具
 const toggleDevTools = () => {
   window.appObject.send('devtools.toggle');
 }
+
+onMounted(async () => {
+  await billadmStore.refreshWorkspaceState();
+})
 </script>
 
 <style scoped>

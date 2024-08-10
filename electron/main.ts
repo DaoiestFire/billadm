@@ -241,12 +241,19 @@ const createWindow = () => {
     });
     ipcMain.handle('init.init-workspace', async (event, workspaceDir) => {
         if (workspaceState.last === workspaceDir) {
-            return
+            return true;
         }
         return await initWorkspace(workspaceDir);
     });
-    ipcMain.handle('init.all-workspaces', async (event, workspaceDir) => {
-        return workspaceState;
+    ipcMain.handle('init.workspaceState', async (event, workspaceDir) => {
+        let res = {
+            current: path.basename(workspace.workspaceDir),
+            workspaces: new Map(),
+        };
+        for (let workspacePath of workspaceState.workspaces) {
+            res.workspaces.set(path.basename(workspacePath), workspacePath);
+        }
+        return res;
     });
 
     // devtools

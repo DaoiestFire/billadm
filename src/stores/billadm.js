@@ -33,6 +33,10 @@ export const useBilladmStore = defineStore("billbooks", {
             timeRange: [new Date(), new Date()],
             showInitWorkspaceForm: false,
             showAdvancedMenu: false,
+            workspaceState: {
+                current: '',
+                workspaces: new Map(),
+            },
         }
     },
     actions: {
@@ -278,6 +282,16 @@ export const useBilladmStore = defineStore("billbooks", {
             return await window.appObject.chooseWorkspaceDirectory();
         },
         async initWorkspace(workspaceDir) {
+            if (workspaceDir.endsWith(toRaw(this.workspaceState.current))) {
+                ElNotification({
+                    type: 'warning',
+                    message: '工作空间已打开',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+                return true;
+            }
             const res = await window.appObject.initWorkspace(workspaceDir);
             if (res) {
                 ElNotification({
@@ -307,6 +321,9 @@ export const useBilladmStore = defineStore("billbooks", {
         },
         async isFirstOpen() {
             return await window.appObject.isFirstOpen();
+        },
+        async refreshWorkspaceState() {
+            this.workspaceState = await window.appObject.workspaceState();
         },
     }
 })
