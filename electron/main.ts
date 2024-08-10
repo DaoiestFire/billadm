@@ -59,10 +59,13 @@ const assignWorkspace = async (dbFile: string, logFile: string, workspaceDir: st
     try {
         await workspace.billadmDao.init();
         logger.info(`init billadmDao for ${workspace.workspaceDir} success`);
+        return true;
     } catch (e) {
         logger.info(`init billadmDao for ${workspace.workspaceDir} failed`);
         dialog.showErrorBox("初始化billadmDao失败", `工作目录【${workspace.workspaceDir}】错误信息【${e.message}】`);
-        app.exit();
+        workspaceState.workspaces = workspaceState.workspaces.filter(item => item !== workspaceState.last);
+        workspaceState.last = '';
+        return false;
     }
 }
 
@@ -70,15 +73,18 @@ const connectWorkspace = async () => {
     logger.info(`connect workspace: ${workspaceState.last}`);
     let dbFile = path.join(workspaceState.last, 'data', 'billadm.db');
     let logFile = path.join(workspaceState.last, 'billadm.db.log');
-    await assignWorkspace(dbFile, logFile, workspaceState.last);
+    return await assignWorkspace(dbFile, logFile, workspaceState.last);
 };
 
 const initWorkspace = async (workspaceDir: string) => {
     try {
         let items = fs.readdirSync(workspaceDir);
         if (items.length != 0) {
-            dialog.showErrorBox(" 工作空间路径错误", `工作空间不为空：${workspaceDir}`);
-            return false;
+            // 尝试作为一个已存在的工作空间去连接
+            logger.info(`attempt to connect workspace: ${workspaceDir}`);
+            workspaceState.last = workspaceDir;
+            workspaceState.workspaces.push(workspaceDir);
+            return await connectWorkspace();
         }
     } catch (e) {
         console.error(e);
@@ -234,6 +240,9 @@ const createWindow = () => {
     ipcMain.handle('init.init-workspace', async (event, workspaceDir) => {
         return await initWorkspace(workspaceDir);
     });
+    ipcMain.handle('init.all-workspaces', async (event, workspaceDir) => {
+        return workspaceState.workspaces;
+    });
 
     if (windowState.isDevToolsOpened) {
         mainWindow.webContents.openDevTools({mode: "bottom"});
@@ -274,7 +283,10 @@ const exitApp = () => {
 
 app.whenReady().then(async () => {
     if (!firstOpen) {
-        await connectWorkspace();
+        const success = await connectWorkspace();
+        if (!success) {
+            firstOpen = true;
+        }
     }
     createWindow();
 });
