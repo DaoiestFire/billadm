@@ -35,6 +35,7 @@ export const useBilladmStore = defineStore("billbooks", {
             showInitWorkspaceFormCloseButton: false,
             showAdvancedMenu: false,
             showMenu: true,
+            showHelpMenu: false,
             workspaceState: {
                 current: '',
                 workspaces: new Map(),
@@ -274,6 +275,9 @@ export const useBilladmStore = defineStore("billbooks", {
         },
         toggleShowMenu() {
             this.showMenu = !this.showMenu;
+        },
+        toggleShowHelpMenu() {
+            this.showHelpMenu = !this.showHelpMenu;
         },
         resetBillForm() {
             this.billForm = {

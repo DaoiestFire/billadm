@@ -80,13 +80,15 @@
         </el-tooltip>
         <el-text>总记录数：{{ billsCnt }} 支出：{{ billsSpend }} 收入：{{ billsIncome }}</el-text>
         <el-tooltip effect="dark" placement="right-start" v-bind="{ 'hide-after' : 0 }" content="帮助">
-          <BillButton height="39px" :width="buttonSize" :offset="buttonOffset" :radius="buttonRadius">
+          <BillButton height="39px" :width="buttonSize" :offset="buttonOffset" :radius="buttonRadius"
+                      @click="billadmStore.toggleShowHelpMenu">
             <el-text>
               <SvgIcon name="help" size="15"/>
             </el-text>
           </BillButton>
         </el-tooltip>
       </div>
+      <HelpMenu v-if="billadmStore.showHelpMenu"/>
     </el-footer>
   </el-container>
 </template>
@@ -102,6 +104,7 @@ import {useBilladmStore} from '@/stores/billadm';
 import AdvancedMenu from "@/components/AdvancedMenu.vue";
 import router from "@/router";
 import {menuItems} from "@/config/menu";
+import HelpMenu from "@/components/HelpMenu.vue";
 
 // store
 const billadmStore = useBilladmStore();

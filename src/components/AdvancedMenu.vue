@@ -79,11 +79,11 @@ onMounted(async () => {
 
 <style scoped>
 .advanced-menu {
+  background-color: #ffffff;
   width: 200px;
   position: absolute;
   top: 40px;
   left: 10px;
-  background-color: #ffffff;
   z-index: 100;
   box-shadow: var(--el-box-shadow);
   border-radius: 8px;
