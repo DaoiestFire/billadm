@@ -238,10 +238,13 @@ const createWindow = () => {
         }
     });
     ipcMain.handle('init.init-workspace', async (event, workspaceDir) => {
+        if (workspaceState.last === workspaceDir) {
+            return
+        }
         return await initWorkspace(workspaceDir);
     });
     ipcMain.handle('init.all-workspaces', async (event, workspaceDir) => {
-        return workspaceState.workspaces;
+        return workspaceState;
     });
 
     // devtools

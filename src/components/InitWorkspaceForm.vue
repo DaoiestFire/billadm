@@ -3,7 +3,7 @@
              :close-on-click-modal="false"
              style="width: 632px;"
              title="选择工作空间目录">
-    <el-text>首次打开软件，请选择一个目录作为工作空间或打开一个已存在的工作空间</el-text>
+    <el-text>请选择一个目录作为工作空间或打开一个已存在的工作空间</el-text>
     <template #footer>
       <div class="dialog-footer">
         <el-input v-model="workspacePath" type="text" :clearable="true">
@@ -39,7 +39,9 @@ const onSubmit = async () => {
   const flag = await billadmStore.initWorkspace(workspacePath.value);
   if (flag) {
     await billadmStore.refreshWorkspace();
+    workspacePath.value = '';
     billadmStore.showInitWorkspaceForm = false;
+    billadmStore.showAdvancedMenu = false;
   }
 }
 </script>
