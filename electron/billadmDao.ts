@@ -37,6 +37,7 @@ const CREATE_TABLE_BILLADM: string = `CREATE TABLE IF NOT EXISTS t_billadm (
 
 /** t_billadm*/
 const INSERT_BILLADM_INFO: string = 'INSERT INTO t_billadm (version,creation_time) VALUES (?,?)';
+const QUERY_ALL_BILLADM_INFO: string = 'SELECT * FROM t_billadm';
 
 /** t_types*/
 const INSERT_ONE_TYPE: string = 'INSERT INTO t_types (id,name) VALUES (?,?)';
@@ -77,6 +78,11 @@ class BilladmDao {
         for (let value of BUILT_IN_TYPES) {
             await this.insertOneType(value);
         }
+    }
+
+    /** 查询软件信息*/
+    async queryAllBilladmInfo() {
+        return await this.easyDB.querySql(QUERY_ALL_BILLADM_INFO, null, true);
     }
 
     /** 插入一条消费类型*/

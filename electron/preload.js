@@ -4,6 +4,9 @@ contextBridge.exposeInMainWorld('appObject', {
     send: (channel, ...args) => {
         ipcRenderer.send(channel, ...args)
     },
+    getBilladmInfo() {
+        return ipcRenderer.invoke('billadm.info');
+    },
     getAllBillbooks() {
         return ipcRenderer.invoke('billbooks.all-billbooks');
     },

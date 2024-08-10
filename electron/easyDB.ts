@@ -57,33 +57,59 @@ class EasyDB {
         }
     }
 
-    querySql(sql: string, value?: any) {
+    querySql(sql: string, value?: any, one?: boolean) {
         if (value) {
             return new Promise(
                 (resolve, reject) => {
-                    this.dbInstance.all(sql, value, (err, rows) => {
-                        if (err) {
-                            this.logger.error(`query data with sql [${sql}] failed, err: ${err.message}`);
-                            reject(err);
-                            return;
-                        }
-                        this.logger.info(`query data with sql [${sql}] success`);
-                        resolve(rows);
-                    });
+                    if (one) {
+                        this.dbInstance.get(sql, value, (err, rows) => {
+                            if (err) {
+                                this.logger.error(`query data with sql [${sql}] failed, err: ${err.message}`);
+                                reject(err);
+                                return;
+                            }
+                            this.logger.info(`query data with sql [${sql}] success`);
+                            resolve(rows);
+                        });
+                    } else {
+                        this.dbInstance.all(sql, value, (err, rows) => {
+                            if (err) {
+                                this.logger.error(`query data with sql [${sql}] failed, err: ${err.message}`);
+                                reject(err);
+                                return;
+                            }
+                            this.logger.info(`query data with sql [${sql}] success`);
+                            resolve(rows);
+                        });
+                    }
+
                 }
             )
         } else {
             return new Promise(
                 (resolve, reject) => {
-                    this.dbInstance.all(sql, (err, rows) => {
-                        if (err) {
-                            this.logger.error(`query data with sql [${sql}] failed, err: ${err.message}`);
-                            reject(err);
-                            return;
-                        }
-                        this.logger.info(`query data with sql [${sql}] success`);
-                        resolve(rows);
-                    });
+                    if (one) {
+                        this.dbInstance.get(sql, (err, rows) => {
+                            if (err) {
+                                this.logger.error(`query data with sql [${sql}] failed, err: ${err.message}`);
+                                reject(err);
+                                return;
+                            }
+                            this.logger.info(`query data with sql [${sql}] success`);
+                            resolve(rows);
+                        });
+                    } else {
+                        this.dbInstance.all(sql, (err, rows) => {
+                            if (err) {
+                                this.logger.error(`query data with sql [${sql}] failed, err: ${err.message}`);
+                                reject(err);
+                                return;
+                            }
+                            this.logger.info(`query data with sql [${sql}] success`);
+                            resolve(rows);
+                        });
+                    }
+
                 }
             )
         }

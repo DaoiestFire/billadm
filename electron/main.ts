@@ -191,6 +191,11 @@ const createWindow = () => {
         mainWindow.minimize();
     });
 
+    // billadm
+    ipcMain.handle("billadm.info", async () => {
+        return await workspace.billadmDao.queryAllBilladmInfo();
+    });
+
     // billbooks
     ipcMain.handle("billbooks.all-billbooks", async () => {
         return await workspace.billadmDao.queryAllBillbook();
@@ -226,7 +231,7 @@ const createWindow = () => {
         return await workspace.billadmDao.queryAllType();
     });
 
-    // 用于初始化工作间
+    // 用于初始化工作空间
     ipcMain.handle('init.first-open', async (event, item) => {
         return firstOpen;
     });
