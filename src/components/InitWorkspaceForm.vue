@@ -1,5 +1,6 @@
 <template>
-  <el-dialog v-model="billadmStore.showInitWorkspaceForm" :show-close="false" :close-on-press-escape="false" top="30vh"
+  <el-dialog v-model="billadmStore.showInitWorkspaceForm" :show-close="billadmStore.showInitWorkspaceFormCloseButton"
+             :close-on-press-escape="false" top="30vh"
              :close-on-click-modal="false"
              style="width: 632px;"
              title="选择工作空间目录">

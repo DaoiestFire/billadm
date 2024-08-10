@@ -55,6 +55,7 @@ const onclickWorkspace = () => {
   showSecondMenu.value = !showSecondMenu.value;
 }
 const openOrCreateWorkspace = () => {
+  billadmStore.showInitWorkspaceFormCloseButton = true;
   billadmStore.showInitWorkspaceForm = true;
 }
 

@@ -89,6 +89,7 @@ const windowMinimize = () => {
 
 onMounted(async () => {
   const firstOpen = await billadmStore.isFirstOpen();
+  billadmStore.showInitWorkspaceFormCloseButton = false;
   billadmStore.showInitWorkspaceForm = firstOpen;
   if (!firstOpen) {
     await billadmStore.refreshWorkspace();

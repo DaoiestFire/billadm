@@ -32,6 +32,7 @@ export const useBilladmStore = defineStore("billbooks", {
             },
             timeRange: [new Date(), new Date()],
             showInitWorkspaceForm: false,
+            showInitWorkspaceFormCloseButton: false,
             showAdvancedMenu: false,
             workspaceState: {
                 current: '',
@@ -282,7 +283,7 @@ export const useBilladmStore = defineStore("billbooks", {
             return await window.appObject.chooseWorkspaceDirectory();
         },
         async initWorkspace(workspaceDir) {
-            if (workspaceDir.endsWith(toRaw(this.workspaceState.current))) {
+            if (toRaw(this.workspaceState.current) !== '' && workspaceDir.endsWith(toRaw(this.workspaceState.current))) {
                 ElNotification({
                     type: 'warning',
                     message: '工作空间已打开',
