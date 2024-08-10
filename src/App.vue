@@ -14,7 +14,6 @@
             </BillButton>
           </el-tooltip>
         </div>
-
         <div class="show-info billadm-vertical-all-center">
           <el-text>{{ billadmStore.workspaceState.current }}-{{ op }}</el-text>
         </div>
@@ -48,7 +47,7 @@
     </el-header>
     <el-main>
       <el-container>
-        <el-aside width="40px">
+        <el-aside v-if="billadmStore.showMenu" width="40px">
           <Menu/>
         </el-aside>
         <el-main>
@@ -59,6 +58,26 @@
     </el-main>
     <el-footer height="40px">
       <div class="show-statistic billadm-horizontal-right">
+        <el-tooltip v-if="!billadmStore.showMenu" effect="dark" placement="right-start" v-bind="{ 'hide-after' : 0 }"
+                    content="展开侧边菜单">
+          <BillButton height="39px" :width="buttonSize" :offset="buttonOffset"
+                      :radius="buttonRadius" @click="billadmStore.toggleShowMenu"
+                      style="margin-right: auto">
+            <el-text>
+              <SvgIcon name="sidebar-expand" size="15"/>
+            </el-text>
+          </BillButton>
+        </el-tooltip>
+        <el-tooltip v-if="billadmStore.showMenu" effect="dark" placement="right-start" v-bind="{ 'hide-after' : 0 }"
+                    content="折叠侧边菜单">
+          <BillButton height="39px" :width="buttonSize" :offset="buttonOffset"
+                      :radius="buttonRadius" @click="billadmStore.toggleShowMenu"
+                      style="margin-right: auto">
+            <el-text>
+              <SvgIcon name="sidebar-collapse" size="15"/>
+            </el-text>
+          </BillButton>
+        </el-tooltip>
         <el-text>总记录数：{{ billsCnt }} 支出：{{ billsSpend }} 收入：{{ billsIncome }}</el-text>
         <el-tooltip effect="dark" placement="right-start" v-bind="{ 'hide-after' : 0 }" content="帮助">
           <BillButton height="39px" :width="buttonSize" :offset="buttonOffset" :radius="buttonRadius">
