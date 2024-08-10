@@ -68,6 +68,15 @@ window.addEventListener('resize', () => {
 });
 // 单记录操作函数
 const handleEdit = (info) => {
+  billadmStore.billForm.id = info.id;
+  billadmStore.billForm.money = info.money;
+  billadmStore.billForm.type = info.type;
+  billadmStore.billForm.income = info.income;
+  billadmStore.billForm.bookId = info.bookId;
+  billadmStore.billForm.description = info.description;
+  billadmStore.billForm.tags = info.tags;
+  billadmStore.billForm.creationTime = info.creationTime;
+  billadmStore.toggleShowBillForm();
 };
 
 const handleDelete = async (id) => {

@@ -49,7 +49,8 @@ const QUERY_ALL_BILLBOOK: string = 'SELECT * FROM t_billbooks';
 const DELETE_ONE_BILLBOOK_BY_ID: string = 'DELETE FROM t_billbooks WHERE id=?';
 
 /** t_bills*/
-const INSERT_ONE_BILL: string = 'INSERT INTO t_bills (id,money,type,income,book_id,description,tags,creation_time) VALUES (?,?,?,?,?,?,?,?);';
+const INSERT_ONE_BILL: string = 'INSERT INTO t_bills (id,money,type,income,book_id,description,tags,creation_time) VALUES (?,?,?,?,?,?,?,?)';
+const UPDATE_ONE_BILL: string = 'UPDATE t_bills set money=?,type=?,income=?,description=?,tags=?,creation_time=? WHERE id=?';
 const QUERY_ALL_BILL_BY_BOOK_ID: string = 'SELECT * FROM t_bills WHERE book_id=?';
 const DELETE_ONE_BILL_BY_ID: string = 'DELETE FROM t_bills WHERE id=?';
 const DELETE_BILLS_BY_BOOK_ID: string = 'DELETE FROM t_bills WHERE book_id=?';
@@ -112,6 +113,11 @@ class BilladmDao {
     /** 创建一条消费记录*/
     async insertOneBill(money: number, type: string, income: string, bookId: string, description: string, tags: string, creationTime: string) {
         await this.easyDB.runSql(INSERT_ONE_BILL, [UUID(), money, type, income, bookId, description, tags, creationTime]);
+    }
+
+    /** 更新一条消费记录*/
+    async updateOneBill(id: string, money: number, type: string, income: string, description: string, tags: string, creationTime: string) {
+        await this.easyDB.runSql(UPDATE_ONE_BILL, [money, type, income, description, tags, creationTime, id]);
     }
 
     /** 查询一个账本中的所有消费记录*/

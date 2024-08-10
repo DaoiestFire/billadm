@@ -137,6 +137,7 @@ onMounted(async () => {
   billadmStore.showInitWorkspaceFormCloseButton = false;
   billadmStore.showInitWorkspaceForm = firstOpen;
   if (!firstOpen) {
+    await billadmStore.refreshWorkspaceState();
     await billadmStore.refreshWorkspace();
   }
 })

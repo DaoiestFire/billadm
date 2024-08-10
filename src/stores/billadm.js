@@ -134,6 +134,36 @@ export const useBilladmStore = defineStore("billbooks", {
                 });
             }
         },
+        async editOneBill() {
+            this.billForm.creationTime.setHours(12, 12, 12);
+            let newItem = {
+                id: this.billForm.id,
+                money: Number(this.billForm.money),
+                type: this.billForm.type,
+                income: this.billForm.income,
+                description: this.billForm.description,
+                tags: JSON.stringify(this.billForm.tags),
+                creationTime: dateObjectToUTCTimeString(this.billForm.creationTime),
+            };
+            try {
+                await window.appObject.editOneBill(newItem);
+                ElNotification({
+                    type: 'success',
+                    message: '修改消费记录成功',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            } catch (err) {
+                ElNotification({
+                    type: 'error',
+                    message: '  修改消费记录失败',
+                    position: 'bottom-right',
+                    duration: 2000,
+                    offset: 40,
+                });
+            }
+        },
         async deleteBills(idList) {
             if (idList.length === 0) {
                 ElNotification({

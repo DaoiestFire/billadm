@@ -212,6 +212,9 @@ const createWindow = () => {
     ipcMain.handle("bills.add-one-bill", async (event, item) => {
         return await workspace.billadmDao.insertOneBill(item.money, item.type, item.income, item.bookId, item.description, item.tags, item.creationTime);
     });
+    ipcMain.handle("bills.edit-one-bill", async (event, item) => {
+        return await workspace.billadmDao.updateOneBill(item.id, item.money, item.type, item.income, item.description, item.tags, item.creationTime);
+    });
     ipcMain.handle("bills.delete-bills", async (event, idList: string[]) => {
         for (let id of idList) {
             await workspace.billadmDao.deleteOneBillByID(id);
