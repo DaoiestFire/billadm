@@ -1,5 +1,26 @@
 <template>
   <div class="advanced-menu billadm-vertical-all-center">
+    <BillButton height="40px" width="200px" radius="8px" offset="10px" @click="onclickWorkspace">
+      <el-text>
+        <div class="billadm-horizontal-left menu-item">
+          <SvgIcon name="folder" size="15" style="margin-right: 10px"/>
+          工作空间
+          <SvgIcon name="chevron-right" size="15" style="margin-left: auto"/>
+        </div>
+      </el-text>
+    </BillButton>
+    <el-divider/>
+    <BillButton height="40px" width="200px" radius="8px" offset="10px" @click="toggleDevTools">
+      <el-text>
+        <div class="billadm-horizontal-left menu-item">
+          <SvgIcon name="bug" size="15" style="margin-right: 10px"/>
+          开发者工具
+        </div>
+      </el-text>
+    </BillButton>
+  </div>
+
+  <div v-if="showSecondMenu" class="advanced-menu billadm-vertical-all-center" style="left: 220px">
     <BillButton height="40px" width="200px" radius="8px" offset="10px">
       <el-text>
         <div class="billadm-horizontal-left menu-item">
@@ -24,15 +45,17 @@
 <script setup>
 import SvgIcon from "@/components/base/SvgIcon.vue";
 import BillButton from "@/components/base/BillButton.vue";
-import {useBilladmStore} from '@/stores/billadm';
+import {ref} from "vue";
 
-// store
-const billadmStore = useBilladmStore();
+// var
+const showSecondMenu = ref(false);
+// function
+const onclickWorkspace = () => {
+  showSecondMenu.value = !showSecondMenu.value;
+}
 
-const onClickOutside = () => {
-  if (billadmStore.showAdvancedMenu) {
-    billadmStore.toggleShowAdvancedMenu();
-  }
+const toggleDevTools = () => {
+  window.appObject.send('devtools.toggle');
 }
 </script>
 

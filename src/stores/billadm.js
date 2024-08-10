@@ -307,6 +307,6 @@ export const useBilladmStore = defineStore("billbooks", {
         },
         async isFirstOpen() {
             return await window.appObject.isFirstOpen();
-        }
+        },
     }
 })

@@ -244,6 +244,18 @@ const createWindow = () => {
         return workspaceState.workspaces;
     });
 
+    // devtools
+    ipcMain.on("devtools.toggle", () => {
+        if (mainWindow.webContents.isDevToolsOpened()) {
+            mainWindow.webContents.closeDevTools();
+            windowState.isDevToolsOpened = false;
+            return
+        }
+        mainWindow.webContents.openDevTools({mode: "bottom"});
+        windowState.isDevToolsOpened = true;
+    });
+
+
     if (windowState.isDevToolsOpened) {
         mainWindow.webContents.openDevTools({mode: "bottom"});
     }
