@@ -78,7 +78,14 @@
             </el-text>
           </BillButton>
         </el-tooltip>
-        <el-text>总记录数：{{ billsCnt }} 支出：{{ billsSpend }} 收入：{{ billsIncome }}</el-text>
+        <el-text type="info">
+          总记录数
+          <el-text type="info" style="margin-right: 10px">{{ billsCnt }}</el-text>
+          支出
+          <el-text type="danger" style="margin-right: 10px">{{ billsSpend }}</el-text>
+          收入
+          <el-text type="success" style="margin-right: 10px">{{ billsIncome }}</el-text>
+        </el-text>
         <el-tooltip effect="dark" placement="right-start" v-bind="{ 'hide-after' : 0 }" content="帮助">
           <BillButton height="39px" :width="buttonSize" :offset="buttonOffset" :radius="buttonRadius"
                       @click="billadmStore.toggleShowHelpMenu">
