@@ -83,7 +83,9 @@ const initWorkspace = async (workspaceDir: string) => {
             // 尝试作为一个已存在的工作空间去连接
             logger.info(`attempt to connect workspace: ${workspaceDir}`);
             workspaceState.last = workspaceDir;
-            workspaceState.workspaces.push(workspaceDir);
+            if (!workspaceState.workspaces.includes(workspaceDir)) {
+                workspaceState.workspaces.push(workspaceDir);
+            }
             return await connectWorkspace();
         }
     } catch (e) {
@@ -292,6 +294,7 @@ const exitApp = () => {
         height: bounds.height,
     }));
     // 保存全部的工作空间路径和上次打开的工作空间路径
+    workspaceState.workspaces = Array.from(new Set(workspaceState.workspaces));
     fs.writeFileSync(workspaceStatePath, JSON.stringify(workspaceState));
     logger.info('end to exit app');
 }
