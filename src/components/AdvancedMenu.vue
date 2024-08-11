@@ -68,6 +68,7 @@ import SvgIcon from "@/components/base/SvgIcon.vue";
 import BillButton from "@/components/base/BillButton.vue";
 import {computed, onMounted, ref} from "vue";
 import {useBilladmStore} from "@/stores/billadm";
+import {notify} from "@/utils/notify";
 // store
 const billadmStore = useBilladmStore();
 // 工作空间
@@ -104,7 +105,8 @@ const removeWorkspace = async () => {
   if (flag) {
     billadmStore.showAdvancedMenu = false;
     await billadmStore.refreshWorkspaceState();
-    if (billadmStore.workspaceState.workspaces.length === 0) {
+    if (billadmStore.workspaceState.workspaces.size === 0) {
+      notify('warning','无工作空间可用，新建或打开新工作空间');
       billadmStore.showInitWorkspaceFormCloseButton = false;
       billadmStore.showInitWorkspaceForm = true;
     } else {

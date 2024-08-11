@@ -267,16 +267,23 @@ const createWindow = () => {
                 workspaceState.last = workspaceState.workspaces[0];
                 await connectWorkspace();
             }
-            return true;
+            logger.info(`${workspaceState.workspaces}`);
+            return {
+                status: 'opened',
+                newWorkspaceName: path.basename(workspaceState.last),
+            };
         }
         // 如果不是已经打开的，则过滤掉即可
         logger.info(`start to remove other workspace ${workspaceDir}`);
         workspaceState.workspaces = workspaceState.workspaces.filter((item) => item !== workspaceDir);
-        return true;
+        return {
+            status: 'other',
+            newWorkspaceName: '',
+        };
     });
     ipcMain.handle('init.workspaceState', async (event, workspaceDir) => {
         let res = {
-            current: path.basename(workspace.workspaceDir),
+            current: path.basename(workspaceState.last),
             workspaces: new Map(),
         };
         for (let workspacePath of workspaceState.workspaces) {

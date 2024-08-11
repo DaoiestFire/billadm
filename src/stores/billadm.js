@@ -1,9 +1,9 @@
 /*存储账本信息*/
 import {defineStore} from "pinia";
-import {ElNotification} from "element-plus";
 import {BUILT_IN_BILLBOOK} from "@/utils/constants";
 import {dateObjectToUTCTimeString, isValidDate, utcTimeStringToDateObject} from "@/utils/timeutils";
 import {toRaw} from "vue";
+import {notify} from "@/utils/notify";
 
 
 export const useBilladmStore = defineStore("billbooks", {
@@ -54,13 +54,7 @@ export const useBilladmStore = defineStore("billbooks", {
                     this.billbooks.push(billbook);
                 });
             } catch (err) {
-                ElNotification({
-                    type: 'error',
-                    message: '获取账本失败',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '获取账本失败');
             }
         },
         async refreshBills(filters) {
@@ -87,24 +81,12 @@ export const useBilladmStore = defineStore("billbooks", {
                 });
                 this.bills = bills;
             } catch (err) {
-                ElNotification({
-                    type: 'error',
-                    message: '获取消费记录失败',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '获取消费记录失败');
             }
         },
         async addOneBill() {
             if (this.currentBook === '') {
-                ElNotification({
-                    type: 'warning',
-                    message: '未选中任何账本',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('warning', '未选中任何账本');
                 return;
             }
             this.billForm.creationTime.setHours(12, 12, 12);
@@ -119,21 +101,9 @@ export const useBilladmStore = defineStore("billbooks", {
             };
             try {
                 await window.appObject.addOneBill(newItem);
-                ElNotification({
-                    type: 'success',
-                    message: '新增消费记录成功',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('success', '新增消费记录成功');
             } catch (err) {
-                ElNotification({
-                    type: 'error',
-                    message: '新增消费记录失败',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '新增消费记录失败');
             }
         },
         async editOneBill() {
@@ -149,62 +119,26 @@ export const useBilladmStore = defineStore("billbooks", {
             };
             try {
                 await window.appObject.editOneBill(newItem);
-                ElNotification({
-                    type: 'success',
-                    message: '修改消费记录成功',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('success', '修改消费记录成功');
             } catch (err) {
-                ElNotification({
-                    type: 'error',
-                    message: '  修改消费记录失败',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '修改消费记录失败');
             }
         },
         async deleteBills(idList) {
             if (idList.length === 0) {
-                ElNotification({
-                    type: 'warning',
-                    message: '未选中任何记录',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('warning', '未选中任何记录');
                 return;
             }
             try {
                 await window.appObject.deleteBills(idList);
-                ElNotification({
-                    type: 'success',
-                    message: '删除消费记录成功',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('success', '删除消费记录成功');
             } catch (err) {
-                ElNotification({
-                    type: 'error',
-                    message: '删除消费记录失败',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '删除消费记录失败');
             }
         },
         async addOneBillbook() {
             if (toRaw(this.billbookForm.name) === '') {
-                ElNotification({
-                    type: 'error',
-                    message: '账本名称不能为空',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '账本名称不能为空');
                 return
             }
             try {
@@ -213,52 +147,22 @@ export const useBilladmStore = defineStore("billbooks", {
                     description: this.billForm.description,
                 };
                 await window.appObject.addOneBillbook(newItem);
-                ElNotification({
-                    type: 'success',
-                    message: '新增账本成功',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('success', '新增账本成功');
             } catch (err) {
-                ElNotification({
-                    type: 'error',
-                    message: '新增账本失败',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '新增账本失败');
             }
         },
         async deleteOneBillbook() {
             if (this.currentBook === BUILT_IN_BILLBOOK.id) {
-                ElNotification({
-                    type: 'warning',
-                    message: '默认账本无法删除',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('warning', '默认账本无法删除');
                 return;
             }
             try {
                 await window.appObject.deleteOneBillbook(this.currentBook);
                 this.currentBook = '';
-                ElNotification({
-                    type: 'success',
-                    message: '删除账本成功',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('success', '删除账本成功');
             } catch (err) {
-                ElNotification({
-                    type: 'error',
-                    message: '删除账本失败',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '删除账本失败');
             }
         },
         toggleShowBillDisplayAside() {
@@ -304,13 +208,7 @@ export const useBilladmStore = defineStore("billbooks", {
                     this.billTypes.set(item.id, item.name);
                 });
             } catch (err) {
-                ElNotification({
-                    type: 'error',
-                    message: '获取消费类型失败',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '获取消费类型失败');
             }
         },
         async handleTimeRangeChange() {
@@ -332,32 +230,14 @@ export const useBilladmStore = defineStore("billbooks", {
         },
         async initWorkspace(workspaceDir) {
             if (toRaw(this.workspaceState.current) !== '' && workspaceDir.endsWith(toRaw(this.workspaceState.current))) {
-                ElNotification({
-                    type: 'warning',
-                    message: '工作空间已打开',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('warning', '工作空间已打开');
                 return true;
             }
             const res = await window.appObject.initWorkspace(workspaceDir);
             if (res) {
-                ElNotification({
-                    type: 'success',
-                    message: '工作空间初始化成功',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('success', '工作空间初始化成功');
             } else {
-                ElNotification({
-                    type: 'error',
-                    message: '工作空间初始化失败',
-                    position: 'bottom-right',
-                    duration: 2000,
-                    offset: 40,
-                });
+                notify('error', '工作空间初始化失败');
             }
             return res;
         },
@@ -369,7 +249,18 @@ export const useBilladmStore = defineStore("billbooks", {
             await this.refreshBills();
         },
         async removeWorkspace(workspaceDir) {
-            return await window.appObject.removeWorkspace(workspaceDir);
+            try {
+                const ret = await window.appObject.removeWorkspace(workspaceDir);
+                if (ret.status === 'opened' && ret.newWorkspaceName.length > 0) {
+                    notify('success', `工作空间已移除，自动切换到另一个工作空间：${ret.newWorkspaceName}`);
+                } else {
+                    notify('success', '工作空间已移除');
+                }
+                return true;
+            } catch (e) {
+                notify('error', '工作空间移除失败');
+                return false;
+            }
         },
         async isFirstOpen() {
             return await window.appObject.isFirstOpen();
