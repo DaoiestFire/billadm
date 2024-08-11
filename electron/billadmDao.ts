@@ -148,6 +148,10 @@ class BilladmDao {
     async deleteOneBillByID(id: string) {
         await this.easyDB.runSql(DELETE_ONE_BILL_BY_ID, [id]);
     }
+
+    async close() {
+        return await this.easyDB.closeDB();
+    }
 }
 
 export default BilladmDao;

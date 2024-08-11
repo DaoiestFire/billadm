@@ -4,6 +4,7 @@ import {app, BrowserWindow, ipcMain, screen, dialog, OpenDialogOptions} from 'el
 import Logger from './logger';
 import BilladmDao from './billadmDao';
 import {Workspace, WorkspaceState} from './api';
+import billadmDao from "./billadmDao";
 
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -253,6 +254,26 @@ const createWindow = () => {
         }
         return await initWorkspace(workspaceDir);
     });
+    ipcMain.handle('init.remove-workspace', async (event, workspaceDir) => {
+        if (workspace.workspaceDir === workspaceDir) {
+            logger.info(`start to remove opened workspace ${workspaceDir}`);
+            // 如果当前的工作空间已经打开了，则关闭工作空间
+            await workspace.billadmDao.close()
+
+            workspaceState.workspaces = workspaceState.workspaces.filter((item) => item !== workspaceDir);
+            workspaceState.last = '';
+            // 如果工作空间不为空,则选择打开一个.最好循环打开，这里暂不实现
+            if (workspaceState.workspaces.length > 0) {
+                workspaceState.last = workspaceState.workspaces[0];
+                await connectWorkspace();
+            }
+            return true;
+        }
+        // 如果不是已经打开的，则过滤掉即可
+        logger.info(`start to remove other workspace ${workspaceDir}`);
+        workspaceState.workspaces = workspaceState.workspaces.filter((item) => item !== workspaceDir);
+        return true;
+    });
     ipcMain.handle('init.workspaceState', async (event, workspaceDir) => {
         let res = {
             current: path.basename(workspace.workspaceDir),
@@ -290,13 +311,16 @@ const createWindow = () => {
         }
     });
 
-    mainWindow.on('close', () => {
-        exitApp();
+    mainWindow.on('close', async () => {
+        await exitApp();
     })
 };
 
-const exitApp = () => {
+const exitApp = async () => {
     logger.info('start to exit app');
+    if (workspace.billadmDao) {
+        await workspace.billadmDao.close();
+    }
     // 保存退出前的窗口状态
     const bounds = workspace.mainWindow.getBounds();
     fs.writeFileSync(windowStatePath, JSON.stringify({

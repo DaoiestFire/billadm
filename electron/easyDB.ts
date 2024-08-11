@@ -82,9 +82,8 @@ class EasyDB {
                             resolve(rows);
                         });
                     }
-
                 }
-            )
+            );
         } else {
             return new Promise(
                 (resolve, reject) => {
@@ -109,20 +108,25 @@ class EasyDB {
                             resolve(rows);
                         });
                     }
-
                 }
-            )
+            );
         }
     }
 
     closeDB() {
-        this.dbInstance.close((err) => {
-            if (err) {
-                this.logger.error(`close db failed, err: ${err}`);
-                return;
+        return new Promise(
+            (resolve, reject) => {
+                this.dbInstance.close((err) => {
+                    if (err) {
+                        this.logger.error(`close db failed, err: ${err}`);
+                        reject(err);
+                        return;
+                    }
+                    this.logger.info('close db success');
+                    resolve(true);
+                });
             }
-            this.logger.info('close db success');
-        });
+        );
     }
 }
 

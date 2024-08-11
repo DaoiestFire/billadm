@@ -368,6 +368,9 @@ export const useBilladmStore = defineStore("billbooks", {
             this.setCurrentBook(BUILT_IN_BILLBOOK.id);
             await this.refreshBills();
         },
+        async removeWorkspace(workspaceDir) {
+            return await window.appObject.removeWorkspace(workspaceDir);
+        },
         async isFirstOpen() {
             return await window.appObject.isFirstOpen();
         },

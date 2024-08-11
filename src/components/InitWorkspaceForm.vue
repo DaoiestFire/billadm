@@ -40,6 +40,7 @@ const onSubmit = async () => {
   const flag = await billadmStore.initWorkspace(workspacePath.value);
   if (flag) {
     await billadmStore.refreshWorkspace();
+    await billadmStore.refreshWorkspaceState();
     workspacePath.value = '';
     billadmStore.showInitWorkspaceForm = false;
     billadmStore.showAdvancedMenu = false;

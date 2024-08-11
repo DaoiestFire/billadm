@@ -40,6 +40,9 @@ contextBridge.exposeInMainWorld('appObject', {
     initWorkspace(workspaceDir) {
         return ipcRenderer.invoke('init.init-workspace', workspaceDir);
     },
+    removeWorkspace(workspaceDir) {
+        return ipcRenderer.invoke('init.remove-workspace', workspaceDir);
+    },
     isFirstOpen() {
         return ipcRenderer.invoke("init.first-open");
     },

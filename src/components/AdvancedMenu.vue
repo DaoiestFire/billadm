@@ -52,7 +52,7 @@
       </el-text>
     </BillButton>
     <el-divider/>
-    <BillButton height="40px" width="200px" radius="8px" offset="10px" @click="">
+    <BillButton height="40px" width="200px" radius="8px" offset="10px" @click="removeWorkspace">
       <el-text>
         <div class="billadm-horizontal-left menu-item">
           <SvgIcon name="trash" size="15" style="margin-right: 10px"/>
@@ -96,6 +96,20 @@ const switchWorkspace = async () => {
     await billadmStore.refreshWorkspace();
     await billadmStore.refreshWorkspaceState();
     billadmStore.showAdvancedMenu = false;
+  }
+}
+const removeWorkspace = async () => {
+  console.log('start to remove workspace', checkedWorkspaceDir.value);
+  const flag = await billadmStore.removeWorkspace(checkedWorkspaceDir.value);
+  if (flag) {
+    billadmStore.showAdvancedMenu = false;
+    await billadmStore.refreshWorkspaceState();
+    if (billadmStore.workspaceState.workspaces.length === 0) {
+      billadmStore.showInitWorkspaceFormCloseButton = false;
+      billadmStore.showInitWorkspaceForm = true;
+    } else {
+      await billadmStore.refreshWorkspace();
+    }
   }
 }
 const getWorkspaceMenuStyle = computed(() => {
